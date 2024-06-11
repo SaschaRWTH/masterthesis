@@ -1,0 +1,114 @@
+\usepackage{ae}
+\usepackage{array}
+\usepackage{threeparttable}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{rotating}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{lastpage}
+\usepackage{dsfont}
+\usepackage{amsmath, amssymb, amsfonts, amstext, xspace}
+\usepackage{color}
+\usepackage{transparent}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{epstopdf}
+\usepackage{svg}
+\usepackage{subfig}
+\usepackage{fp}
+\usepackage{mathtools}
+\usepackage{longtable}
+\usepackage[toc]{appendix}
+\usepackage{tabularx}
+\usepackage{anyfontsize}
+\usepackage{pdfpages}
+\usepackage{tikz}
+%\usepackage{minted}
+% adapt title and author
+\usepackage{titling} % https://tex.stackexchange.com/questions/27710/how-can-i-use-author-date-and-title-after-maketitle
+
+\usepackage[pdftitle={},pdfsubject={},pdfauthor={}]{hyperref}
+
+\input{../preamble/config}
+
+
+\addtolength{\evensidemargin}{-7mm}\addtolength{\oddsidemargin}{7mm}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\captionsetup[subfloat]{font=scriptsize, labelformat=parens, labelsep=space, listofformat=subparens}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\definecolor{grey}{rgb}{0.8,0.8,0.8}
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{green}{rgb}{0,1,0}
+\definecolor{yellow}{rgb}{1,1,0}
+\definecolor{lightblue}{rgb}{0,0,0.5}
+\definecolor{lightgray}{rgb}{.95,.95,.95}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\newcommand{\blankpage}{
+	% \ifdefined\PROPOSAL{}
+	% \else
+		\newpage
+		\thispagestyle{empty}
+		\mbox{}
+		\newpage
+	% \fi
+}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+\graphicspath{{../figures/}}
+
+
+\lstloadlanguages{C,C++,csh,Java}
+\lstset{
+	language=csh,
+	basicstyle=\footnotesize\ttfamily,
+	numbers=left,
+	numberstyle=\tiny,
+	numbersep=5pt,
+	tabsize=2,
+	extendedchars=true,
+	breaklines=true,
+	frame=tlrb,
+	stringstyle=\color{blue}\ttfamily,
+	showspaces=false,
+	showtabs=false,
+	framexleftmargin=17pt,
+	framexrightmargin=5pt,
+	framexbottommargin=4pt,
+	xleftmargin=.2\textwidth,
+	xrightmargin=.2\textwidth,
+	commentstyle=\color{green},
+	morecomment=[l]{//}, %use comment-line-style!
+	morecomment=[s]{/*}{*/}, %for multiline comments
+	showstringspaces=false,
+	morekeywords={ abstract, event, new, struct,
+		async, await,
+		as, explicit, null, switch,
+		base, extern, object, this,
+		bool, false, operator, throw,
+		break, finally, out, true,
+		byte, fixed, override, try,
+		case, float, params, typeof,
+		catch, for, private, uint,
+		char, foreach, protected, ulong,
+		checked, goto, public, unchecked,
+		class, if, readonly, unsafe,
+		const, implicit, ref, ushort,
+		continue, in, return, using,
+		decimal, int, sbyte, virtual,
+		default, interface, sealed, volatile,
+		delegate, internal, short, void,
+		do, is, sizeof, while,
+		double, lock, stackalloc,
+		else, long, static,
+		enum, namespace, string},
+	keywordstyle=\color{cyan},
+}

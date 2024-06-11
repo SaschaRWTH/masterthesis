@@ -1,0 +1,29 @@
+\documentclass[a4paper,BCOR5mm,11pt,pointlessnumbers,openany]{scrbook}
+
+\newcommand*{\PROPOSAL}{Proposal}%
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\scr@startchapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
+\makeatother
+\input{../preamble/preamble}
+\begin{document}
+	\frontmatter
+
+	\input{../preamble/title}
+	\thispagestyle{empty}
+	\tableofcontents
+
+	\thispagestyle{empty}
+	\ifdefined\PROPOSAL{}
+	\else
+	\listoffigures
+	\fi
+	\addtolength{\parskip}{-.5\parskip}
+	\mainmatter{}
+	\input{content/1_introduction}
+	\input{content/2_motivation}
+	\input{content/3_concept}
+	\input{../bibliography/bibliography}
+	\input{content/appendix}
+	\backmatter{}
+\end{document}
