@@ -9,15 +9,15 @@ The QCMs syntax and logic are both heavily influenced by classical assembly lang
 
 Because quantum computers are based on unitary gates, all there operations need to be unitary and, therefore, reversible as well. This also includes jump instructions which are not reversible in classical computers.\unsure{ Example for non-reversibility?} To ensure reversibility of jumps, the QCM uses a \emph{branch control register} which values controls how much the instruction pointer of the machine advances after an execution. The branch control register can then be manipulated reversibly. The idea of a branch control register can also be found in reversible architectures for classical machines\cite{AGY07, TAG12}.
 
-
+Although such a program counter addresses the issue of reversibility, it can become entangled with data registers when in superposition. This can lead to disruptive entanglement where the output of the program becomes invalid.~\cite{YVC24} To prevent any disruptive entanglement of the data and control registers, the QCM adheres to the principle of synchronization. It requires that the control flow is separated from the data at the end of execution. 
 
 \begin{itemize}
     \item bounded by reversibility and synchronicity
     \begin{itemize}
-        \item what is reversibility, why is it needed
+        %\item what is reversibility, why is it needed
         \item what is synchronicity, why is it needed
     \end{itemize}
-    \item based on classical assembly languages (jumps, registers, ...)
+  %  \item based on classical assembly languages (jumps, registers, ...)
 \end{itemize}
 
 \begin{itemize}
