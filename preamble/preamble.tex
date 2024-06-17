@@ -29,6 +29,10 @@
 \usepackage{pdfpages}
 \usepackage{xargs}   
 \usepackage{tikz}
+
+\usepackage{caption}
+\usepackage{subcaption}
+
 %\usepackage{minted}
 % adapt title and author
 \usepackage{titling} % https://tex.stackexchange.com/questions/27710/how-can-i-use-author-date-and-title-after-maketitle
@@ -115,7 +119,7 @@
 }
 
 \lstdefinestyle{ANTLR}{
-    basicstyle=\small\ttfamily\color{magenta},%
+    % basicstyle=\small\ttfamily\color{magenta},%
     breaklines=true,%                                      allow line breaks
     moredelim=[s][\color{green!50!black}\ttfamily]{'}{'},% single quotes in green
     moredelim=*[s][\color{black}\ttfamily]{options}{\}},%  options in black (until trailing })
@@ -127,6 +131,20 @@
     alsoletter={:,|,;},%
     morekeywords={:,|,;},%                                 define the special characters
     keywordstyle={\color{black}},%                         and format them in black
+}
+
+\lstdefinestyle{QCM}{
+    breaklines=true,%                                      allow line breaks
+    moredelim=[s][\color{green!50!black}\ttfamily]{'}{'},% single quotes in green
+    moredelim=*[s][\color{black}\ttfamily]{options}{\}},%  options in black (until trailing })
+    commentstyle={\color{gray}\itshape},%                  gray italics for comments
+    morecomment=[l]{;},%                                  define // comment
+    emph={%
+		l1, l2, l3, l4, l5, l6, l7, l8%                                         literal strings listed here
+        },emphstyle={\color{red}\ttfamily},%              and formatted in blue
+    alsoletter={|,;},%
+    morekeywords={add, rjne, jz, jg, mul, jmp, rjmp, nop, rjle, radd},%                                 define the special characters
+    keywordstyle={\color{blue}},%                         and format them in black
 }
 
 
