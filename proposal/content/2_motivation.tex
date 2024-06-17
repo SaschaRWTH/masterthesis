@@ -61,17 +61,13 @@ l4: rjmp  l2
 %   %  \item based on classical assembly languages (jumps, registers, ...)
 % \end{itemize}
 
+Because of the reversibility of the QCM, any jump instruction in the code needs to have an opposing return jump instruction. Additionally, the synchronization principle requires any loop with $n$ instructions to contain $n$ padding instructions and any loops cannot depend on quantum data for its iterations. Together with the syntax based on classical assembly languages, the language of the QCM is hard to read and write. 
 
-\begin{itemize}
-    \item Issues with qcm
-    \begin{itemize}
-        \item Reversibility always requires "back" jmps
-        \item Synchronization can be easily missed (e.g. passing in while)\unsure{add lstlistings of to programs annotated to clarify jumps}
-        \item Overall hard to read and program in code 
-    \end{itemize}
-    \item Idea 
-    \begin{itemize}
-        \item reduce QCM to basics
-        \item lead to concept section
-    \end{itemize}
-\end{itemize}
+% \begin{itemize}
+%     % \item Issues with qcm
+%     % \begin{itemize}
+%     %     \item Reversibility always requires "back" jmps
+%     %     \item Synchronization can be easily missed (e.g. passing in while)\unsure{add lstlistings of to programs annotated to clarify jumps}
+%     %     \item Overall hard to read and program in code 
+%     % \end{itemize}
+% \end{itemize}
