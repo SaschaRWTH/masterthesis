@@ -9,42 +9,43 @@ The QCMs syntax and logic are both heavily influenced by classical assembly lang
 
 Because quantum computers are based on unitary gates, all there operations need to be unitary and, therefore, reversible as well. This also includes jump instructions which are not reversible in classical computers.\unsure{ Example for non-reversibility?} To ensure reversibility of jumps, the QCM uses a \emph{branch control register} which values controls how much the instruction pointer of the machine advances after an execution. The branch control register can then be manipulated reversibly. The idea of a branch control register can also be found in reversible architectures for classical machines\cite{AGY07, TAG12}.
 
-Although such a program counter addresses the issue of reversibility, it can become entangled with data registers when in superposition. This can lead to disruptive entanglement where the output of the program becomes invalid.~\cite{YVC24} To prevent any disruptive entanglement of the data and control registers, the QCM adheres to the principle of synchronization. It requires that the control flow is separated from the data at the end of execution. 
+Although such a program counter addresses the issue of reversibility, it can become entangled with data registers when in superposition. This can lead to disruptive entanglement where the output of the program becomes invalid.~\cite{YVC24} To prevent any disruptive entanglement of the data and control registers, the QCM adheres to the principle of synchronization. 
+It requires that the control flow is separated from the data at the end of execution. 
 Examples where synchronization comes into play are given in Fig.~\ref{fig:qcm_not_sync} and Fig.~\ref{fig:qcm_sync} where $x^y$ and $x^{\texttt{min}\{y, max\}}$ are calculated respectively. 
-
+While the first example is completely reversible, it does not adhere to the principle of synchronization. Given the inputs two different inputs, the loop will be executed a different amount of times. This means that after the faster input completed the loop, the program counter of the slower input cannot catch up. To prevent this issue, the second program uses padding which is executed instead of the main loop. 
 \begin{figure}
     \centering     
-    \begin{minipage}{.45\textwidth}
-        \vspace{5em}
-        \begin{lstlisting}[linewidth=21em,style=QCM]
-    add     res     $1
-    add     r1      max
-l1: rjne    l3      r1  max
-l2: jz      l4      r1
-    mul     res     x
-    radd    r1      $1
-l3: jmp     l1  
-l4: rjmp    l2      
+    \begin{minipage}{.40\textwidth}
+        \vspace{7.5em}
+        \begin{lstlisting}[linewidth=17em,style=QCM]
+    add   res $1
+    add   r1  y
+l1: rjne  l3  r1  y
+l2: jz    l4  r1
+    mul   res x
+    radd  r1  $1
+l3: jmp   l1  
+l4: rjmp  l2      
         \end{lstlisting}
         \caption{QCM exponentiation without synchronization}
         \label{fig:qcm_not_sync}
     \end{minipage}
     \hfill
-    \begin{minipage}{.45\textwidth}
-        \begin{lstlisting}[linewidth=21em,style=QCM]
-    add     res $1
-    add     r1  max
-l1: rjne    l3  r1  max
-l2: jz      l4  r1
-l5: jg      l7  r1  y   
-    mul     res x
-l6: jmp     l8  
-l7: rjmp    l5
-    nop
-l8: rjle    l6  r1  y
-    radd    r1  $1
-l3: jmp     l1
-l4: rjmp    l2
+    \begin{minipage}{.55\textwidth}
+        \begin{lstlisting}[linewidth=23em,style=QCM]
+    add   res $1
+    add   r1  max
+l1: rjne  l3  r1  max
+l2: jz    l4  r1
+l5: jg    l7  r1  y   
+    mul   res x
+l6: jmp   l8  
+l7: rjmp  l5
+    nop           ; padding
+l8: rjle  l6  r1  y
+    radd  r1  $1
+l3: jmp   l1
+l4: rjmp  l2
         \end{lstlisting}
         \caption{Synchronized QCM exponentiation}    
         \label{fig:qcm_sync}
