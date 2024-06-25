@@ -12,7 +12,7 @@ When quantum computers are based on unitary gates, all their operations need to 
 Although such a program counter addresses the issue of reversibility, it can become entangled with data registers when in superposition. This can lead to disruptive entanglement where the output of the program becomes invalid~\cite{YVC24}. To prevent any disruptive entanglement of the data and control registers, the QCM adheres to the principle of synchronization. 
 It requires that the control flow is separated from the data at the end of execution. 
 Examples where synchronization comes into play are given in Fig.~\ref{fig:qcm_not_sync} and Fig.~\ref{fig:qcm_sync} where $x^y$ and $x^{\texttt{min}\{y, max\}}$ are calculated respectively. 
-While the first example is completely reversible, it does not adhere to the principle of synchronization. Given two different inputs, the loop will be executed different number of times. This means that after the faster of the two programs completed the loop, the program counter of the slower input cannot catch up. To prevent this issue, the second program uses padding which is executed instead of the main loop. \thiswillnotshow{Should this be explained in more detail? It is a very superficial explanation}
+While the first example is completely reversible, it does not adhere to the principle of synchronization. Given two different inputs, the loop will be executed a different number of times. This means that after the faster of the two programs completed the loop, the program counter of the slower one cannot catch up. To prevent this issue, the second program uses padding which is executed instead of the main loop. \thiswillnotshow{Should this be explained in more detail? It is a very superficial explanation}
 
 \begin{figure}[htp]
     \centering     
@@ -62,7 +62,7 @@ l4: rjmp  l2
 %   %  \item based on classical assembly languages (jumps, registers, ...)
 % \end{itemize}
 
-Because of the reversibility of the QCM, any jump instruction in the code needs to have an opposing return jump instruction. Additionally, the synchronization principle requires any loop with $n$ instructions to contain $n$ padding instructions and any loops cannot depend on quantum data for its iterations. 
+Because of the reversibility of the QCM, any jump instruction in the code needs to have an opposing return jump instruction. Additionally, the synchronization principle requires any loop with $n$ instructions to contain $n$ padding instructions and any loops cannot depend on quantum data for their iterations. 
 % Furthermore, current quantum computers do not support loops that depend on the measurement of a register. \info{cant depend on measurement data} (Does not fit into sentence or context) 
 Together with the syntax based on classical assembly languages, the language of the QCM is hard to read and write. 
 
