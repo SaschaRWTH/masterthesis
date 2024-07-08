@@ -29,8 +29,8 @@ jobs:
       - name: Build Thesis
         uses: xu-cheng/latex-action@3.2.0
         with:
-          root_file: thesis/thesis.tex
           working_directory: ./thesis
+          root_file: ./thesis.tex
 
       - name: Upload Thesis Artifact
         uses: actions/upload-artifact@v4.3.4
