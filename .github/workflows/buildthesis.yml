@@ -30,6 +30,7 @@ jobs:
         uses: xu-cheng/latex-action@3.2.0
         with:
           root_file: thesis/thesis.tex
+          working-directory: ./thesis
 
       - name: Upload Thesis Artifact
         uses: actions/upload-artifact@v4.3.4
