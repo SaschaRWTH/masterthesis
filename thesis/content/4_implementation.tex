@@ -1,8 +1,71 @@
 \chapter{Implementation}
 \label{ch:implementation}
+
+\section{Semantic analysis}
 \begin{itemize}
-    \item Describe the implementation of LUIE
-    \item What are the main components
-    \item How do they interact
-    \item Important structures/classes
+    \item What is semantic analysis used for?
+    \item How is it implemented in Luie?
+    \item Different types of semantic analysis
+\end{itemize}
+
+\section{Code Generation}
+\begin{itemize}
+    \item How is code generated?
+    \item Important classes and abstractions
+\end{itemize}
+
+\section{Language Overview}
+
+\subsection{Blocks and Scopes}
+\begin{itemize}
+    \item Basic structure of Luie
+    \item Consists of blocks and statements
+    \item One main block
+    \item All blocks have scope 
+\end{itemize}
+\subsubsection{Grammar}
+\begin{itemize}
+    \item A block consists of arbitrarily many definitions and statements
+\end{itemize}
+
+\begin{lstlisting}[style=ANTLR]
+    grammar Luie;
+    
+    parse
+     : block EOF
+     ;
+    
+    block
+     : (definition | statement)*
+     ;
+\end{lstlisting}
+
+
+\subsection{Semantic Analysis}
+\subsubsection{Code Generation}
+
+\subsection{Data Types}
+\subsubsection{Grammar}
+\subsubsection{Type Checking}
+\subsubsection{Code Generation}
+
+\subsection{Gate Application}
+\subsubsection{Grammar}
+\subsubsection{Semantic Analysis}
+\subsubsection{Code Generation}
+
+\subsection{Control Flow}
+\subsubsection{Grammar}
+\subsubsection{Code Generation}
+
+\subsection{Expressions}
+\subsubsection{Grammar}
+\subsubsection{Evaluation}
+
+\section{Test Cases}
+\begin{itemize}
+    \item Different test categories
+    \item How are they implemented?
+    \item What do they test?
+    \item (Continuous integration) 
 \end{itemize}

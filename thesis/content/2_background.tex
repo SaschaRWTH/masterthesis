@@ -4,7 +4,30 @@
 \section{Quantum Computing}
 \begin{itemize}
     \item Introduction into quantum computing
+    \item From bits to qubits
+    \item Entanglement
 \end{itemize}
+
+\subsection{Entanglement}
+\begin{itemize}
+    \item Explain entanglement
+    \item How is entanglement relevant for quantum computing?
+    \item Explain disruptive entanglement
+\end{itemize}
+
+\subsection{Operators and Gates}
+\begin{itemize}
+    \item General theoretical bases of operators and gates
+    \item Most important gates and their functions
+\end{itemize}
+
+\subsection{Measurement}
+\begin{itemize}
+    \item How are qubits measured?
+    \item What is the effect of measurement on qubits?
+\end{itemize}
+
+\subsection{Relevant Algorithms}
 
 
 \section{Quantum Control Flow}
@@ -15,13 +38,95 @@
     \item Limitations
 \end{itemize}
 
+\subsection{Branching}
+\begin{itemize}
+    \item Explain branching principle
+    \item How is branching relevant for control flow?
+    \begin{itemize}
+        \item Example of branching in classical computing
+        \item Example of branching in quantum computing
+    \end{itemize}
+\end{itemize}
 
-\section{QASM}
+\subsection{Iteration}
+
+\subsection{Limitations}	
+
+\subsubsection{Reversibility}
+\begin{itemize}
+    \item Explain reversibility principle
+    \item How is reversibility relevant for control flow?
+    \begin{itemize}
+        \item Example of reversible and irreversible operations (JMP instructions)
+    \end{itemize} 
+    \item 
+\end{itemize}
+\subsubsection{Synchronization}
+\begin{itemize}
+    \item Explain synchronization principle
+    \item Tortoise and hare example
+\end{itemize}
+
+\subsection{Quantum Control Machine}
+\begin{itemize}
+    \item Definition of Quantum Control Machine
+    \item How does it solve/handle the limitations of quantum control flow?
+    \item Example program
+    \begin{itemize}
+        \item Example for non-reversible program
+        \item Example for reversible but not synchronous program
+        \item Example for correct program
+    \end{itemize}
+\end{itemize}
+
+
+\begin{figure}[htp]
+    \centering     
+    \begin{minipage}{.40\textwidth}
+        \vspace{7.5em}
+        \begin{lstlisting}[linewidth=17em,style=QCM]
+    add   res $1
+    add   r1  y
+l1: rjne  l3  r1  y
+l2: jz    l4  r1
+    mul   res x
+    radd  r1  $1
+l3: jmp   l1  
+l4: rjmp  l2      
+        \end{lstlisting}
+        \caption{QCM exponentiation without synchronization}
+        \label{fig:qcm_not_sync}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.55\textwidth}
+        \begin{lstlisting}[linewidth=23em,style=QCM]
+    add   res $1
+    add   r1  max
+l1: rjne  l3  r1  max
+l2: jz    l4  r1
+l5: jg    l7  r1  y   
+    mul   res x
+l6: jmp   l8  
+l7: rjmp  l5
+    nop           ; padding
+l8: rjle  l6  r1  y
+    radd  r1  $1
+l3: jmp   l1
+l4: rjmp  l2
+        \end{lstlisting}*
+        \caption{Synchronized QCM exponentiation}    
+        \label{fig:qcm_sync}
+    \end{minipage}
+\end{figure}
+
+\section{Quantum Languages}
+
+\subsection{QASM Language}
 \begin{itemize}
     \item Give overview of QASM language and concepts
 \end{itemize}
 
-\section{ANTLR (or parsing in general)}
+\section{ANTLR (Lexer and Parser in general)}
 \begin{itemize}
     \item Give overview of ANTLR and parsing in general
 \end{itemize}
