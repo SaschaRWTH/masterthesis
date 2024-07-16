@@ -6,6 +6,12 @@
     \item What is semantic analysis used for?
     \item How is it implemented in Luie?
     \item Different types of semantic analysis
+    \item Errors
+    \begin{itemize}
+        \item Types of errors: Critical, warning
+        \item Different critical errors (Type, undefined, \dots)
+        \item Different warnings (invalid range, \dots)
+    \end{itemize}
 \end{itemize}
 
 \section{Code Generation}
@@ -21,6 +27,7 @@
     \item Basic structure of Luie
     \item Consists of blocks and statements
     \item One main block
+    \item Symbol table that handles scopes
     \item All blocks have scope 
 \end{itemize}
 \subsubsection{Grammar}
@@ -40,14 +47,55 @@
      ;
 \end{lstlisting}
 
-
-\subsection{Semantic Analysis}
-\subsubsection{Code Generation}
-
 \subsection{Data Types}
+\begin{itemize}
+    \item Different data types
+    \begin{itemize}
+        \item Register
+        \item Qubits (Registers with size 1)
+        \item Iterators, in more detail in Sec.~\ref{sec:control_flow}
+    \end{itemize}
+
+\end{itemize}
+
 \subsubsection{Grammar}
-\subsubsection{Type Checking}
+\begin{itemize}
+    \item Registers and qubits defined in declaration
+    \item Optional size, otherwise qubit (size 1).
+    \item Identifier is the name of the register/qubit
+    \item Arbitrary string starting with a character or underscore
+    \item Later 
+\end{itemize}
+\begin{lstlisting}[style=ANTLR]
+    declaration
+     : 'qubit' ('[' size=expression ']')? IDENTIFIER ';'
+     ;
+
+    IDENTIFIER 
+      : [a-zA-Z_] [a-zA-Z_0-9]*
+      ;
+\end{lstlisting}
+\subsubsection{Semantic analysis}
+\begin{itemize}
+    \item Semantic analysis can be differentiated between checking the use of an identifier and checking the type of an identifier.
+    \item \emph{Definedness}: symbol table to check if an identifier is defined
+    \item \emph{Type checking}: symbol table to check if the type of an identifier is correct
+    \begin{itemize}
+        \item What are different type 
+        \item Object oriented approach, i.e. because qubit inherits from register it is also a register
+        \item -> less checks required
+    \end{itemize}
+\end{itemize}
+
 \subsubsection{Code Generation}
+\begin{itemize}
+    \item \texttt{Definition}s used for code generation, symbols can be transformed into definitions
+    \item Needs unique identifier (language has scopes -> multiple variables with same name possible, while QASM does not)
+    \item Unique identifiers given at generation time because of for loops
+    \begin{itemize}
+        \item Explain why \dots
+    \end{itemize}
+\end{itemize}
 
 \subsection{Gate Application}
 \subsubsection{Grammar}
@@ -55,6 +103,7 @@
 \subsubsection{Code Generation}
 
 \subsection{Control Flow}
+\label{sec:control_flow}
 \subsubsection{Grammar}
 \subsubsection{Code Generation}
 
