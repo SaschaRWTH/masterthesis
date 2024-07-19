@@ -109,7 +109,29 @@
 
 \subsection{Expressions}
 \subsubsection{Grammar}
+\begin{itemize}
+    \item Consists of expressions, terms and factors
+    \begin{itemize}
+        \item Expressions consist of expression, operator, and term or just a term
+        \item Term consists of term, operator, and factor or just a factor
+        \item Factor consists of expression in parentheses, a negated factor, number, identifier or function call
+    \end{itemize}
+    \item Inherent order of operations
+\end{itemize}
 \subsubsection{Evaluation}
+
+\section{Optimization}
+\subsection{Constant folding}
+\begin{itemize}
+    \item Inherent in the language
+    \item All variables known at compile time
+    \item Any expression is evaluated at compile time
+\end{itemize}
+\subsection{Peephole optimization}
+\begin{itemize}
+    \item Not implemented, but planed
+    \item Replace sequences of gates with more efficient ones
+\end{itemize}
 
 \section{Test Cases}
 \begin{itemize}
