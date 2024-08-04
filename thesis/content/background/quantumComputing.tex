@@ -8,22 +8,29 @@ While computers are prevalent and important in todays society, there are many re
 
 Classical Computers are based on simple operations, like \texttt{and}, \texttt{or}, and \texttt{not}, on bits. These bits can either have a value of $0$ or $1$. Similarly, at their core, quantum computers apply simple operations, like \texttt{controlled not}, and \texttt{hadamar}, on quantum bits (qubits). In contrast to classical bits, quantum computers use the unique properties of quantum mechanics to enable qubits to have not just one value of either $0$ or $1$ but a combination of both\unsure{citation needed?}. Additionally, quantum computers also use the idea of entanglement to their advantage where the value of a qubit is dependent on another qubit. The combination of superposition and entanglement enable quantum computers to solve specific problems more efficiently than classical computers~\cite{RDB*22}, e.g. prime factorization~\cite{Shor97}\unsure{Repeating info from paragraph above?}.
 
-Different QC models: analog/digital -> focus on digital, use~\cite{DiCh20}
+Models for Quantum Computers can be divided into three main categories, the \emph{analog model}, the \emph{measurement-based model}, and the \emph{gate-based model}. The analog model uses smooth operations to evolve a quantum system over time such that the resulting system encodes the desired result with high probability. It is not clear whether this model allows for universal quantum computation or quantum speedup~\cite{DiCh20}. Instead of smoothly evolving a system, the measurement-based model starts with a fixed quantum state, the cluster-state. The computation is accomplished by measuring qubits of the systen, possibly depending on the results of previous measurements. The concept of gate teleportation~\unsure{explain?} is used such that the measurements realize quantum gates. The result is a bit-string of the measurement results~\cite{DiCh20, Niel06}. Lastly, the gate-based model uses a discrete set of qubits that are minipulated by a sequence of operations represented by quantum gates. The result is optained by measuring the qubits at the end of the computation. Although digital quantum computation is more sensitive to noise than analog computations, the digitization can also be used for quantum error correction and mitigate the increased noisiness~\cite{DiCh20}. The gate-based model is the most used model and this thesis will mainly focus on it. 
+% In contrast to the analog mode, both the other models were shown to be universal quantum computation models. (not specifically stated for gate in DiCh20)!
 
-\subsection{Superposition}
-The concept of superposition is most known for its role in the ``Schrödinger's cat'' thought experiment~\cite{Wine13} where the life of a cat is dependent on a particle in superposition. Similar to the cat being refered to as alive and dead at the same time, qubits in superposition are often informally described as simultaniously having a value of $0$ and $1$. However, a qubit in superposition is more formally a linear combination of its basis states. The basis states are the states where the qubit has a value of $0$, written $\ket{0} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$, and $1$, written $\ket{1} = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$\unsure{also describe the definition of $\ket{+}, \ket{-}$?}. Therefore, a state $\psi$ in superposition can be written as:
+\subsection{Superposition}\unsure{Is a citation needed for this definition? (if yes use \cite{DiCh20}) } 
+The first important property of quantum mechanics used by quantum computer is the idea of superposition. The concept of superposition is most known for its role in the ``Schrödinger's cat'' thought experiment~\cite{Wine13} where the life of a cat in a box is dependent on a particle in superposition, only when ``measuring'' the state of the cat, i.e. looking into the box, we can know if it is still alive. 
+
+Similar to the cat being refered to as alive and dead at the same time, qubits in superposition are often informally described as simultaniously having a value of $0$ and $1$ until their state is measured. However, a qubit in superposition is more formally a linear combination of its basis states. The basis states are the states where the qubit has a value of $0$, written $\ket{0} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$, and $1$, written $\ket{1} = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$\unsure{also describe the definition of $\ket{+}, \ket{-}$?}. Therefore, a state $\psi$ in superposition can be written as:
 \begin{equation*}
-    \ket{\psi} = \alpha \ket{0} + \beta \ket{1} = \alpha \begin{pmatrix} 1 \\ 0 \end{pmatrix} + \beta \begin{pmatrix} 0 \\ 1 \end{pmatrix}
+    \ket{\psi} = \alpha \ket{0} + \beta \ket{1} = \alpha \begin{pmatrix} 1 \\ 0 \end{pmatrix} + \beta \begin{pmatrix} 0 \\ 1 \end{pmatrix}.
 \end{equation*}
-The factors $\alpha$ and $\beta$ are the amplitudes of the basis states and are complex numbers. The probability that the state collapses to a basis state when measured is related to be corresponding amplitude of that basis state and can be computed by squaring it. Because a state will always collapse to a basis state when measured, the sum of the squares of the amplitudes must always be equal to one for the state to be a valid quantum state\unsure{formulate at math formula to be easier to read?}.
+
+The factors $\alpha$ and $\beta$ are the amplitudes of the basis states and are complex numbers. The probability that the state will either be $0$ or $1$ when measured is related to be amplitude of the corresponding basis state and can be computed by squaring the absolute values of the amplitude. Because a state will always collapse to a basis state when measured, the following must hold for a state to be a valid quantum state:
+\begin{equation*}
+    \abs{\alpha}^2 + \abs{\beta}^2 = 1.
+\end{equation*}
 
 \subsection{Entanglement}
-\begin{itemize}
-    \item Explain entanglement
-    \item How is entanglement relevant for quantum computing?
-    \item Explain disruptive entanglement
-\end{itemize}
+The second important quantum mechanical concept is entanglement. Simply said, two qubits are entangled when their values depend on each other. An example would be a quantum system where two qubits are in superposition and equally likely to collapse to either $0$ or $1$; which ever value one qubit collapses to when measured, the second one will also collapse to the same values. Additionally, changes to one of the qubits can also affect the other one. This happens independent of the locations of the two qubits~\cite{RDB*22, HHHH09}. 
+\unsure{Also introduce notation for composition of systems?}
 
+The entanglement of states is used by leveraging the effect of the qubits on each other to collaborate to calculate the result. Although this can be simulated on classical computers, it cannot be achieved ``naitively'' because all qubits are independent of each other. Moreover, quantum algorithms not using entangled states can often be simulated efficiently on classical computers~\cite{MHH19}. Therefore, entanglement is at the core of quantum computing but it can also have unintendet consequences one needs to be aware of when designing quantum algorithms.
+
+... Disruptive entanglement
 
 \subsection{Operators and Gates}
 \begin{itemize}
