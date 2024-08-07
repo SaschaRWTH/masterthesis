@@ -1,3 +1,4 @@
+\newpage
 \section{Quantum Computing}
 % \begin{itemize}
 %     \item Introduction into quantum computing
@@ -8,7 +9,7 @@ While computers are prevalent and important in today's society, there are many r
 
 Classical Computers are based on simple operations, like \texttt{and}, \texttt{or}, and \texttt{not}, on bits. These bits can either have a value of $0$ or $1$. Similarly, at their core, quantum computers apply simple operations, like \texttt{controlled not}, and \texttt{Hadamard}, on quantum bits (qubits). In contrast to classical bits, quantum computers use the unique properties of quantum mechanics to enable qubits to have not just one value of either $0$ or $1$ but a combination of both\unsure{citation needed?}. Additionally, quantum computers also use the idea of entanglement to their advantage where the value of a qubit is dependent on another qubit. The combination of superposition and entanglement enable quantum computers to solve specific problems more efficiently than classical computers~\cite{RDB*22}, e.g. prime factorization~\cite{Shor97}\unsure{Repeating info from paragraph above?}.
 
-Models for Quantum Computers can be divided into three main categories, the \emph{analog model}, the \emph{measurement-based model}, and the \emph{gate-based model}. The analog model uses smooth operations to evolve a quantum system over time such that the resulting system encodes the desired result with high probability. It is not clear whether this model allows for universal quantum computation or quantum speedup~\cite{DiCh20}. Instead of smoothly evolving a system, the measurement-based model starts with a fixed quantum state, the cluster-state. The computation is accomplished by measuring qubits of the system, possibly depending on the results of previous measurements. The concept of gate teleportation~\unsure{explain?} is used such that the measurements realize quantum gates. The result is a bit-string of the measurement results~\cite{DiCh20, Niel06}. Lastly, the gate-based model uses a discrete set of qubits that are manipulated by a sequence of operations represented by quantum gates. The result is obtained by measuring the qubits at the end of the computation. Although digital quantum computation is more sensitive to noise than analog computations, the digitization can also be used for quantum error correction and mitigate the increased noise~\cite{DiCh20}. The gate-based model is the most used model and this thesis will mainly focus on it. 
+Models for Quantum Computers can be divided into three main categories, the \emph{analog model}, the \emph{measurement-based model}, and the \emph{gate-based model}. The analog model uses smooth operations to evolve a quantum system over time such that the resulting system encodes the desired result with high probability. It is not clear whether this model allows for universal quantum computation or quantum speedup~\cite{DiCh20}. Instead of smoothly evolving a system, the measurement-based model starts with a fixed quantum state, the cluster-state. The computation is accomplished by measuring qubits of the system, possibly depending on the results of previous measurements. The concept of gate teleportation~\unsure{explain?} is used such that the measurements realize quantum gates. The result is a bit-string of the measurement results~\cite{DiCh20, Niel06}. Lastly, the gate-based model uses a digitized, discrete set of qubits that are manipulated by a sequence of operations represented by quantum gates. The result is obtained by measuring the qubits at the end of the computation. Although digital quantum computation is more sensitive to noise than analog computations, the digitization can also be used for quantum error correction~\cite{DMN13} and mitigate the increased noise~\cite{DiCh20}. Furthermore, because qubits are actively manipulated and not passively evolved, digital quantum computers are more flexible than analog ones~\cite{RDB*22}. Therefore, the gate-based model is the most common model and this thesis will mainly focus on it. \improvement{Add section on: no cloning/deleting, implicit measurement theorems?\cite{WoZu82, KuBr00}}
 % In contrast to the analog mode, both the other models were shown to be universal quantum computation models. (not specifically stated for gate in DiCh20)!
 
 \subsection{Superposition}\unsure{Is a citation needed for this definition? (if yes use \cite{DiCh20}) } 
@@ -25,53 +26,55 @@ The factors $\alpha$ and $\beta$ are the amplitudes of the basis states and are 
 \end{equation*}
 
 \subsection{Entanglement}
-The second important quantum mechanical concept is entanglement. Simply said, two qubits are entangled when their values depend on each other. An example would be a quantum system where two qubits are in superposition and equally likely to collapse to either $0$ or $1$; whichever value one qubit collapses to when measured, the second one will also collapse to the same values. Additionally, changes to one of the qubits can also affect the other one. This happens independent of the locations of the two qubits~\cite{RDB*22, HHHH09}. 
+The second important quantum mechanical concept is entanglement. Simply said, two qubits are entangled when their values depend on each other. An example would be a quantum system where two qubits are in superposition and equally likely to collapse to either $0$ or $1$; whichever value one qubit collapses to when measured, the second one will also collapse to the same values.\improvement{Define Bell $\beta_{00}$ state}
+ Additionally, changes to one of the qubits can also affect the other one. This happens independent of the locations of the two qubits~\cite{RDB*22, HHHH09}. 
 \unsure{Also introduce notation for composition of systems?}
 
 The entanglement of states is used by leveraging the effect of the qubits on each other to collaborate to calculate the result. Although this can be simulated on classical computers, it cannot be achieved ``natively'' because all classical bits are independent of each other. Moreover, quantum algorithms not using entangled states can often be simulated efficiently on classical computers~\cite{MHH19}. Therefore, entanglement is at the core of quantum computing but it can also have unintended consequences one needs to be aware of when designing quantum algorithms.
 
 To calculate specific functions or intermediate values, quantum algorithms may need to use additional qubits or registers\change{register were not previously mentioned, add small reference} which state can, in turn, be entangled with the main data of the algorithm. If this entanglement is not resolved in time by, e.g., uncomputing\change{Uncomputing as a concept was not introduced before} the changes to the qubit or register, it can interfere with future calculations or measurements and cause the results to be invalid. This effect is called \emph{disruptive entanglement}~\cite{YVC24}\unsure{Cannot find literature besides \cite{YVC24} which calls this effect disruptive entanglement, use anyway?}.  
 
-\subsection{Operators and Gates}
-In gate-based quantum computer, the transformations applied to the quantum data are represented by \emph{quantum gates}. Similar to quantum states, which can be represented by linear combinations of basis states, or vectors, quantum gates can be formulated as linear transformations of these combinations or a matrix to be applied to the vector. Because the result of such a transformation also needs to be a valid quantum state, the transformation needs to be norm-preserving, or \emph{unitary}. The most relevant of often used unitary gates are depicted in Tab.~\ref{Tab:gates}\change{Add correct matrices and functions}\improvement{Add depications for gates in circuits?}\improvement{Add troffoli gate, large but important for universality?}.
+\subsection{Quantum Gates}
+\label{sec:background_quantumGates}
+In gate-based quantum computer, the transformations applied to the quantum data are represented by \emph{quantum gates}. Similar to quantum states, which can be represented by linear combinations of basis states, or vectors, quantum gates can be formulated as linear transformations of these combinations, or a matrix. Because the result of such a transformation also needs to be a valid quantum state, the transformation needs to be norm-preserving, or \emph{unitary}~\cite{DiCh20}. The most relevant and often used unitary gates are depicted in Tab.~\ref{tab:gates}\change{$\ket{+}$ and $\ket{-}$ not explained}\improvement{Add depications for gates in circuits?}\improvement{Add troffoli gate, large but important for universality?}.
 
 \begin{table}[htp]
     \centering
     \begin{tabular}{c|c|cc}
                                  & Gates    & Matrix & Ket-notation \\ \hline
-    \multirow{5}{*}{Pauli-Gates} & X        
-                                    & $\begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix}$       
-                                    & $\begin{matrix} \ket{0} \mapsto \ket{0} \\ \ket{0} \mapsto \ket{0} \end{matrix}$            \\ \cline{2-4} 
+    \multirow{5}{*}{Pauli gates} & X        
+                                    & $\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$       
+                                    & $\begin{matrix} \ket{0} \mapsto \ket{1} \\ \ket{1} \mapsto \ket{0} \end{matrix}$            \\ \cline{2-4} 
                                  & Y        
-                                    & $\begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix}$       
-                                    & $\begin{matrix} \ket{0} \mapsto \ket{0} \\ \ket{0} \mapsto \ket{0} \end{matrix}$             \\ \cline{2-4} 
+                                    & $\begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}$       
+                                    & $\begin{matrix} \ket{0} \mapsto \ket{i} \\ \ket{1} \mapsto -\ket{i} \end{matrix}$             \\ \cline{2-4} 
                                  & Z        
-                                    & $\begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix}$       
-                                    & $\begin{matrix} \ket{0} \mapsto \ket{0} \\ \ket{0} \mapsto \ket{0} \end{matrix}$             \\ \hline
-                                 & Hadamard 
-                                    & $\begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix}$       
-                                    & $\begin{matrix} \ket{0} \mapsto \ket{0} \\ \ket{0} \mapsto \ket{0} \end{matrix}$             \\ \hline
-                                 & Phase    
-                                    & $\begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix}$       
-                                    & $\begin{matrix} \ket{0} \mapsto \ket{0} \\ \ket{0} \mapsto \ket{0} \end{matrix}$             \\ \hline
-                                 & CNOT     
-                                    & $\begin{pmatrix} 0 & 0 & 0 & 0\\ 0 & 0 & 0 & 0\\ 0 & 0 & 0 & 0\\ 0 & 0 & 0 & 0 \end{pmatrix}$       
-                                    & $\begin{matrix} \ket{0} \mapsto \ket{0} \\ \ket{0} \mapsto \ket{0} \\ \ket{0} \mapsto \ket{0} \\ \ket{0} \mapsto \ket{0} \end{matrix}$            
+                                    & $\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$       
+                                    & $\begin{matrix} \ket{0} \mapsto \ket{0} \\ \ket{1} \mapsto -\ket{1} \end{matrix}$             \\ \hline
+    Hadamard gate                & H 
+                                    & $\frac{1}{\sqrt{2}}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}$       
+                                    & $\begin{matrix} \ket{0} \mapsto \ket{+} \\ \ket{1} \mapsto \ket{-} \end{matrix}$             \\ \hline
+    Phase gate                   & $P(\lambda)$ 
+                                    & $\begin{pmatrix} 1 & 0 \\ 0 & e^{i\lambda} \end{pmatrix}$       
+                                    & $\begin{matrix} \ket{0} \mapsto \ket{0} \\ \ket{1} \mapsto e^{i\lambda} \cdot \ket{1} \end{matrix}$             \\ \hline
+    Controlled-NOT gate          & CX     
+                                    & $\begin{pmatrix} 1 & 0 & 0 & 0\\ 0 & 1 & 0 & 0\\ 0 & 0 & 0 & 1\\ 0 & 0 & 1 & 0 \end{pmatrix}$       
+                                    & $\begin{matrix} \ket{00} \mapsto \ket{00} \\ \ket{01} \mapsto \ket{01} \\ \ket{10} \mapsto \ket{11} \\ \ket{11} \mapsto \ket{10} \end{matrix}$\\ \hline
+    Traffoli gate                & CCX     
+                                    & $\begin{pmatrix} 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \end{pmatrix}$       
+                                    & $\begin{matrix} \ket{000} \mapsto \ket{000} \\ \ket{001} \mapsto \ket{001} \\ \ket{010} \mapsto \ket{010} \\ \ket{011} \mapsto \ket{011} \\  \ket{100} \mapsto \ket{100} \\ \ket{101} \mapsto \ket{101} \\ \ket{110} \mapsto \ket{111} \\ \ket{111} \mapsto \ket{110} \end{matrix}$            
     \end{tabular}
     \caption{List of relevant quantum gates in matrix representation as as functions in ket-notation.}
-    \label{Tab:gates}
+    \label{tab:gates}
 \end{table}
 
-\begin{itemize}
-    \item What do unitary transformations lead to?
-    \begin{itemize}
-        \item -> all transformation need to be reversible!
-    \end{itemize}
-    \item Universality of gates? 
-    \begin{itemize}
-        \item -> later can be stated that set of gates/functionality provided by Luie must be universal.
-    \end{itemize}
-\end{itemize}
+A matrix $U$ is unitary if it has an inverse matrix which is equal to its conjugate transpose $U^\dagger$, i.e. the following must hold:
+\begin{equation*}
+    U U^\dagger = I.
+\end{equation*}
+Therefore, all transformations applied to quantum states in a gate-based quantum computer must be reversible by definition. This limitation does not apply to classical computers where non-reversible transformations, e.g. mapping an arbitrary bit to a specific value, are easily implementable. 
+
+To design a useful quantum computer or language, the set of gates should be \emph{universal}. A set of gates is universal if any gate can be simulated by a combination of the gates from the set with arbitrary accuracy~\cite{BrBr01}. An example for a universal set of gates is the combination of the Traffoli gate together with the Hadamard gate~\cite{DiCh20}\improvement{very short section, expand on universality?}.
 
 \subsection{Measurement}
 \begin{itemize}
@@ -82,6 +85,9 @@ In gate-based quantum computer, the transformations applied to the quantum data 
 \subsection{Relevant Algorithms}
 \begin{itemize}
     \item Shortly describe algorithms referenced later
-    \item QFT (Quantum Fourier Transform) 
-    \item Shor's algorithm 
+    \item Shor's algorithm % Can already be implemented in Luie
+    \begin{itemize}
+        \item QFT (Quantum Fourier Transform) 
+    \end{itemize} 
+    \item Grover's algorithm % currently not implementable
 \end{itemize}
