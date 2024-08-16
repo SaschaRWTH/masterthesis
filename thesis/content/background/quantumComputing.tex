@@ -30,8 +30,37 @@ Beside $\ket{0}$ and $\ket{1}$, there exist more relevant short hands for quantu
 
 \subsection{Entanglement}
 Another important quantum mechanical concept is entanglement. Simply said, two qubits are entangled when their values depend on each other. An example would be a quantum system where two qubits are in superposition and equally likely to collapse to either $0$ or $1$; whichever value one qubit collapses to when measured, the second one will also collapse to the same values.\improvement{Define Bell $\beta_{00}$ state}
- Additionally, changes to one of the qubits can also affect the other one. This happens independent of the locations of the two qubits~\cite{RDB*22, HHHH09}. 
-\unsure{Also introduce notation for composition of systems?}
+Additionally, changes to one of the qubits can also affect the other one. This happens independent of the locations of the two qubits~\cite{RDB*22, HHHH09}.
+
+A more formal definition for an entangled state uses the definition of a composite system. Two separate quantum system can be represented as a single system with the tensor product of both systems. For example, the combined state $\ket{\psi}$ of the separate states $\ket{0}$ and $\ket{1}$ can be represented as:
+\begin{equation*}
+    \ket{\psi} 
+    = \ket{0} \otimes \ket{1} 
+    = \ket{01} 
+    = \begin{pmatrix}
+        0 \\    
+        1 \\    
+        0 \\    
+        0     
+    \end{pmatrix}
+    = \begin{pmatrix}
+        1 \\ 0
+    \end{pmatrix} \otimes 
+    \begin{pmatrix}
+        0 \\ 1
+    \end{pmatrix}.
+\end{equation*} 
+When a quantum state cannot be expressed as a tensor product of two states, the state is entangled. The previous example is a case of a maximally entanglement Bell state~\cite{DiCh20, MHH19}, often denoted $\beta_{00}$, and can be expressed as the following:
+\begin{equation*}
+    \beta_{00} = \frac{1}{\sqrt{2}} (\ket{00} + \ket{11}) = \frac{1}{\sqrt{2}} 
+    \begin{pmatrix}
+        1 \\
+        0 \\
+        0 \\
+        1    
+    \end{pmatrix}.
+\end{equation*}
+
 
 The entanglement of states is used by leveraging the effect of the qubits on each other to collaborate to calculate the result. Although this can be simulated on classical computers, it cannot be achieved ``natively'' because all classical bits are independent of each other. Moreover, quantum algorithms not using entangled states can often be simulated efficiently on classical computers~\cite{MHH19}. Therefore, entanglement is at the core of quantum computing but it can also have unintended consequences one needs to be aware of when designing quantum algorithms.
 
@@ -41,10 +70,18 @@ To calculate specific functions or intermediate values, quantum algorithms may n
 \subsection{Measurement}
 \label{sec:background_measurement}
 For quantum computer to be of any use, we need a way to read out information about its state. However, the information we can obtain from a quantum system is limited by the quantum measurement postulate. The postulate states that the only way, to gain any information from a quantum system, is to measure it. When measuring a quantum state, the state irreversibly collapses to one of its basis states.
-Furthermore, this is a probabilistic transformation and the original state in superposition cannot be recovered from the result  
+Furthermore, this is a probabilistic transformation and the original state in superposition cannot be recovered from the result. 
 For a state $\ket{\psi} = \alpha \ket{0} + \beta \ket{1}$, the measurement collapses the state to $\ket{0}$ with a probability of $\abs{\alpha}^2$. Correspondingly, the state will collapse to $\ket{1}$ with a probability of $\abs{\beta}^2$ when measured~\cite{DiCh20}.
 
-Post measurement state...
+Measurement can be represented a a measurement basis set $\{M_i\}_i$ which requires the following condition:
+\begin{equation*}
+    \sum_i M_i^\dagger M_i = I.
+\end{equation*}
+The probability that outcome $i$ is obtained when measuring a state $\ket{\psi}$ is equivalent to $\abs{M_i \ket{\psi}}^2$. After the measurement of outcome $i$, the state $\ket{\psi'}$ will be equivalent to
+\begin{equation*}
+    \ket{\psi'} = \frac{M_i \ket{\psi}}{|M_i \ket{\psi}|} = \frac{M_i \ket{\psi}}{\sqrt{\Probability{[\text{observe }i]}}}.
+\end{equation*} 
+In contrast to all other transformations, measurements are neither unitary nor reversible and, therefore, are able to ``destroy'' information on the quantum state before the measurement~\cite{DiCh20}.\improvement{already mentioned above, only mention once}
 
 \subsection{Quantum Gates}
 \label{sec:background_quantumGates}
@@ -91,7 +128,8 @@ To design a useful quantum computer or language, the set of gates should be \emp
 \subsection{Relevant Algorithms}
 Although quantum computers have impressive technical abilities\change{write better introduction}, they cannot function without a specially designed algorithm. This algorithm needs to exploit the special quantum properties of qubits to achieve \emph{quantum advantage}, \ie a better complexity than any classical algorithm. One of the first algorithms to show its quantum advantage was the Deutsch–Josza algorithm~\cite{DeJo92}. Deutsch et al.\ define a problem that can be solved in exponential time on classical computer and present a quantum algorithm which can solve the problem in polynomial time. The Bernstein-Vazirani algorithm~\cite{BeVa93} is another example with shown quantum advantage, resulting in a polynomial speed up. However, currently, there does not exist a use case for either of the algorithms and, therefore, they are only of limited theoretical interest~\cite{DiCh20}.  
 
-An algorithm with more potential for practical use is Shor's algorithm~\cite{Shor97}. It presents an efficient\improvement{poly time} quantum implementation for the discrete logarithm, \ie find $r$ for a given $a$, $x$, $p$ such that $a^r = x \mod p$. The algorithm is of special interest because Shor also provides a reduction of prime factorization to order finding; order finding is a special case of the discrete logarithm where $x = 1$. Modern cryptography is often based on the complexity of factoring large prime numbers~\info{discrete log is also used in modern cryptography}, \eg the commonly used RSA cryptosystem~\cite{RSA78}. Therefore, an advanced quantum computer could brake these systems with Shor's algorithm~\cite{MVZJ18}.
+An algorithm with more potential for practical use is Shor's algorithm~\cite{Shor97}. It presents an efficient\improvement{poly time} quantum implementation for the discrete logarithm, \ie find $r$ for a given $a$, $x$, $p$ such that $a^r = x \mod p$. The algorithm is of special interest because Shor also provides a reduction of prime factorization to order finding; order finding is a special case of the discrete logarithm where $x = 1$. Modern cryptography is often based on the complexity of factoring large prime numbers~\info{discrete log is also used in modern cryptography}, \eg the commonly used RSA cryptosystem~\cite{RSA78}. Therefore, an advanced quantum computer could brake these systems with Shor's algorithm~\cite{MVZJ18}. Not only does this prospect provide a practical use-case for Quantum Computer but it also creates the research field of \emph{post-quantum cryptography}~\cite{BeLa17}.  
 
-Quantum Fourier Transform...
-% QFT (used in Shor's algorithm and implemented in Luie already) https://arxiv.org/abs/quant-ph/0201067
+Another relevant algorithm or transformation is the quantum Fourier transform (QFT)~\cite{Copp02}. Beside being used as a subroutine in Shor's algorithm, it is also relevant for other algorithm, e.g. addition of quantum registers~\cite{Drap00}. Similar to the discrete Fourier transform~\cite{Wino78} which operates on vectors, the QFT$_{2^n}$ operates on the quantum equivalent of vector, quantum registers, of size $n$. Registers of size $n$ consist of $n$ qubits. From the register, the QFT extracts periodic features which are then used by the algorithms using the QFT\change{bad formulation}.
+
+% possible subsection on Grovers algorithm
