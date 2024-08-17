@@ -1,34 +1,53 @@
 \section{Quantum Control Flow}
-\begin{itemize}
-    \item Introduction into quantum control flow
-    \item Branching
-    \item Iteration
-    \item Limitations
-\end{itemize}
+% \begin{itemize}
+%     \item Introduction into quantum control flow
+%     \item Branching
+%     \item Iteration
+%     \item Limitations
+% \end{itemize} 
+The idea of quantum control flow was first used by Altenkirch et al.~\cite{AlGr05} when defining a functional programming language with quantum control flow elements. The language uses an if-statement in superposition, $\texttt{if}^\circ$, which is used to, e.g., defined the Hadamard gate as a function $had$ instead of a matrix. The $had$ function takes a qubit as an input. If the qubit is true, i.e. the value is one, the function returns a uniform superposition of true and false, where true has a negative sign. Correspondingly, for a false input, a uniform superposition with both signs positive is returned.
+\begin{align*}
+    had : Q& \to Q\\
+    had : x \mapsto& \texttt{ if}^\circ x\\
+                   & \texttt{ then } \{false \mid -true\}\\
+                   & \texttt{ else } \{false \mid true\}
+\end{align*}
+Quantum control flow can be divided into \emph{quantum branching} and \emph{iteration}~\cite{YVC24}. In the following, we will discuss both branching and iteration in superposition as well as the limitations of quantum control flow. 
+
+% It is quantum branching is based on Dijkstra's guarded clauses~\cite{Dijk75}. Guarded clauses concern the nondeterministic executing of functions based on Boolean expressions. In contrast, quantum branching allows for execution of functions based on a value in superposition such that the result may be a superposition of the results of the individual functions. Quantum branching is, e.g., used in simulation algorithms like \cite{BGB*18}, and \cite{LoCh19}. Extending on the idea of branching, quantum iterations is the repetition of a function based on a value in superposition.
 
 \subsection{Branching}
-\begin{itemize}
-    \item Explain branching principle
-    \item How is branching relevant for control flow?
-    \begin{itemize}
-        \item Example of branching in classical computing
-        \item Example of branching in quantum computing
-    \end{itemize}
-\end{itemize}
+% \begin{itemize}
+%     \item Explain branching principle
+%     \item How is branching relevant for control flow?
+%     \begin{itemize}
+%         \item Example of branching in classical computing
+%         \item Example of branching in quantum computing
+%     \end{itemize}
+% \end{itemize}
+Based on the work presented by Altenkirch et al.~\cite{AlGr05}, the concept of quantum control flow, more specifically quantum branching, was expanded on and formally defined by Ying et al.~\cite{YYF12}. They introduce two different types of quantum branching, quantum guarded commands, and quantum choices as a special case of guarded commands. The definition of quantum guarded commands is based on Dijkstra's guarded commands~\cite{Dijk75}. Guarded commands concern the nondeterministic executing of functions based on Boolean expressions, where the nondeterminism derives from the possible overlapping of the guards. In contrast, quantum branching allows for execution of functions based on a value in superposition. The functions are executed such that the result may be a superposition of the results of the individual functions.
+\unsure{possible add and explain formal definition $\square^n_{i=1} \bar{q}, \ket{i} \to P_i$, show relation to guarded clauses}
+
+% Explain quantum choice...
+
+Example of quantum branching\dots
+Quantum branching is, e.g., used in simulation algorithms like \cite{BGB*18}, and \cite{LoCh19}.
 
 \subsection{Iteration}
+Quantum iteration can be implemented either as quantum recursion or quantum loops. While some languages implement loops based on the measurement of qubits or registers~\cite{Ying11}, the concept of quantum iteration requires the body of the loop to be executed in superposition based on the guard in superposition~\cite{YYF12}.\unsure{reference~\cite{FYY13}?}
+
+While classical iteration takes an operation and repeats it on a classical register for $k$ iterations, quantum iteration is dependent on a value $k'$ in superposition and, correspondingly, return a quantum register in superposition. Moreover, it is a special case of quantum branching and heavily restricted by the limitations of quantum computers~\cite{YVC24}.    
+
+Example of quantum iteration\dots
 
 \subsection{Limitations}	
+While quantum control flow is often based on the corresponding control flow primitives on classical computers, it is restricted by multiple limitations imposed by quantum computers. The main limitations are the \emph{reversibility} of any quantum program as well as the required \emph{synchronization}.
 
 \subsubsection{Reversibility}
-\begin{itemize}
-    \item Explain reversibility principle
-    \item How is reversibility relevant for control flow?
-    \begin{itemize}
-        \item Example of reversible and irreversible operations (JMP instructions)
-    \end{itemize} 
-    \item 
-\end{itemize}
+As introduced in Sec.~\ref{sec:background_quantumGates}, any sequence of instructions on gate-based quantum computers, excluding measurements, is required to be reversible by definition. Therefore, any quantum control flow is also required to adhere to this principle. A resulting limitation, that is not present on classical computer, is that any guards for guarded commands need to be immutable in the commands themselves. For example, if a qubit's state is flipped when its value is $0$, the resulting command will always return $1$. When a program returns the same result regardless of which statements where executed, the program cannot be reversible.\improvement{Also inherint in definition of quantum branching~\cite{YYF12}}   
+
+Introduce \emph{Landauer Embedding}~\cite{Land61} as ``solution'' for reversibility\dots
+
 \subsubsection{Synchronization}
 \begin{itemize}
     \item Explain synchronization principle
