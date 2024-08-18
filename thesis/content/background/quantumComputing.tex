@@ -1,5 +1,6 @@
 \newpage
 \section{Quantum Computing}
+\label{sec:background_quantumComputing}
 % \begin{itemize}
 %     \item Introduction into quantum computing
 %     \item From bits to qubits
@@ -13,6 +14,7 @@ Models for Quantum Computers can be divided into three main categories, the \emp
 % In contrast to the analog mode, both the other models were shown to be universal quantum computation models. (not specifically stated for gate in DiCh20)!
 
 \subsection{Superposition}\unsure{Is a citation needed for this definition? (if yes use \cite{DiCh20}) } 
+\label{sec:background_superposition}
 The first important property of quantum mechanics used by quantum computers is the idea of superposition. The concept of superposition is most known for its role in the ``Schrödinger's cat'' thought experiment~\cite{Wine13} where the life of a cat in a box is dependent on a particle in superposition, only when ``measuring'' the state of the cat, \ie looking into the box, we can know if it is still alive. 
 
 Similar to the cat being referred to as alive and dead at the same time, qubits in superposition are often informally described as simultaneously having a value of $0$ and $1$ until their state is measured. However, a qubit in superposition is more formally a linear combination of its basis states. The basis states are the states where the qubit has a value of $0$, written $\ket{0} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$, and $1$, written $\ket{1} = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$.
@@ -29,6 +31,7 @@ Beside $\ket{0}$ and $\ket{1}$, there exist more relevant short hands for quantu
 \end{equation*}
 
 \subsection{Entanglement}
+\label{sec:background_entanglement}
 Another important quantum mechanical concept is entanglement. Simply said, two qubits are entangled when their values depend on each other. An example would be a quantum system where two qubits are in superposition and equally likely to collapse to either $0$ or $1$; whichever value one qubit collapses to when measured, the second one will also collapse to the same values.\improvement{Define Bell $\beta_{00}$ state}
 Additionally, changes to one of the qubits can also affect the other one. This happens independent of the locations of the two qubits~\cite{RDB*22, HHHH09}.
 
@@ -126,10 +129,18 @@ Therefore, all transformations applied to quantum states in a gate-based quantum
 To design a useful quantum computer or language, the set of gates should be \emph{universal}. A set of gates is universal if any gate can be simulated by a combination of the gates from the set with arbitrary accuracy~\cite{BrBr01}. An example for a universal set of gates is the combination of the Traffoli gate together with the Hadamard gate~\cite{DiCh20}\improvement{very short section, expand on universality?}.
 
 \subsection{Relevant Algorithms}
+\label{sec:background_algorithms}
 Although quantum computers have impressive technical abilities\change{write better introduction}, they cannot function without a specially designed algorithm. This algorithm needs to exploit the special quantum properties of qubits to achieve \emph{quantum advantage}, \ie a better complexity than any classical algorithm. One of the first algorithms to show its quantum advantage was the Deutsch–Josza algorithm~\cite{DeJo92}. Deutsch et al.\ define a problem that can be solved in exponential time on classical computer and present a quantum algorithm which can solve the problem in polynomial time. The Bernstein-Vazirani algorithm~\cite{BeVa93} is another example with shown quantum advantage, resulting in a polynomial speed up. However, currently, there does not exist a use case for either of the algorithms and, therefore, they are only of limited theoretical interest~\cite{DiCh20}.  
 
 An algorithm with more potential for practical use is Shor's algorithm~\cite{Shor97}. It presents an efficient\improvement{poly time} quantum implementation for the discrete logarithm, \ie find $r$ for a given $a$, $x$, $p$ such that $a^r = x \mod p$. The algorithm is of special interest because Shor also provides a reduction of prime factorization to order finding; order finding is a special case of the discrete logarithm where $x = 1$. Modern cryptography is often based on the complexity of factoring large prime numbers~\info{discrete log is also used in modern cryptography}, \eg the commonly used RSA cryptosystem~\cite{RSA78}. Therefore, an advanced quantum computer could brake these systems with Shor's algorithm~\cite{MVZJ18}. Not only does this prospect provide a practical use-case for Quantum Computer but it also creates the research field of \emph{post-quantum cryptography}~\cite{BeLa17}.  
 
 Another relevant algorithm or transformation is the quantum Fourier transform (QFT)~\cite{Copp02}. Beside being used as a subroutine in Shor's algorithm, it is also relevant for other algorithm, e.g. addition of quantum registers~\cite{Drap00}. Similar to the discrete Fourier transform~\cite{Wino78} which operates on vectors, the QFT$_{2^n}$ operates on the quantum equivalent of vector, quantum registers, of size $n$. Registers of size $n$ consist of $n$ qubits. From the register, the QFT extracts periodic features which are then used by the algorithms using the QFT\change{bad formulation}.
 
-% possible subsection on Grovers algorithm
+\subsection{Circuit optimization}
+\label{sec:background_algorithms}
+\begin{itemize}
+    \item Subsection about possible circuit optimizations
+    \item What are different techniques
+    \item How are they related to the specific quantum hardware
+    \item Peephole opt. of circuits, e.g. null gates \dots
+\end{itemize}
