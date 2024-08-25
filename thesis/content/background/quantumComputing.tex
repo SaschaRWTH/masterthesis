@@ -6,7 +6,7 @@
 %     \item From bits to qubits
 %     \item Entanglement
 % \end{itemize}
-While computers are prevalent and important in today's society, there are many relevant problems which classical computers can currently and perhaps will never realistically be able to solve. Quantum Computing is gaining more momentum as the technology that could solve at least some of these problems. For example, Quantum algorithms like Shor's algorithm~\cite{Shor97} could provide a significant improvement for prime factorization given sufficient technology. Therefore, it is estimated to be a valuable market with many of the largest technology companies as well as governments investing billions in the research and development of quantum technology~\cite{RDB*22}. While there already exist detailed theoretical foundations~\cite{van20, Ying11,YYF12} and advanced algorithms for QC~\cite{ACR*10,BGB*18,LoCh19,Shor97}, the technology of quantum computers is said to be on the level of classical computers in the 1950s~\cite{CFM17}. In the following section, we take a look at the basic concepts of a quantum computer and the core principles it relies on.
+While computers are prevalent and important in today's society, there are many relevant problems which classical computers can currently and perhaps will never realistically be able to solve. Quantum Computing (QC) is gaining more momentum as the technology that could solve at least some of these problems. For example, Quantum algorithms like Shor's algorithm~\cite{Shor97} could provide a significant improvement for prime factorization given sufficient technology. Therefore, it is estimated to be a valuable market with many of the largest technology companies as well as governments investing billions in the research and development of quantum technology~\cite{RDB*22, Pres18}. While there already exist detailed theoretical foundations~\cite{van20, Ying11,YYF12} and advanced algorithms for QC~\cite{ACR*10,BGB*18,LoCh19,Shor97}, the technology of quantum computers is said to be on the level of classical computers in the 1950s~\cite{CFM17}. In the following section, we take a look at the basic concepts of a quantum computer and the core principles it relies on.
 
 Classical Computers are based on simple operations, like \texttt{and}, \texttt{or}, and \texttt{not}, on bits. These bits can either have a value of $0$ or $1$. Similarly, at their core, quantum computers apply simple operations, like \texttt{controlled not}, and \texttt{Hadamard}, on quantum bits (qubits). In contrast to classical bits, quantum computers use the unique properties of quantum mechanics to enable qubits to have not just one value of either $0$ or $1$ but a combination of both. The phenomenon, where a particle or qubit exists in multiple states at the same time\unsure{This is just a coloquially explaination and not technically correct}, is called \emph{superposition}. Additionally, quantum computers also use the idea of \emph{entanglement} to their advantage where the value of a qubit is dependent on another qubit. The combination of superposition and entanglement enable quantum computers to solve specific problems more efficiently than classical computers~\cite{RDB*22}, \eg prime factorization~\cite{Shor97}\unsure{Repeating info from paragraph above?}.
 
@@ -137,10 +137,58 @@ An algorithm with more potential for practical use is Shor's algorithm~\cite{Sho
 Another relevant algorithm or transformation is the quantum Fourier transform (QFT)~\cite{Copp02}. Beside being used as a subroutine in Shor's algorithm, it is also relevant for other algorithm, e.g. addition of quantum registers~\cite{Drap00}. Similar to the discrete Fourier transform~\cite{Wino78} which operates on vectors, the QFT$_{2^n}$ operates on the quantum equivalent of vector, quantum registers, of size $n$. Registers of size $n$ consist of $n$ qubits. From the register, the QFT extracts periodic features which are then used by the algorithms using the QFT\change{bad formulation}.
 
 \subsection{Circuit optimization}
-\label{sec:background_algorithms}
-\begin{itemize}
-    \item Subsection about possible circuit optimizations
-    \item What are different techniques
-    \item How are they related to the specific quantum hardware
-    \item Peephole opt. of circuits, e.g. null gates \dots
-\end{itemize}
+\label{sec:background_circuitOptimization}
+Despite the expansive theoretical foundations for QC, the current state of the art for it technology is limited. However, the technology is nearing its first milestone towards useable quantum computers with the advent of prototypes with noisy intermediate-scale quantum (NISQ) technology~\cite{BFA22}. Nevertheless, the technology is still far away from fault-tolerant quantum computers and, by definition, limited in the number of available qubits. Furthermore, the gate count of NISQ era quantum computers is limited by the inherent noise which is increased with each additional transformation~\cite{Pres18}. Therefore, attributes such as the gate count of a quantum algorithm are an important metric for its utility. To improve the utility of an algorithm, its quantum circuit can be optimized with different techniques and rules.
+
+There exist many kinds of optimization techniques for quantum circuits. They are mostly concerned with optimizing the gate count of quantum circuits with the use of peephole optimizations, as described in Sec.~\ref{sec:background_compiler_codeOptimization}. These techniques can range from general rules~\cite{GaCh11, LBZ21}, that can be applied to all quantum circuits, to hardware-specific optimizations~\cite{KMO*23}. Furthermore, machine learning based optimization frameworks for quantum circuits are also gaining popularity~\cite{FNML21,LPM*24, RLB*24}.
+
+The most simple general optimizations are so called \emph{null gates}~\cite{GaCh11}. They are gate combinations or gates under specific conditions that are equivalent to the identity gate $I$. Therefore, any occurrence of such a null gate can be removed from the circuit. The most basic example for null gates is the double application of a self-inverse~\unsure{is this the correct word?} gate, i.e. a gate which is its own inverse. These include the $H, X, Y,$ and $Z$ gates. Therefore, the following holds:
+\begin{figure}[htp!]
+    %\centering
+    \[
+        \Qcircuit @C=.5em @R=0em {
+            & \gate{H} & \gate{H} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{X} & \gate{X} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{Y} & \gate{Y} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{Z} & \gate{Z} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{I} & \qw
+            }
+    \]
+    \caption{Null gates of self-inverse gates.}
+    \label{fig:nullgates_selfInverse}
+\end{figure}
+
+Furthermore, the same holds for any controlled version of a self-inverse gate such that the rule can also be applied to $CNOT$ and similar gates. The second kind of null gates are gates that do not have an effect under specific conditions. For example, a controlled gate $U$ is not applied if we know that the control is $\ket{0}$. Similarly, the $X$ gate does not have an effect on a qubit in the $\ket{+}$ state. The following two circuits are hence null gates and semantically equivalent to an identity gate.
+\begin{figure}[htp!]
+    \[
+        \Qcircuit @C=1em @R=1em {
+            \lstick{\ket{0}} & \ctrl{1} &  \qw &&&&& \lstick{\ket{\psi}} & \ctrl{1} & \qw \\
+            \lstick{\ket{\psi}} & \gate{U} & \qw &&&&& \lstick{\ket{+}} & \targ & \qw
+            }
+    \]
+    \caption{Null gates for gate in specific conditions.}
+    \label{fig:nullgates_control}
+\end{figure}
+
+Another class of optimizations are called \emph{control reversal}. Control reversal describes gate combination equalities based on the symmetry of the controlled $Z$ gate. For the controlled $Z$ gate, it is semantically equivalent to apply the $Z$ gate to the second wire with a control on the first and to apply the $Z$ gate on the first wire with a control on the second one. Based on this and together with the equalities $HZH = X$, and $HXH = Z$, a controlled $X$ gate surrounded by $H$ gates on both wires can be represented as the reversed $X$ gate. Both equalities are depicted in Fig.~\ref{fig:control_reversal_cz} and Fig.~\ref{fig:control_reversal_hcx}. 
+
+\begin{figure}[htp!]
+    \centering
+    \begin{minipage}{.45\textwidth}
+        \[
+            \Qcircuit @C=1em @R=1em {
+                & \ctrl{1} & \qw & \raisebox{-2.2em}{=} & & \gate{Z} & \qw \\
+                & \gate{Z} & \qw &           & & \ctrl{-1} & \qw
+                }
+        \]
+        \caption{Control reversal of the controlled Z gate.}
+        \label{fig:control_reversal_cz}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.45\textwidth}
+        \[
+            \Qcircuit @C=1em @R=1em {
+               & \gate{H} & \ctrl{1} & \gate{H} & \qw & \raisebox{-2.2em}{=} & & \targ & \qw \\
+               & \gate{H} & \targ & \gate{H} & \qw &           & & \ctrl{-1} & \qw
+                }
+        \]
+        \caption{Control reversal of CX.}
+        \label{fig:control_reversal_hcx}
+    \end{minipage}
+\end{figure}

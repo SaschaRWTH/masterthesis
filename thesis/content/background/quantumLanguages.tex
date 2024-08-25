@@ -1,4 +1,41 @@
 \section{Quantum Languages}
+With the emergence of quantum computing, many quantum languages were introduced. Most languages focus on a lower level representation of quantum circuits. An example is the popular Open Quantum Assembly Language (QASM)\cite{CBSG17}. QASM consists mainly of quantum and classical gates that can be manipulated by predefined and composite gates as well as limited classical if-statements. In contrast, there are also languages with a focus on high level interactions, e.g. Tower\cite{ChMi22} which contains data structures in superposition, and Silq~\cite{BBGV20} which allows for automatic uncomputing of registers. What all these languages have in common is the restriction to quantum data while using only classical control flow. Although quantum control flow was defined by Ying et al.~\cite{YYF12}, as described in Sec.~\ref{sec:background_quantumControlFlow}, over ten years ago, only very few languages have incorporated the principle. One example is the functional programming language proposed by Altenkirch et al.~\cite{AlGr05} where quantum branching is used to define, \eg, the Hadamard gate. Only recently was the Quantum Control Machine (QCM) with quantum control flow at its core proposed by Yuan et al.~\cite{YVC24}. 
+
+\subsection{Quantum Control Machine}
+\begin{itemize}
+    \item Definition of Quantum Control Machine
+    \item How does it solve/handle the limitations of quantum control flow?
+    \item Example program
+    \begin{itemize}
+        \item Example for non-reversible program
+        \item Example for reversible but not synchronous program
+        \item Example for correct program
+    \end{itemize}
+\end{itemize}
+The QCMs syntax and logic are both heavily influenced by classical assembly languages. The language consists of quantum registers, gate, swap and get-bit operations\footnote{The gate operations are limited to the Hadamard and NOT gates.}, simple numeric operations on registers, and, finally, jump instructions. The jump instructions range from simple to conditional to indirect and are used to enable quantum control flow. Although the jump instructions are based on jumps in classical computers, they are limited by two concepts quantum computers based on unitary gates must adhere to, \emph{reversibility} and \emph{synchronization}.~\cite{YVC24}
+
+When quantum computers are based on unitary gates, all their operations need to be unitary and, therefore, reversible as well. This also includes jump instructions which are not reversible in classical computers. To ensure reversibility of jumps, the QCM uses a \emph{branch control register} whose value controls how much the instruction pointer of the machine advances after each instruction. The branch control register can then be manipulated reversibly by, e.g., adding or subtracting from it. The idea of a branch control register can also be found in reversible architectures for classical machines~\cite{AGY07, TAG12}.
+
+Although such a program counter addresses the issue of reversibility, it can become entangled with data registers when in superposition. This can lead to disruptive entanglement where the output of the program becomes invalid~\cite{YVC24}. To prevent any disruptive entanglement of the data and control registers, the QCM adheres to the principle of synchronization. 
+It requires that the control flow is separated from the data at the end of execution. 
+Examples where synchronization comes into play are given in Fig.~\ref{fig:qcm_not_sync} and Fig.~\ref{fig:qcm_sync} where $x^y$ and $x^{\texttt{min}\{y, max\}}$ are calculated respectively. 
+While the first example is completely reversible, it does not adhere to the principle of synchronization. Given two different inputs, the loop will be executed a different number of times. This means that after the faster of the two programs completed the loop, the program counter of the slower one cannot catch up. To prevent this issue, the second program uses padding which is executed instead of the main loop. \thiswillnotshow{Should this be explained in more detail? It is a very superficial explanation}
+
+\begin{figure}[htp]
+    \centering     
+    \begin{minipage}{.40\textwidth}
+        \vspace{7.5em}
+        \lstinputlisting[linewidth=17em,style=QCM]{../figures/code/exp_non_sync.qcm}
+        \caption{QCM exponentiation without synchronization}
+        \label{fig:qcm_not_sync}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.55\textwidth}
+        \lstinputlisting[linewidth=23em,style=QCM]{../figures/code/exp_sync.qcm}
+        \caption{Synchronized QCM exponentiation}    
+        \label{fig:qcm_sync}
+    \end{minipage}
+\end{figure}
 
 \subsection{QASM Language}
 \begin{itemize}
