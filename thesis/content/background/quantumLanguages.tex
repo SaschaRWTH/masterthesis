@@ -1,18 +1,22 @@
 \section{Quantum Languages}
-With the emergence of quantum computing, many quantum languages were introduced. Most languages focus on a lower level representation of quantum circuits. An example is the popular Open Quantum Assembly Language (QASM)\cite{CBSG17}. QASM consists mainly of quantum and classical gates that can be manipulated by predefined and composite gates as well as limited classical if-statements. In contrast, there are also languages with a focus on high level interactions, e.g. Tower\cite{ChMi22} which contains data structures in superposition, and Silq~\cite{BBGV20} which allows for automatic uncomputing of registers. What all these languages have in common is the restriction to quantum data while using only classical control flow. Although quantum control flow was defined by Ying et al.~\cite{YYF12}, as described in Sec.~\ref{sec:background_quantumControlFlow}, over ten years ago, only very few languages have incorporated the principle. One example is the functional programming language proposed by Altenkirch et al.~\cite{AlGr05} where quantum branching is used to define, \eg, the Hadamard gate. Only recently was the Quantum Control Machine (QCM) with quantum control flow at its core proposed by Yuan et al.~\cite{YVC24}. 
+\label{sec:background_quantumLanguages}
+With the emergence of quantum computing, many quantum languages were introduced. Most languages focus on a lower level representation of quantum circuits. An example is the popular Open Quantum Assembly Language (QASM)\cite{CBSG17}. QASM consists mainly of quantum and classical registers that can be manipulated by predefined and composite gates. Additionally, some classical control flow is possible with if-statements depending on classical bits or measurements. As its name suggests, the language is designed for low level interactions with quantum computers and mostly a directly describing a quantum circuit. In Sec.~\ref{sec:background_qasm}, QASM is discussed in more detail. 
+
+In contrast to the low level circuit descriptions of QASM, there are also languages with a focus on high level interactions. One such language is Tower\cite{YuCa22}. It does not only allow for basic qubits and registers in superposition but also abstract data structures such as lists. Another example is the language Silq~\cite{BBGV20} which allows for the automatic and safe uncomputation of registers after they have been used for, \eg, intermediate calculations. What both languages have in common is the restriction to quantum data while using only classical control flow. 
+
+Although quantum control flow was defined by Ying et al.~\cite{YYF12}, as described in Sec.~\ref{sec:background_quantumControlFlow}, over ten years ago, only very few languages have incorporated the principle. One example is the functional programming language proposed by Altenkirch et al.~\cite{AlGr05} where quantum branching is used to define, \eg, the Hadamard gate. Only recently was the Quantum Control Machine with quantum control flow at its core proposed by Yuan et al.~\cite{YVC24}. 
 
 \subsection{Quantum Control Machine}
-\begin{itemize}
-    \item Definition of Quantum Control Machine
-    \item How does it solve/handle the limitations of quantum control flow?
-    \item Example program
-    \begin{itemize}
-        \item Example for non-reversible program
-        \item Example for reversible but not synchronous program
-        \item Example for correct program
-    \end{itemize}
-\end{itemize}
-The QCMs syntax and logic are both heavily influenced by classical assembly languages. The language consists of quantum registers, gate, swap and get-bit operations\footnote{The gate operations are limited to the Hadamard and NOT gates.}, simple numeric operations on registers, and, finally, jump instructions. The jump instructions range from simple to conditional to indirect and are used to enable quantum control flow. Although the jump instructions are based on jumps in classical computers, they are limited by two concepts quantum computers based on unitary gates must adhere to, \emph{reversibility} and \emph{synchronization}.~\cite{YVC24}
+\label{sec:background_quantumControlMachine}
+The Quantum Control Machine (QCM), proposed by Yuan et al.~\cite{YVC24}, is an instruction set architecture that does not only allow for data in superposition but also quantum control flow. The architecture is designed around the limitations of control flow in superposition. 
+
+The syntax and logic of the QCM are both heavily influenced by classical assembly languages. Similar to classical computers,
+\unsure{is similar confusing, because classical computer do not use \emph{quantum} registers}
+the language provides a finite set of quantum registers which are all initiated with $0$. The instructions of the architecture are limited to gate transformations, swap and get-bit operations, simple numeric operations on registers, and, finally, jump instructions.
+The gates are limited to the $X$ and Hadamard gate $H$. However, with the ability on quantum branching, any gate can become a controlled gate such that the $X$ gate can easily be used a the Traffoli gate. In combination with the Hadamard gate, the gate set is therefore universal, as described in Sec.~\ref{sec:background_quantumGates}.
+
+% --- rework --- 
+The jump instructions range from simple to conditional to indirect and are used to enable quantum control flow. Although the jump instructions are based on jumps in classical computers, they are limited by two concepts quantum computers based on unitary gates must adhere to, \emph{reversibility} and \emph{synchronization}.~\cite{YVC24}
 
 When quantum computers are based on unitary gates, all their operations need to be unitary and, therefore, reversible as well. This also includes jump instructions which are not reversible in classical computers. To ensure reversibility of jumps, the QCM uses a \emph{branch control register} whose value controls how much the instruction pointer of the machine advances after each instruction. The branch control register can then be manipulated reversibly by, e.g., adding or subtracting from it. The idea of a branch control register can also be found in reversible architectures for classical machines~\cite{AGY07, TAG12}.
 
@@ -38,6 +42,7 @@ While the first example is completely reversible, it does not adhere to the prin
 \end{figure}
 
 \subsection{QASM Language}
+\label{sec:background_qasm}
 \begin{itemize}
     \item Give overview of QASM language and concepts
 \end{itemize}
