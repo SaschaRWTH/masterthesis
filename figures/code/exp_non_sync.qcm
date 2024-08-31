@@ -1,8 +1,8 @@
-    add   res $1
-    add   r1  y
-l1: rjne  l3  r1  y
-l2: jz    l4  r1
-    mul   res x
-    radd  r1  $1
-l3: jmp   l1  
-l4: rjmp  l2      
+     add   res $1
+     add   r1  y
+l1:  rjne  rl1 r1  y
+rl2: jz    l2  r1
+     mul   res x
+     radd  r1  $1
+rl1: jmp   l1  
+l2:  rjmp  l2      

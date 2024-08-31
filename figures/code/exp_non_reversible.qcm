@@ -1,0 +1,7 @@
+    add   res $1
+    add   r1  y
+l1: jz    l2  r1
+    mul   res x
+    radd  r1  $1
+    jmp  l1  
+l2: nop 

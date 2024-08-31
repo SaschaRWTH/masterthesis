@@ -1,13 +1,13 @@
-    add   res $1
-    add   r1  max
-l1: rjne  l3  r1  max
-l2: jz    l4  r1
-l5: jg    l7  r1  y   
-    mul   res x
-l6: jmp   l8  
-l7: rjmp  l5
-    nop           ; padding
-l8: rjle  l6  r1  y
-    radd  r1  $1
-l3: jmp   l1
-l4: rjmp  l2
+        add   res  $1
+        add   r1   max
+l1:     rjne  rl1  r1  max
+rl2:    jz    l2   r1
+rl3:    jg    l3   r1  y   
+        mul   res  x
+rl4:    jmp   l4  
+l3:     rjmp  rl3
+        nop                 ; padding
+l4:     rjle  rl4  r1  y
+        radd  r1   $1
+rl1:    jmp   l1
+l2:     rjmp  rl2

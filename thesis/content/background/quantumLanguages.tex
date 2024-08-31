@@ -12,33 +12,65 @@ The Quantum Control Machine (QCM), proposed by Yuan et al.~\cite{YVC24}, is an i
 
 The syntax and logic of the QCM are both heavily influenced by classical assembly languages. Similar to classical computers,
 \unsure{is similar confusing, because classical computer do not use \emph{quantum} registers}
-the language provides a finite set of quantum registers which are all initiated with $0$. The instructions of the architecture are limited to gate transformations, swap and get-bit operations, simple numeric operations on registers, and, finally, jump instructions.
-The gates are limited to the $X$ and Hadamard gate $H$. However, with the ability on quantum branching, any gate can become a controlled gate such that the $X$ gate can easily be used a the Traffoli gate. In combination with the Hadamard gate, the gate set is therefore universal, as described in Sec.~\ref{sec:background_quantumGates}.
+the language provides a finite set of quantum registers which are all initiated with $0$. The instruction set of the architecture does not only provide limited gate transformations and swap operations but also more classical operations on registers such as get-bit operations and simple arithmetical operations like addition and multiplication. However, what makes the QCM stand out are the jump instructions that enabled quantum control flow.
 
-% --- rework --- 
-The jump instructions range from simple to conditional to indirect and are used to enable quantum control flow. Although the jump instructions are based on jumps in classical computers, they are limited by two concepts quantum computers based on unitary gates must adhere to, \emph{reversibility} and \emph{synchronization}.~\cite{YVC24}
+The gates of the architecture are limited to the $X$ and Hadamard gate $H$. However, since the QCM machine provides  the ability on quantum branching, any gate can become a controlled gate such that the $X$ gate can easily be used in combination with quantum branching to create a Traffoli gate. Together with the Hadamard gate, the gate set is therefore universal, as described in Sec.~\ref{sec:background_quantumGates}.
 
-When quantum computers are based on unitary gates, all their operations need to be unitary and, therefore, reversible as well. This also includes jump instructions which are not reversible in classical computers. To ensure reversibility of jumps, the QCM uses a \emph{branch control register} whose value controls how much the instruction pointer of the machine advances after each instruction. The branch control register can then be manipulated reversibly by, e.g., adding or subtracting from it. The idea of a branch control register can also be found in reversible architectures for classical machines~\cite{AGY07, TAG12}.
+There are three kinds of jump instructions. The first is a simple jump based on a given offset, the second is a conditional jump that performs a basic jump when a given register is $0$, and, lastly, an indirect jump which is based on the value of a given register. Although the jump instructions are based on jumps in classical computers, they are limited by the restriction of unitary gates and must adhere to \emph{reversibility} and \emph{synchronization}~\cite{YVC24}, as described in Sec.~\ref{sec:background_quantumControlFlow}. An overview of some QCM instructions is depicted in Tab.~\ref{tab:qcm_instructionset}.
 
-Although such a program counter addresses the issue of reversibility, it can become entangled with data registers when in superposition. This can lead to disruptive entanglement where the output of the program becomes invalid~\cite{YVC24}. To prevent any disruptive entanglement of the data and control registers, the QCM adheres to the principle of synchronization. 
-It requires that the control flow is separated from the data at the end of execution. 
-Examples where synchronization comes into play are given in Fig.~\ref{fig:qcm_not_sync} and Fig.~\ref{fig:qcm_sync} where $x^y$ and $x^{\texttt{min}\{y, max\}}$ are calculated respectively. 
-While the first example is completely reversible, it does not adhere to the principle of synchronization. Given two different inputs, the loop will be executed a different number of times. This means that after the faster of the two programs completed the loop, the program counter of the slower one cannot catch up. To prevent this issue, the second program uses padding which is executed instead of the main loop. \thiswillnotshow{Should this be explained in more detail? It is a very superficial explanation}
+\begin{table}[htp]
+    \centering
+    \begin{tabular}{llp{.5\textwidth}}
+        \multicolumn{1}{l|}{Operation}                          & \multicolumn{1}{l|}{Syntax}                                      & Semantics                                                              \\ \hline
+        
+        \multicolumn{1}{l|}{No-op}                              & \multicolumn{1}{l|}{\texttt{nop}}               & Only increases instruction pointer by the branch control register.     \\ \hline
+        
+        \multicolumn{1}{l|}{Addition}                           & \multicolumn{1}{l|}{\texttt{add} $ra$ $rb$}     & Adds register $rb$ to $rb$.                                            \\
+        \multicolumn{1}{l|}{Multiplication}                     & \multicolumn{1}{l|}{\texttt{mul} $ra$ $rb$}     & Multiplies register $ra$ by $rb$.                                      \\ \hline
+        
+        \multicolumn{1}{l|}{Jump}                               & \multicolumn{1}{l|}{\texttt{jmp} $p$}           & Increases branch control register by $p$.                              \\
+        \multicolumn{1}{l|}{\multirow{2}{*}{Conditional Jumps}} & \multicolumn{1}{l|}{\texttt{jz} $p$ $ra$}       & Increases branch control register by $p$ if $ra$ is $0$.               \\
+        \multicolumn{1}{l|}{}                                   & \multicolumn{1}{l|}{\texttt{jne} $p$ $ra$ $rb$} & Increases branch control register by $p$ if $ra$ is not equal to $rb$. \\ \hline
+        
+        \multicolumn{3}{p{.9\textwidth}}{\small Note: After all operations, the instruction pointer is increased by the value of the branch control register.}                                                                  
+    \end{tabular}
+    \caption{An excerpt of the QCM instruction set with instructions used in later examples.}
+    \label{tab:qcm_instructionset}
+\end{table}
+
+When quantum computers are based on unitary gates, all their operations need to be unitary and, therefore, reversible as well. This limits quantum jump instructions and prohibits them to work like their classical equivalent. However, the problem of a reversible architecture and instruction set is not unique to quantum computers but was also discussed\unsure{other word?} for, \eg, energy efficient classical computers~\cite{AGY07, TAG12}. 
+To enable reversible jumps, the QCM adapts the \emph{branch control register} from the reversible Bob architecture~\cite{TAG12}. Instead of directly changing the instruction pointer of the machine, the branch control register specifies how much the instruction pointer advances after each instruction.
+
+The branch control register can then be manipulated reversibly by, \eg, adding or subtracting from it. To jump by a given $distance$, the branch control register needs to be increased by $distance$. However, after the instruction pointer has reached the desired location, the register needs to be decreased by $distance$. Otherwise, the pointer would continue to jump in increments of $distance$ and any further jumps, \ie increases to the register, would not jump to the correct location. Because the jump instructions are defined to be reversible, the instruction set also includes a reserve jump instruction which instead decreases the branch control register by a given offset. Therefore, a jump instruction always requires a reverse jump instruction to reset the program counter. Similarly, other operations can also be represented as the reverse operation of an existing one. For example, subtraction can be implemented as reverse addition. Further, to make the code easier to read and write, the QCM also allows for named labels, which can be used for jump instructions instead of offsets. The offset to the given label can then be computed at compile time. 
+
+An example of a classical program and the reversible equivalent can be seen in Fig.~\ref{fig:qcm_not_reverse} and Fig.~\ref{fig:qcm_reverse} respectively. Both program calculate $x^y$ for two registers $x$ and $y$. While the first example has classical jumps that are not reversible, the second example uses reversible jump instructions and their reverse counterpart to create a reversible algorithm.
 
 \begin{figure}[htp]
     \centering     
     \begin{minipage}{.40\textwidth}
-        \vspace{7.5em}
-        \lstinputlisting[linewidth=17em,style=QCM]{../figures/code/exp_non_sync.qcm}
-        \caption{QCM exponentiation without synchronization}
-        \label{fig:qcm_not_sync}
+        \lstinputlisting[style=QCM]{../figures/code/exp_non_reversible.qcm}
+        \caption{A non-reversible exponentiation algorithm.}
+        \label{fig:qcm_not_reverse}
     \end{minipage}
     \hfill
-    \begin{minipage}{.55\textwidth}
-        \lstinputlisting[linewidth=23em,style=QCM]{../figures/code/exp_sync.qcm}
-        \caption{Synchronized QCM exponentiation}    
-        \label{fig:qcm_sync}
+    \begin{minipage}{.50\textwidth}
+        \lstinputlisting[style=QCM]{../figures/code/exp_non_sync.qcm}
+        \caption{Reversible exponentiation algorithm.}    
+        \label{fig:qcm_reverse}
     \end{minipage}
+\end{figure}
+
+Although such a program counter addresses the issue of reversibility, it can become entangled with data registers when in superposition. This can lead to disruptive entanglement where the output of the program becomes invalid~\cite{YVC24}. To prevent any disruptive entanglement of the data and control registers, QCM programs must adhere to the principle of synchronization, as described in Sec.~\ref{sec:background_quantumControlFlow}. 
+It requires that the control flow is separated from the data at the end of execution. However, this is not the case for the reversible example program in Fig.~\ref{fig:qcm_reverse} which, therefore, is not a valid QCM program.
+
+The issue that the loop in the reversible example encounters is the \emph{tortoise and hare} problem. Given a superposition of two different values $a$ and $b$ in the $y$ register, the loop will execute $a$ and $b$ times.Therefore, the one of the two loops will finish before the other. Since we must adhere to synchronization, the instruction pointer needs to become independent of the two values again. However, because the branch with the faster execution of the loop cannot simple wait, the other branch cannot catch up and the instruction pointer cannot become independent of the data values. 
+To prevent this issue, the program must include padding operations which are executed instead of the main loop. Furthermore, the loop also needs to be bounded by a classical value, as described in Sec.~\ref{sec:background_controlflow_synchronization}. The results in an algorithms, as depicted in Fig.~\ref{fig:qcm_sync}, that calculates $x^{\min{(y, max)}}$.
+
+\begin{figure}[htp]
+    \centering     
+    \lstinputlisting[style=QCM]{../figures/code/exp_sync.qcm}
+    \caption{A synchronized, reversible exponentiation algorithm.}
+    \label{fig:qcm_sync}
 \end{figure}
 
 \subsection{QASM Language}
