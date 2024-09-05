@@ -1,0 +1,42 @@
+\section{Language Overview}
+\begin{itemize}
+    \item Given an overview of the different feature of the language\
+    \item How do they work and what is the reason for implementing them
+    \item Why are some feature (\eg implicit iteration) \emph{not} implemented
+\end{itemize}
+
+\subsection{Blocks and Scopes}
+\begin{itemize}
+    \item Basic structure of Luie
+    \item Consists of blocks and statements
+    \item One main block
+    \item Symbol table that handles scopes
+    \item All blocks have scope 
+\end{itemize}
+
+\subsection{Data Types}
+\begin{itemize}
+    \item Different data types
+    \begin{itemize}
+        \item Register
+        \item Qubits (Registers with size 1)
+        \item Iterators, in more detail in Sec.~\ref{sec:control_flow}
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{Gate Application}
+
+\subsection{Control Flow}
+\label{sec:control_flow}
+
+\subsection{Expressions}
+\begin{itemize}
+    \item Consists of expressions, terms and factors
+    \begin{itemize}
+        \item Expressions consist of expression, operator, and term or just a term
+        \item Term consists of term, operator, and factor or just a factor
+        \item Factor consists of expression in parentheses, a negated factor, number, identifier or function call
+    \end{itemize}
+    \item Inherent order of operations
+\end{itemize}

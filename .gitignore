@@ -7,3 +7,5 @@
 *.toc
 
 *.synctex(busy)
+
+*thesis.lof

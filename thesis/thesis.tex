@@ -1,10 +1,6 @@
-\documentclass[a4paper,BCOR5mm,11pt,pointlessnumbers,openany]{scrbook}
-
-\usepackage{etoolbox}
-\makeatletter
-\patchcmd{\scr@startchapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
-\makeatother
+\documentclass[a4paper,BCOR5mm,11pt,pointlessnumbers,twoside,openany]{scrbook}
 \input{../preamble/preamble}
+
 \begin{document}
 	\frontmatter
 
@@ -22,6 +18,8 @@
 	\input{content/4_implementation}
 	\input{content/5_conclusion.tex}
 	\input{../bibliography/bibliography}
+	
+	\listoffigures
 	\input{content/appendix}
 	\backmatter{}
 \end{document}
