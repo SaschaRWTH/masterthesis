@@ -149,18 +149,34 @@
     keywordstyle={\color{blue}},%                         and format them in black
 }
 
-\lstdefinestyle{QASM}{
-    breaklines=true,%                                      allow line breaks
-    moredelim=[s][\color{green!50!black}\ttfamily]{"}{"},% single quotes in green
-    moredelim=*[s][\color{black}\ttfamily]{options}{\}},%  options in black (until trailing })
-    commentstyle={\color{gray}\itshape},%                  gray italics for comments
-    morecomment=[l]{;},%                                  define // comment
-    emph={%
-		l1, l2, l3, l4, l5, l6, l7, l8, 
-		rl1, rl2, rl3, rl4, rl5, rl6, rl7, rl8%                                         literal strings listed here
-        },emphstyle={\color{red}\ttfamily},%              and formatted in blue
-    morekeywords={qubit, bit},%                                 define the special characters
-    keywordstyle={\color{blue}},%                         and format them in black
+\lstdefinestyle{QASM}{                 
+	basicstyle=\footnotesize\ttfamily,       % Basic font style
+	numbers=left,                            % Line numbers on the left
+	numberstyle=\tiny,                       % Style of line numbers
+	numbersep=5pt,                           % Distance of line numbers from code
+	tabsize=2,                               % Tab size
+	extendedchars=true,                      % Allow extended characters
+	breaklines=true,                         % Break long lines
+	frame=tlrb,                              % Frame around the listing
+	stringstyle=\color{blue}\ttfamily,       % Style for strings
+	showspaces=false,                        % Do not show spaces
+	showtabs=false,                          % Do not show tabs
+	framexleftmargin=17pt,                   % Extra margin on the left
+	framexrightmargin=5pt,                   % Extra margin on the right
+	framexbottommargin=4pt,                  % Extra margin at the bottom
+	xleftmargin=.05\textwidth,                % Left margin
+	xrightmargin=.05\textwidth,               % Right margin
+	commentstyle=\color{green},              % Style for comments
+	morecomment=[l]{//},                     % Line comment style
+	morecomment=[s]{/*}{*/},                 % Multiline comment style
+	showstringspaces=false,                  % Do not mark string spaces
+	morekeywords={qreg, creg, gate, measure, reset, barrier,                 % QASM 2.0 keywords
+				if, cx, u3, u2, u1, h, x, y, z, s, sdg, t, tdg, rx, ry, rz, % Quantum gates
+				input, output, bit, bool, const, int, uint, float, angle, duration, 
+				qubit, array, int, stretch, qubit, uint, box, ctrl, negctrl, 
+				return, for, while, end, break, continue, do, def, kernel, 
+				const, stretch, delay, gate, qubit, measure, measure_all},  % OpenQASM 3 new keywords
+	keywordstyle=\color{cyan},               % Style for quantum keywords
 }
 
 

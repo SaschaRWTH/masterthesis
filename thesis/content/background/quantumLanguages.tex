@@ -81,7 +81,9 @@ Both languages are imperative and machine independent quantum languages. They ar
 
 OpenQASM 3 requires the header to indicate the language in the circuit header for any top-level circuit. This is achieve by adding \texttt{"OpenQASM 3.0";} to the beginning. Additionally, the language supports the inclusion of other source files which can be include with the \texttt{include} keyword.
 
-Similar to other quantum languages, OpenQASM 3 operates in 2 basic data types. The first is the classical bit while the second is the qubit. Both primitives can also be used in registers with a fixed size. In contrast to its predecessor where any identifiers have to start with a lowercase letter, in OpenQASM 3, identifiers can start with a range of unicode characters with some exception. 
+Similar to other quantum languages, OpenQASM 3 operates in 2 basic data types. The first is the classical bit while the second is the qubit. Both primitives can also be used in registers with a fixed size.
+\change{add info about more complex classical data types in 3.} 
+In contrast to its predecessor where any identifiers have to start with a lowercase letter, in OpenQASM 3, identifiers can start with a range of unicode characters with some exception. 
 
 The basic operations of the language can be divided into unitary and non-unitary operations. The most basic unitary operation is the unitary $U(a,b,c)$ where $a,b,c$ are angular parameters.
 \change{Both sentences start almost the same.} 
@@ -89,13 +91,14 @@ While OpenQASM 2 supported a controlled-NOT gate natively, the successor require
 
 The programmer can not only use the operations and modifiers provided by OpenQASM 3 but can also define custom gates. These user-defined gate are defined with an identifier for the gate and a fixed number of single qubit arguments and angular parameters. In the body of the gate definition, the user can apply a sequence of gates to the qubit arguments with the given angular parameters. Additionally, the language also provides implicit iteration. This means the application of a single qubit gate to a quantum register will be interpreted as separate applications of the gate to all qubits in the register.
 
-In Fig.~\ref{fig:qasm_example}, a circuit written in OpenQASM 3 is depicted. The circuit ...
 \begin{figure}[htp]
     \centering     
     \lstinputlisting[style=QASM]{../figures/code/example_circuit.qasm}
     \caption{Code for an OpenQASM 3 example circuit.}
     \label{fig:qasm_example}
 \end{figure}
+
+In Fig.~\ref{fig:qasm_example}, a example circuit, written in OpenQASM 3, is depicted. The circuits takes two qubits, brings them into an entangled superposition, measures their state and saves the result to a classical register. In the beginning of the circuit definition, the circuit header indicates the language and the $X$, $CX$, and $H$ gate are defined based on the predefined unitary $U$. Then, the quantum and classical register, both with a size of 2, are defined. Next, the Hadamard gate $H$ is applied to the first qubit in the quantum register followed with the application of a controlled-NOT gate to both qubits. Lastly, the state of both qubits is measure and the result is saved to the classical bits.
 
 
 % QASM consists mainly of quantum and classical registers that can be manipulated by predefined and composite gates. Additionally, some classical control flow is possible with if-statements depending on classical bits or measurements. As its name suggests, the language is designed for low level interactions with quantum computers and mostly a directly describing a quantum circuit. In Sec.~\ref{sec:background_qasm}, QASM is discussed in more detail
