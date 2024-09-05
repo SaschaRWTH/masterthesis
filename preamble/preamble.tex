@@ -19,7 +19,7 @@
 \usepackage{caption}
 \usepackage{epstopdf}
 \usepackage{svg}
-\usepackage{subfig}
+% \usepackage{subfig}
 \usepackage{fp}
 \usepackage{mathtools}
 \usepackage{longtable}
@@ -45,7 +45,7 @@
 
 \addtolength{\evensidemargin}{-7mm}\addtolength{\oddsidemargin}{7mm}
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
-\captionsetup[subfloat]{font=scriptsize, labelformat=parens, labelsep=space, listofformat=subparens}
+% \captionsetup[subfloat]{font=scriptsize, labelformat=parens, labelsep=space, listofformat=subparens}
 
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
@@ -146,6 +146,20 @@
         },emphstyle={\color{red}\ttfamily},%              and formatted in blue
     alsoletter={|,;},%
     morekeywords={add, rjne, jz, jg, mul, jmp, rjmp, nop, rjle, radd},%                                 define the special characters
+    keywordstyle={\color{blue}},%                         and format them in black
+}
+
+\lstdefinestyle{QASM}{
+    breaklines=true,%                                      allow line breaks
+    moredelim=[s][\color{green!50!black}\ttfamily]{"}{"},% single quotes in green
+    moredelim=*[s][\color{black}\ttfamily]{options}{\}},%  options in black (until trailing })
+    commentstyle={\color{gray}\itshape},%                  gray italics for comments
+    morecomment=[l]{;},%                                  define // comment
+    emph={%
+		l1, l2, l3, l4, l5, l6, l7, l8, 
+		rl1, rl2, rl3, rl4, rl5, rl6, rl7, rl8%                                         literal strings listed here
+        },emphstyle={\color{red}\ttfamily},%              and formatted in blue
+    morekeywords={qubit, bit},%                                 define the special characters
     keywordstyle={\color{blue}},%                         and format them in black
 }
 

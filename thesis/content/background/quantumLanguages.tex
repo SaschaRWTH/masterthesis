@@ -1,8 +1,8 @@
 \section{Quantum Languages}
 \label{sec:background_quantumLanguages}
-With the emergence of quantum computing, many quantum languages were introduced. Most languages focus on a lower level representation of quantum circuits. An example is the popular Open Quantum Assembly Language (QASM)\cite{CBSG17}. QASM consists mainly of quantum and classical registers that can be manipulated by predefined and composite gates. Additionally, some classical control flow is possible with if-statements depending on classical bits or measurements. As its name suggests, the language is designed for low level interactions with quantum computers and mostly a directly describing a quantum circuit. In Sec.~\ref{sec:background_qasm}, QASM is discussed in more detail. 
+With the emergence of quantum computing, many quantum languages were introduced. Most languages focus on a lower level representation of quantum circuits. An example is the popular Open Quantum Assembly Language (OpenQASM)\cite{CBSG17}. OpenQASM consists mainly of quantum and classical registers that can be manipulated by predefined and composite gates. Additionally, some classical control flow is possible with if-statements depending on classical bits or measurements. As its name suggests, the language is designed for low level interactions with quantum computers and mostly a directly describing a quantum circuit. In Sec.~\ref{sec:background_qasm}, OpenQASM is discussed in more detail. 
 
-In contrast to the low level circuit descriptions of QASM, there are also languages with a focus on high level interactions. One such language is Tower\cite{YuCa22}. It does not only allow for basic qubits and registers in superposition but also abstract data structures such as lists. Another example is the language Silq~\cite{BBGV20} which allows for the automatic and safe uncomputation of registers after they have been used for, \eg, intermediate calculations. What both languages have in common is the restriction to quantum data while using only classical control flow. 
+In contrast to the low level circuit descriptions of OpenQASM, there are also languages with a focus on high level interactions. One such language is Tower\cite{YuCa22}. It does not only allow for basic qubits and registers in superposition but also abstract data structures such as lists. Another example is the language Silq~\cite{BBGV20} which allows for the automatic and safe uncomputation of registers after they have been used for, \eg, intermediate calculations. What both languages have in common is the restriction to quantum data while using only classical control flow. 
 
 Although quantum control flow was defined by Ying et al.~\cite{YYF12}, as described in Sec.~\ref{sec:background_quantumControlFlow}, over ten years ago, only very few languages have incorporated the principle. One example is the functional programming language proposed by Altenkirch et al.~\cite{AlGr05} where quantum branching is used to define, \eg, the Hadamard gate. Only recently was the Quantum Control Machine with quantum control flow at its core proposed by Yuan et al.~\cite{YVC24}. 
 
@@ -63,8 +63,8 @@ An example of a classical program and the reversible equivalent can be seen in F
 Although such a program counter addresses the issue of reversibility, it can become entangled with data registers when in superposition. This can lead to disruptive entanglement where the output of the program becomes invalid~\cite{YVC24}. To prevent any disruptive entanglement of the data and control registers, QCM programs must adhere to the principle of synchronization, as described in Sec.~\ref{sec:background_quantumControlFlow}. 
 It requires that the control flow is separated from the data at the end of execution. However, this is not the case for the reversible example program in Fig.~\ref{fig:qcm_reverse} which, therefore, is not a valid QCM program.
 
-The issue that the loop in the reversible example encounters is the \emph{tortoise and hare} problem. Given a superposition of two different values $a$ and $b$ in the $y$ register, the loop will execute $a$ and $b$ times.Therefore, the one of the two loops will finish before the other. Since we must adhere to synchronization, the instruction pointer needs to become independent of the two values again. However, because the branch with the faster execution of the loop cannot simple wait, the other branch cannot catch up and the instruction pointer cannot become independent of the data values. 
-To prevent this issue, the program must include padding operations which are executed instead of the main loop. Furthermore, the loop also needs to be bounded by a classical value, as described in Sec.~\ref{sec:background_controlflow_synchronization}. The results in an algorithms, as depicted in Fig.~\ref{fig:qcm_sync}, that calculates $x^{\min{(y, max)}}$.
+The issue that the loop in the reversible example encounters is the \emph{tortoise and hare} problem. Given a superposition of two different values $a$ and $b$ in the $y$ register, the loop will execute $a$ and $b$ times respectively.Therefore, the one of the two loops will finish before the other. Since we must adhere to synchronization, the instruction pointer needs to become independent of the two values again. However, because the branch with the faster execution of the loop cannot simple wait, the other branch cannot catch up and the instruction pointer cannot become independent of the data values. Consequently, the program does not adhere to synchronization. 
+To prevent this issue, the program must include padding operations which are executed instead of the main loop. Furthermore, the loop also needs to be bounded by a classical value, as described in Sec.~\ref{sec:background_controlflow_synchronization}. The results in an algorithms, as depicted in Fig.~\ref{fig:qcm_sync}, that calculates $x^{\min{(y, max)}}$. Here, $max$ is a classical bound to the number of loop iterations, as required.
 
 \begin{figure}[htp]
     \centering     
@@ -73,8 +73,29 @@ To prevent this issue, the program must include padding operations which are exe
     \label{fig:qcm_sync}
 \end{figure}
 
-\subsection{QASM Language}
+\subsection{OpenQASM Language}
 \label{sec:background_qasm}
-\begin{itemize}
-    \item Give overview of QASM language and concepts
-\end{itemize}
+The Open Quantum Assembly Language (OpenQASM) 3~\cite{CJA*22} is the successor of the OpenQASM 2~\cite{CBSG17} language.
+\unsure{include link to QASM repository?} 
+Both languages are imperative and machine independent quantum languages. They are low level quantum languages and, thereby, concretely describe a quantum algorithm in the form of a circuit. OpenQASM 2 developed into a de facto standard and is often used as an intermediate for different quantum tools~\cite{CJA*22}. OpenQASM 3 was developed to fit the changing needs of current quantum research and hardware while being mostly backwards compatible except for some uncommon cases. For example, some keywords were added of changed for the successor such that identifiers of OpenQASM 2 circuits by be invalid in the successor language. Sine OpenQASM 3 is the new and improved standard, we will focus on its features in the following.
+
+OpenQASM 3 requires the header to indicate the language in the circuit header for any top-level circuit. This is achieve by adding \texttt{"OpenQASM 3.0";} to the beginning. Additionally, the language supports the inclusion of other source files which can be include with the \texttt{include} keyword.
+
+Similar to other quantum languages, OpenQASM 3 operates in 2 basic data types. The first is the classical bit while the second is the qubit. Both primitives can also be used in registers with a fixed size. In contrast to its predecessor where any identifiers have to start with a lowercase letter, in OpenQASM 3, identifiers can start with a range of unicode characters with some exception. 
+
+The basic operations of the language can be divided into unitary and non-unitary operations. The most basic unitary operation is the unitary $U(a,b,c)$ where $a,b,c$ are angular parameters.
+\change{Both sentences start almost the same.} 
+While OpenQASM 2 supported a controlled-NOT gate natively, the successor requires the gate to be defined with, \eg, the NOT gate and a control modifier. The control modifier can be used to turn any arbitrary unitary gate into a controlled gate with an arbitrary number of control qubits. Therefore, the formally predefined gate $CX$ must now be defined by the programmer of represented by a NOT gate with a control modifier, \eg \texttt{ctrl @ x}. Lastly, the non-unitary operations are \texttt{measure} and \texttt{reset}. While the \texttt{measure} operation measures the state of a qubit and saves it to a classical bit, the \texttt{reset} operation discards the value of a qubit and replaces it with the $\ket{0}$ state.
+
+The programmer can not only use the operations and modifiers provided by OpenQASM 3 but can also define custom gates. These user-defined gate are defined with an identifier for the gate and a fixed number of single qubit arguments and angular parameters. In the body of the gate definition, the user can apply a sequence of gates to the qubit arguments with the given angular parameters. Additionally, the language also provides implicit iteration. This means the application of a single qubit gate to a quantum register will be interpreted as separate applications of the gate to all qubits in the register.
+
+In Fig.~\ref{fig:qasm_example}, a circuit written in OpenQASM 3 is depicted. The circuit ...
+\begin{figure}[htp]
+    \centering     
+    \lstinputlisting[style=QASM]{../figures/code/example_circuit.qasm}
+    \caption{Code for an OpenQASM 3 example circuit.}
+    \label{fig:qasm_example}
+\end{figure}
+
+
+% QASM consists mainly of quantum and classical registers that can be manipulated by predefined and composite gates. Additionally, some classical control flow is possible with if-statements depending on classical bits or measurements. As its name suggests, the language is designed for low level interactions with quantum computers and mostly a directly describing a quantum circuit. In Sec.~\ref{sec:background_qasm}, QASM is discussed in more detail
