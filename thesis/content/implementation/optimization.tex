@@ -1,12 +1,51 @@
 \section{Optimization}
-\subsection{Constant folding}
+The implementation of the compiler does not only translate the custom language to OpenQASM 3 but
+%also implements inherit optimizations on the program
+and allows for optimization on the translated circuit. 
+To apply the optimization to the translated circuit, the circuit description, \ie the program, is used to build a circuit graph, as described in Sec.~\ref{sec:concept_circuitGraph}. Next, an algorithm iterates over the graph and checks whether a list of optimization rules is applicable to a part of the graph. If a rule is applicable, the rule is applied. The process of iterating over the entire graph is repeated for as long as rules where applied in the previous iteration over the graph. When the optimization of the circuit is completed, the graph is translated back to a programmatic description of the circuit and the result is returned.
+
+In the following, we will discuss the implementation of the different steps in the optimization process. This includes the circuit graph in general, the construction of the graph based on the program, and the translation of the graph back to a circuit. Further, we discuss the implementation of the optimization rules and the optimization algorithm in  general.
+
+\subsection{Circuit Graph}
 \begin{itemize}
-    \item Inherent in the language
-    \item All variables known at compile time
-    \item Any expression is evaluated at compile time
+    \item Basic structure of circuit
+    \item Graph construction
+    \item Graph translation
+    \item Some auxillary constructs ands functions
+    \begin{itemize}
+        \item Paths
+        \item Removal of nodes
+        \item replacing paths
+    \end{itemize} 
 \end{itemize}
-\subsection{Peephole optimization}
+
+Graph construction
+
+Graph translation
 \begin{itemize}
-    \item Not implemented, but planed
-    \item Replace sequences of gates with more efficient ones
+    \item Important attributes
+    \begin{itemize}
+        \item Gates applied in correct order
+        \item But when to apply which gate?
+        \item In many cases arbitrary (example) 
+    \end{itemize}
+    \item Eager translation
+    \begin{itemize}
+        \item Translate each wire as much as possible
+        \item Switch to other wire only if entirely translated 
+        \item or node can only be translated if other wire is translated first (up to the node) 
+    \end{itemize}
+\end{itemize} 
+
+\subsection{Optimization Rules}
+\begin{itemize}
+    \item Rule interface
+    \item Abstract optimization rule
+    \item Describe the different optimization and the general implementation
+\end{itemize}
+
+\subsection{Optimization Algorithm}
+\begin{itemize}
+    \item How is the graph iterated\
+    \item How are sub-paths used and created
 \end{itemize}
