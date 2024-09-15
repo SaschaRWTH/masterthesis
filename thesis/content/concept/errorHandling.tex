@@ -1,0 +1,13 @@
+\section{Error Handling}
+Generally, an important part of a program is error handling; useful and precise error messages are essential for comfortable interactions with the program. This is especially the case for compilers where the user should not only easily understand what the issue is but also where in the source code the error occurred.  
+
+Our compiler has two types of errors with different severity. The first type is the warning. A warning from the compiler can indicate issues in the source code that may cause unintended behavior. However, the issues itself does not prevent the compilation of the program and is simply an indication that there my be something wrong. In contrast, the critical error is cause by a flaw in the source program that prevents the correct compilation. In the following, we will discuss the different warnings and critical errors, the compiler my raise and what their meaning is.
+
+\subsection{Warnings}
+The compiler can throw two different kinds of warnings. The first is the invalid range warning and the second is the unused symbol warning.
+
+The invalid range warning can be raised in the context of for loops\todo{add}
+
+The unused symbol warning is raised when a symbol, \eg a register of composite gate, is defined in the source code but never used. The unused symbol does not have any negative effect on the compilation and the optimization step can easily remove, \eg, an unused register. Therefore, this is only a warning and the program an be compiled. However, an unused symbol may indicate, that the wrong symbol was used somewhere else or part of the program is no longer used, hence, warning the user of the unused symbol may prevent untended behavior.
+
+\subsection{Critical Errors}
