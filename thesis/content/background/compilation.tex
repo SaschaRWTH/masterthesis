@@ -13,6 +13,13 @@ After being divided into a sequence of tokens, the screening step drops any char
 These may include characters such as spaces and tabs, or white space in general, and character sequences such as comments. 
 Further, is may also recognize additional special symbols, such as keywords, and map them to a designated token~\cite{DeRe74}.\improvement{example for regular expression (simple tokens)}
 
+\begin{figure}[htp]
+    \centering
+    \lstinputlisting[style=ANTLR]{../figures/code/example_lexer.g4}
+    \caption{An example of a regular grammar for the lexical analysis.}
+    \label{fig:example_lexer}
+\end{figure}
+
 \subsection{Parser}
 The lexical analysis of the compiler yields a sequence of token with a known meaning the structure of the program, however, is not apparent in the token sequence. For example, an operator token does not indicate which which other tokens it operates on. To gain knowledge of the structure of the program, the parser step of the compiler analyzes the syntactic structure of the source program and creates a parse tree from it. 
 \improvement{Lots of ``of''s}
