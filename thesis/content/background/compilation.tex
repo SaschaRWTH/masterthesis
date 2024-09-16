@@ -3,7 +3,7 @@ The execution on a computer is controlled by a program. This program is written 
 
 A compiler translates a program written in a source language to a program in a target language. The compilation process can be divided into multiple steps. The first step ist the \emph{lexical analysis} of the source code. Next, the source codes syntactic structure is analyzed be the \emph{parser}. Then, the code is \emph{semantically analyzed} and the target code is generated in the \emph{code generation} step. Lastly, the compiler may \emph{optimize} the target code~\cite{Oliv07}. In the following, we be discuss the different steps of a compiler individually.
 
-\subsection{Lexical Analysis}
+\subsection{Lexer (Lexical Analysis)}
 The lexical analysis of the source program takes the character stream and groups together associated characters producing a sequence of tokens~\cite{Oliv07}. Therefore, the step is also referred to as \emph{tokenization}~\cite{Gref99}. The process can be divided into the \emph{scanning} and \emph{screening} of the character and token sequence~\cite{DeRe74}.
 
 The scanning process groups together substrings into textual elements, or tokens. In contrast to the characters and substrings, these tokens have defined meanings and may have additional attributes. For example, they may include identifiers, operator, comments, and spaces. In the case of the identifier token, an additional attribute could be the string value of the identifier. They can be specified with the help of a regular grammar or regular expression~\cite{DeRe74,VSSD07}.\unsure{\cite{VSSD07} is extensive book, cite specific chapter somehow?}  
@@ -23,13 +23,21 @@ The integer can either be an arbitrary sequence of characters between zero and n
     \label{fig:example_lexer}
 \end{figure}
 
-\subsection{Parser}
-The lexical analysis of the compiler yields a sequence of token with a known meaning the structure of the program, however, is not apparent in the token sequence. For example, an operator token does not indicate which which other tokens it operates on. To gain knowledge of the structure of the program, the parser step of the compiler analyzes the syntactic structure of the source program and creates a parse tree from it. 
-\improvement{Lots of ``of''s}
-The compiler can then use the tree by, \eg, walking over it to generate the target code. This step should also detect and report any syntactical errors, \eg a missing closing parentheses~\cite{VSSD07}.
+\subsection{Parser (Syntax Analysis)}
+The lexical analysis of the compiler yields a sequence of token with a known meaning; the structure of the program, however, is not apparent in the token sequence. For example, an operator-token does not indicate what the operands are. To gain knowledge of the structure of the program, the parser step analyzes the syntactic structure of the source program and creates a parse tree from it. The compiler can then use the tree by, \eg, walking over it to generate the target code. This step should also detect and report any syntactical errors, like a missing closing parentheses~\cite{VSSD07}.
 
-The syntactic structure of a program can be represented by a context-free grammar.
-\improvement{example of grammar}
+While the lexical analysis can be achieved with a regular expression, the syntactic structure of a program is represented by a context-free grammar. There exists two main kinds of parsing a grammar, either top-down or bottom-up.
+Top-down parsing creates a parse tree based on an input sequence of tokens starting from the root and creating the nodes in a depth-first approach. In contrast, bottom-up parsing builds the parse tree from the leaves up to the root~\cite{VSSD07}.\improvement{Add short description of recursive descrent parsing -> lookahead and $LL(k)$ grammars \& LR grammar}
+
+An example grammar for parsing simple integer expressions is depicted in Fig.~\ref{fig:example_parser}. Similar to the regular expressions in Fig.~\ref{fig:example_lexer}, the grammar is given in ANTLR syntax. An expression is either the sum of another expression and a term or just a term. In turn, a term is either the product of a term and a factor or just a factor. Lastly, a factor is either an expression in parenthesis or an integer. Here, the definition of an integer is omitted. However, it can be seen in the previous example. The grammar is defined such that a generated parse tree inherently adheres to the order of operations.
+
+\begin{figure}[htp]
+    \centering
+    \lstinputlisting[style=ANTLR]{../figures/code/example_parser.g4}
+    \caption{An example of a context-free grammar for parsing simple expressions.}
+    \label{fig:example_parser}
+\end{figure}
+
 
 \subsection{Semantic Analysis}
 While the syntactic analysis is accomplished by context-free grammars, an analysis of the program including context is practical to semantic errors, \eg the use of undefined variables. \dots
