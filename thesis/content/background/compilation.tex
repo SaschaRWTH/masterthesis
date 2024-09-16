@@ -4,14 +4,17 @@ The execution on a computer is controlled by a program. This program is written 
 A compiler translates a program written in a source language to a program in a target language. The compilation process can be divided into multiple steps. The first step ist the \emph{lexical analysis} of the source code. Next, the source codes syntactic structure is analyzed be the \emph{parser}. Then, the code is \emph{semantically analyzed} and the target code is generated in the \emph{code generation} step. Lastly, the compiler may \emph{optimize} the target code~\cite{Oliv07}. In the following, we be discuss the different steps of a compiler individually.
 
 \subsection{Lexical Analysis}
-The lexical analysis of the source program takes the character stream and groups together associated characters producing a sequence of tokens~\cite{Oliv07}. Therefore, the step is also referred to as \emph{tokenization}~\cite{Gref99}. The process can be divided into the \emph{scanning} and \emph{screening} of the program~\cite{DeRe74}.
+The lexical analysis of the source program takes the character stream and groups together associated characters producing a sequence of tokens~\cite{Oliv07}. Therefore, the step is also referred to as \emph{tokenization}~\cite{Gref99}. The process can be divided into the \emph{scanning} and \emph{screening} of the character and token sequence~\cite{DeRe74}.
 
-
-The scanning process groups together substrings into textual elements, or tokens. In contrast to the characters and substrings, these tokens have defined meanings and may have additional attributes. For example, they may include identifiers, operator, comments, and spaces. In the case of the identifier token, an additional attribute could be the string value of the identifier.  They can be specified with the help of a regular grammar or regular expression~\cite{DeRe74,VSSD07}.\unsure{\cite{VSSD07} is extensive book, cite specific chapter somehow?}  
+The scanning process groups together substrings into textual elements, or tokens. In contrast to the characters and substrings, these tokens have defined meanings and may have additional attributes. For example, they may include identifiers, operator, comments, and spaces. In the case of the identifier token, an additional attribute could be the string value of the identifier. They can be specified with the help of a regular grammar or regular expression~\cite{DeRe74,VSSD07}.\unsure{\cite{VSSD07} is extensive book, cite specific chapter somehow?}  
 
 After being divided into a sequence of tokens, the screening step drops any characters or sequences of characters not relevant to the compilation from the program code. 
 These may include characters such as spaces and tabs, or white space in general, and character sequences such as comments. 
-Further, is may also recognize additional special symbols, such as keywords, and map them to a designated token~\cite{DeRe74}.\improvement{example for regular expression (simple tokens)}
+Further, is may also recognize additional special symbols, such as keywords, and map them to a designated token. For example, a identifier with a value of ``while'' could be mapped to the corresponding token of the \texttt{while}-toke.\cite{DeRe74}.
+
+Some example regular expressions for a lexical analysis are depicted in Fig.~\ref{fig:example_lexer}. The code depicts regular expressions for integers, identifiers, comments, and white space in ANTLR syntax.
+\improvement{add reference to section discussing ANTLR}
+The integer can either be an arbitrary sequence of characters between zero and nine without a leading zero or just zero with a length of at least one. Similarly, an identifier is a sequence of lower and upper case alphabetical characters, numbers, and underscores with a length of at least 1 and without a leading number. In contrast, a comment is any string starting with a double slash until the line break and white space is any white space characters. Additionally, the comment and white space also define a scanning step where both are discarded.
 
 \begin{figure}[htp]
     \centering
@@ -41,9 +44,4 @@ While the syntactic analysis is accomplished by context-free grammars, an analys
         \item Constant folding or constant propagation
         \item Peephole optimization
     \end{itemize}
-\end{itemize}
-
-\subsection{ANTLR}
-\begin{itemize}
-    \item Give overview of ANTLR~\cite{PaQu95} and parsing in general
 \end{itemize}
