@@ -57,23 +57,33 @@ After the semantic analysis of the program,
 which, at this stage, is in the form of a parse tree, the compiler can generate the code. Here, the compiler can either generate the target code, \eg machine code, directly or translate the parse tree into an intermediate code. 
 The translation of the source code to the intermediate can be thought of as the \emph{frontend} of the compiler, with the translation of the intermediate to the target being the \emph{backend}. While the intermediate code will need to be translated again into the target language, the use of an intermediate representation can increase the modularity and extensibility of a compiler. Additionally, it can also ease the construction of a new compiler. When creating a new compiler from a source language to a target language the front end of an existing compiler for the source can be combined with an existing compiler to the target if both are using the same intermediate language~\cite{VSSD07, GFH82}.     
 
-The most common issues when generation the target code are the evaluation order of expressions, register and storage allocation as well as related issues, context switches, and instruction selection~\cite{GFH82}. While these issues are critical for compilers that translate classical languages, \ie not quantum languages, to machine code, they are mostly not relevant for the translation of quantum computers, since quantum computers do not offer same features and abstractions that classical computer do; they have, \eg, do storage, other than the quantum registers.
+The most common issues when generation the target code are the evaluation order of expressions, register and storage allocation as well as related issues, context switches, and instruction selection~\cite{GFH82}. While these issues are critical for compilers that translate classical languages, \ie not quantum languages, to machine code, they are mostly not relevant for the translation of quantum computers, since quantum computers do not offer same features and abstractions that classical computer do; they have, \eg, no storage, other than the quantum registers.
 \unsure{citation needed?}
 Therefore, we will not discuss these issues in more detail.
 
 \subsection{Optimization}
 \label{sec:background_compiler_codeOptimization}
+While the lexical, syntax, and semantic analysis combined with the code generation are the essential parts of a compiler, without which it would not work, the optimization step is also important. It used to apply either machine-independent or machine-dependent optimizations. The optimizations can be applied to the parse tree, a possible intermediate representation, and the generated target code depending on the optimization itself. While the removal of unreachable code, \eg code after a return statement, can most easily be performed on the parse tree, machine-dependent optimizations can, more appropriately, be performed on the target or intermediate code~\cite{Oliv07,VSSD07}.
+
 \begin{itemize}
     \item Optimize intermediate and target code
     \item Optimizations that are hardware (in-)dependent
     \begin{itemize}
-        \item Constant folding or constant propagation
-        \item Peephole optimization
+        \item Constant folding or constant propagation~\cite{BeDa94}
+        \item Loop unrolling~\cite{BeDa94}
+        \item Function inlining~\cite{BeDa94}
+        \item Peephole optimization~\cite{McKe65}
     \end{itemize}
 \end{itemize}
 
 \subsection{Tools}
 \begin{itemize}
+    \item Why use tools
+    \item \cite{PaFi11} states: Parsing is not a solved problem, despite its importance and
+    long history of academic study. Because it is tedious and
+    error-prone to write parsers by hand, researchers have spent
+    decades studying how to generate efficient parsers from high-
+    level grammars
     \item What are different existing tools?
     \item flex/bison
     \item yacc
