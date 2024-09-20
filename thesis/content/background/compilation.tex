@@ -1,7 +1,7 @@
 \section{Compilation}
 The execution on a computer is controlled by a program. This program is written in a specific language unique to the hardware of the computer, machine code. However, this language is often neither human readable nor suitable for writing complex systems. Therefore, most programs are written in a more accessible language. The program can then be translated to the machine code with a \emph{compiler}. 
 
-A compiler translates a program written in a source language to a program in a target language. The compilation process can be divided into multiple steps. The first step ist the \emph{lexical analysis} of the source code. Next, the source codes syntactic structure is analyzed be the \emph{parser}. Then, the code is \emph{semantically analyzed} and the target code is generated in the \emph{code generation} step. Lastly, the compiler may \emph{optimize} the target code~\cite{Oliv07}. In the following, we be discuss the different steps of a compiler individually.
+A compiler translates a program written in a source language to a program in a target language. The compilation process can be divided into multiple steps. The first step is the \emph{lexical analysis} to transform the source code into a sequence of tokens. Next, the syntactic structure of the code is analyzed be the \emph{parser}. Then, the code is \emph{semantically analyzed} to find semantic errors and infer information for the following phases. Lastly, the \emph{code generation} step generates the code in the target language. Additionally, the compiler may perform optimizations on the code before generating the target code or it may \emph{optimize} the resulting target code~\cite{Oliv07,VSSD07}. In the following, we be discuss the different steps of a compiler individually.
 
 \subsection{Lexer (Lexical Analysis)}
 The lexical analysis of the source program takes the character stream and groups together associated characters producing a sequence of tokens~\cite{Oliv07}. Therefore, the step is also referred to as \emph{tokenization}~\cite{Gref99}. The process can be divided into the \emph{scanning} and \emph{screening} of the character and token sequence~\cite{DeRe74}.
@@ -24,10 +24,16 @@ The integer can either be an arbitrary sequence of characters between zero and n
 \end{figure}
 
 \subsection{Parser (Syntax Analysis)}
-The lexical analysis of the compiler yields a sequence of token with a known meaning; the structure of the program, however, is not apparent in the token sequence. For example, an operator-token does not indicate what the operands are. To gain knowledge of the structure of the program, the parser step analyzes the syntactic structure of the source program and creates a parse tree from it. The compiler can then use the tree by, \eg, walking over it to generate the target code. This step should also detect and report any syntactical errors, like a missing closing parentheses~\cite{VSSD07}.
+The lexical analysis of the compiler yields a sequence of tokens with a known meaning; the structure of the program, however, is not apparent in the token sequence. For example, an operator-token does not indicate what the operands are. To gain knowledge of the structure of the program, the parser step analyzes the syntactic structure of the source program and creates a parse tree from it. The compiler can then use the tree by, \eg, walking over it to generate the target code. This step should also detect and report any syntactical errors, like a missing closing parentheses~\cite{VSSD07}.
 
-While the lexical analysis can be achieved with a regular expression, the syntactic structure of a program is represented by a context-free grammar. There exists two main kinds of parsing a grammar, either top-down or bottom-up.
-Top-down parsing creates a parse tree based on an input sequence of tokens starting from the root and creating the nodes in a depth-first approach. In contrast, bottom-up parsing builds the parse tree from the leaves up to the root~\cite{VSSD07}.\improvement{Add short description of recursive descrent parsing -> lookahead and $LL(k)$ grammars \& LR grammar}
+While the lexical analysis can be achieved with regular expressions, the syntactic structure of a program must be represented by, at least, a context-free grammar. Since regular languages are a subset of context-free languages, 
+\unsure{citation needed? (Chomsky, "Three models for the description of language")}
+the parsing step can also perform the lexical analysis. However, there are multiple reasons why the lexical and syntax analysis are separated. Firstly, the separation of both analysis makes the compiler more modular and extensible. Furthermore, using regular expression for the lexical analysis prevents it from being more complex than necessary with a context-free grammar. Lastly, the lexer can be more efficient when generated from regular expressions instead of a context-free grammar~\cite{VSSD07}. 
+
+There exists two main kinds of parsing a grammar, either top-down or bottom-up.
+Top-down parsing creates a parse tree based on an input sequence of tokens starting from the root and creating the nodes in a depth-first approach. It yields a left-most derivation for the input sequence and can be implemented as a recursive-descent parser. The most common form of top-down parsing is $LL$-parsing, where the input is read from \emph{l}eft to right, yielding a \emph{l}eftmost derivation. To improve the efficiency of parsers, the context-free grammar is often restricted such that it can be parsed without backtracking with a fixed length \emph{lookahead} onto the token sequence. Such grammar are called $LL(k)$ grammars where $k$ is the length of the lookahead~\cite{VSSD07,PaFi11}.  
+
+In contrast, bottom-up parsing builds the parse tree from the leaves up to the root. Furthermore, instead of yielding a left-most derivation, it produces a right-most derivation. Similar to top-down parsing, the most common bottom-up parsers scan the input from left to right which are therefore LR-parsers. Moreover, they can also be implemented more efficiently when restricting the grammar to a maximum lookahead. These grammar the $LR(k)$ grammars~\cite{VSSD07, PaFi11}.
 
 An example grammar for parsing simple integer expressions is depicted in Fig.~\ref{fig:example_parser}. Similar to the regular expressions in Fig.~\ref{fig:example_lexer}, the grammar is given in ANTLR syntax. An expression is either the sum of another expression and a term or just a term. In turn, a term is either the product of a term and a factor or just a factor. Lastly, a factor is either an expression in parenthesis or an integer. Here, the definition of an integer is omitted. However, it can be seen in the previous example. The grammar is defined such that a generated parse tree inherently adheres to the order of operations.
 
@@ -40,16 +46,37 @@ An example grammar for parsing simple integer expressions is depicted in Fig.~\r
 
 
 \subsection{Semantic Analysis}
-While the syntactic analysis is accomplished by context-free grammars, an analysis of the program including context is practical to semantic errors, \eg the use of undefined variables. \dots
+% While the syntactic analysis is accomplished by context-free grammars, an analysis of the program including context is practical for finding semantic errors, \eg the use of undefined variables. Therefore, the next step in the compiler process is the semantic analysis of the parse tree.
+The parser analyzes the syntactic structure of a program with a context-free grammar; however, an analysis without any context is not sufficient for an analysis of non-syntactic, \ie semantic, constraints of the program. This step is performed by the semantic analysis. The semantic analysis is used to throw semantic errors that may prevent the program from being compiled such as the use of undefined identifiers. Further, it may also enforce constraints that prevent runtime error such as type checking in a strongly typed language. Additionally, the analysis step may also process and save declarations and similar information to a symbol table which can be used in the code generation or optimization~\cite{Oliv07, SWW*88}. Moreover, the semantic analysis may not only throw errors but can also be used to infer additional information for further compilation steps. For example, besides preventing operations on operands with invalid types, the analysis may deduce which operation to apply to the operands based on their type; in the case of two integers, the analysis may infer an integer additions for the ``+''-operator while two floating point values require floating point operations~\cite{Wait74,VSSD07}.
+
+What specifically the semantic analysis does is dependent on the design of the language being analyze. For example, a loosely typed language may have limited type checking, when compared to a strongly typed language, if any at all. Further, the implementation of the analysis can differ greatly. However, all implementations have some common elements. It requires the propagation of attributes through the syntactic structure of the program to enable the analysis. In the case of type checking, the analysis must pass on the type of a variable. Moreover, it does not only need to know the types of variables and constants, \ie leafs in a parse tree, but also the resulting type of an expression using them. For example, a integer added to a floating point value may result in a floating point value. To infer and propagate these attributes, the parse tree may need to be transverse~\cite{Wait74,VSSD07}.
 
 \subsection{Code Generation}
+After the semantic analysis of the program,
+\unsure{em dash (---) here?}
+which, at this stage, is in the form of a parse tree, the compiler can generate the code. Here, the compiler can either generate the target code, \eg machine code, directly or translate the parse tree into an intermediate code. 
+The translation of the source code to the intermediate can be thought of as the \emph{frontend} of the compiler, with the translation of the intermediate to the target being the \emph{backend}. While the intermediate code will need to be translated again into the target language, the use of an intermediate representation can increase the modularity and extensibility of a compiler. Additionally, it can also ease the construction of a new compiler. When creating a new compiler from a source language to a target language the front end of an existing compiler for the source can be combined with an existing compiler to the target if both are using the same intermediate language~\cite{VSSD07, GFH82}.     
+
+The most common issues when generation the target code are the evaluation order of expressions, register and storage allocation as well as related issues, context switches, and instruction selection~\cite{GFH82}. While these issues are critical for compilers that translate classical languages, \ie not quantum languages, to machine code, they are mostly not relevant for the translation of quantum computers, since quantum computers do not offer same features and abstractions that classical computer do; they have, \eg, do storage, other than the quantum registers.
+\unsure{citation needed?}
+Therefore, we will not discuss these issues in more detail.
 
 \subsection{Optimization}
 \label{sec:background_compiler_codeOptimization}
 \begin{itemize}
-    \item Different optimization techniques
+    \item Optimize intermediate and target code
+    \item Optimizations that are hardware (in-)dependent
     \begin{itemize}
         \item Constant folding or constant propagation
         \item Peephole optimization
     \end{itemize}
+\end{itemize}
+
+\subsection{Tools}
+\begin{itemize}
+    \item What are different existing tools?
+    \item flex/bison
+    \item yacc
+    \item ANTLR
+    \item \dots
 \end{itemize}

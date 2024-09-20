@@ -516,6 +516,19 @@ List},
 }
 
 
+@article{GFH82,
+ author = {Ganapathi, Mahadevan and Fischer, Charles N. and Hennessy, John L.},
+ year = {1982},
+ title = {Retargetable Compiler Code Generation},
+ pages = {573--592},
+ volume = {14},
+ number = {4},
+ issn = {0360-0300},
+ journal = {ACM Computing Surveys},
+ doi = {10.1145/356893.356897}
+}
+
+
 @incollection{Gref99,
  author = {Grefenstette, Gregory},
  title = {Tokenization},
@@ -733,7 +746,26 @@ List},
 }
 
 
+@article{PaFi11,
+ abstract = {Despite the power of Parser Expression Grammars (PEGs) and GLR, parsing is not a solved problem. Adding nondeterminism (parser speculation) to traditional LL and LR parsers can lead to unexpected parse-time behavior and introduces practical issues with error handling, single-step debugging, and side-effecting embedded grammar actions. This paper introduces the LL(*) parsing strategy and an associated grammar analysis algorithm that constructs LL(*) parsing decisions from ANTLR grammars. At parse-time, decisions gracefully throttle up from conventional fixed k{\textgreater}=1 lookahead to arbitrary lookahead and, finally, fail over to backtracking depending on the complexity of the parsing decision and the input symbols. LL(*) parsing strength reaches into the context-sensitive languages, in some cases beyond what GLR and PEGs can express. By statically removing as much speculation as possible, LL(*) provides the expressivity of PEGs while retaining LL's good error handling and unrestricted grammar actions. Widespread use of ANTLR (over 70,000 downloads/year) shows that it is effective for a wide variety of applications.},
+ author = {Parr, Terence and Fisher, Kathleen},
+ year = {2011},
+ title = {LL(*): the foundation of the ANTLR parser generator},
+ pages = {425--436},
+ volume = {46},
+ number = {6},
+ issn = {0362-1340},
+ journal = {ACM SIGPLAN Notices},
+ doi = {10.1145/1993316.1993548}
+}
+
+
 @article{PaQu95,
+ abstract = {Despite the parsing power of LR/LALR algorithms, e.g. YACC, programmers often choose to write recursive-descent parsers by hand to obtain increased flexibility, better error handling, and ease of debugging. We introduce ANTLR, a public-domain parser generator that combines the flexibility of hand-coded parsing with the convenience of a parser generator, which is a component of PCCTS. ANTLR has many features that make it easier to use than other language tools. Most important, ANTLR provides predicates which let the programmer systematically direct the parse via arbitrary expressions using semantic and syntactic context; in practice, the use of predicates eliminates the need to hand-tweak the ANTLR output, even for difficult parsing problems. ANTLR also integrates the description of lexical and syntactic analysis, accepts LL(k) grammars for k {\textgreater} 1 with extended BNF notation, and can automatically generate abstract syntax trees.
+
+
+
+ANTLR is widely used, with over 1000 registered industrial and academic users in 37 countries. It has been ported to many popular systems such as the PC, Macintosh, and a variety of UNIX platforms; a commercial C++ front-end has been developed as a result of one of our industrial collaborations.},
  author = {Parr, T. J. and Quong, R. W.},
  year = {1995},
  title = {ANTLR: A predicated-- LL ( k ) parser generator},
@@ -832,6 +864,20 @@ List},
 }
 
 
+@inproceedings{SWW*88,
+ author = {Seshadri, V. and Weber, S. and Wortman, D. B. and Yu, C. P. and Small, I.},
+ title = {Semantic analysis in a concurrent compiler},
+ pages = {233--240},
+ publisher = {ACM},
+ isbn = {0897912691},
+ editor = {Wexelblat, R. L.},
+ booktitle = {Proceedings of the ACM SIGPLAN 1988 conference on Programming language design and implementation},
+ year = {1988},
+ address = {New York, NY, USA},
+ doi = {10.1145/53990.54013}
+}
+
+
 @incollection{TAG12,
  author = {Thomsen, Michael Kirkedal and Axelsen, Holger Bock and Gl{\"u}ck, Robert},
  title = {A Reversible Processor Architecture and Its Reversible Logic Design},
@@ -875,6 +921,22 @@ List},
  edition = {2nd ed.},
  publisher = {{Pearson/Addison Wesley}},
  isbn = {0-321-48681-1}
+}
+
+
+@incollection{Wait74,
+ author = {Waite, W. M.},
+ title = {Semantic Analysis},
+ pages = {157--169},
+ volume = {21},
+ publisher = {{Springer Berlin Heidelberg}},
+ isbn = {978-3-540-06958-4},
+ series = {Lecture Notes in Computer Science},
+ editor = {Bauer, F. L. and de Remer, F. L. and Griffiths, M. and Hill, U. and Horning, J. J. and Koster, C. H. A. and McKeeman, W. M. and Poole, P. C. and Waite, W. M. and Eickel, J.},
+ booktitle = {Compiler Construction},
+ year = {1974},
+ address = {Berlin, Heidelberg},
+ doi = {10.1007/978-3-662-21549-4{\textunderscore }8}
 }
 
 
