@@ -1,9 +1,11 @@
 \section{Compilation}
+\label{sec:background_compilation}
 The execution on a computer is controlled by a program. This program is written in a specific language unique to the hardware of the computer, machine code. However, this language is often neither human readable nor suitable for writing complex systems. Therefore, most programs are written in a more accessible language. The program can then be translated to the machine code with a \emph{compiler}. 
 
 A compiler translates a program written in a source language to a program in a target language. The compilation process can be divided into multiple steps. The first step is the \emph{lexical analysis} to transform the source code into a sequence of tokens. Next, the syntactic structure of the code is analyzed be the \emph{parser}. Then, the code is \emph{semantically analyzed} to find semantic errors and infer information for the following phases. Lastly, the \emph{code generation} step generates the code in the target language. Additionally, the compiler may perform optimizations on the code before generating the target code or it may \emph{optimize} the resulting target code~\cite{Oliv07,VSSD07}. In the following, we be discuss the different steps of a compiler individually.
 
 \subsection{Lexer (Lexical Analysis)}
+\label{sec:background_lexer}
 The lexical analysis of the source program takes the character stream and groups together associated characters producing a sequence of tokens~\cite{Oliv07}. Therefore, the step is also referred to as \emph{tokenization}~\cite{Gref99}. The process can be divided into the \emph{scanning} and \emph{screening} of the character and token sequence~\cite{DeRe74}.
 
 The scanning process groups together substrings into textual elements, or tokens. In contrast to the characters and substrings, these tokens have defined meanings and may have additional attributes. For example, they may include identifiers, operator, comments, and spaces. In the case of the identifier token, an additional attribute could be the string value of the identifier. They can be specified with the help of a regular grammar or regular expression~\cite{DeRe74,VSSD07}.\unsure{\cite{VSSD07} is extensive book, cite specific chapter somehow?}  
@@ -24,6 +26,7 @@ The integer can either be an arbitrary sequence of characters between zero and n
 \end{figure}
 
 \subsection{Parser (Syntax Analysis)}
+\label{sec:background_parser}
 The lexical analysis of the compiler yields a sequence of tokens with a known meaning; the structure of the program, however, is not apparent in the token sequence. For example, an operator-token does not indicate what the operands are. To gain knowledge of the structure of the program, the parser step analyzes the syntactic structure of the source program and creates a parse tree from it. The compiler can then use the tree by, \eg, walking over it to generate the target code. This step should also detect and report any syntactical errors, like a missing closing parentheses~\cite{VSSD07}.
 
 While the lexical analysis can be achieved with regular expressions, the syntactic structure of a program must be represented by, at least, a context-free grammar. Since regular languages are a subset of context-free languages, 
@@ -46,12 +49,14 @@ An example grammar for parsing simple integer expressions is depicted in Fig.~\r
 
 
 \subsection{Semantic Analysis}
+\label{sec:background_semanticalAnalysis}
 % While the syntactic analysis is accomplished by context-free grammars, an analysis of the program including context is practical for finding semantic errors, \eg the use of undefined variables. Therefore, the next step in the compiler process is the semantic analysis of the parse tree.
 The parser analyzes the syntactic structure of a program with a context-free grammar; however, an analysis without any context is not sufficient for an analysis of non-syntactic, \ie semantic, constraints of the program. This step is performed by the semantic analysis. The semantic analysis is used to throw semantic errors that may prevent the program from being compiled such as the use of undefined identifiers. Further, it may also enforce constraints that prevent runtime error such as type checking in a strongly typed language. Additionally, the analysis step may also process and save declarations and similar information to a symbol table which can be used in the code generation or optimization~\cite{Oliv07, SWW*88}. Moreover, the semantic analysis may not only throw errors but can also be used to infer additional information for further compilation steps. For example, besides preventing operations on operands with invalid types, the analysis may deduce which operation to apply to the operands based on their type; in the case of two integers, the analysis may infer an integer additions for the ``+''-operator while two floating point values require floating point operations~\cite{Wait74,VSSD07}.
 
 What specifically the semantic analysis does is dependent on the design of the language being analyze. For example, a loosely typed language may have limited type checking, when compared to a strongly typed language, if any at all. Further, the implementation of the analysis can differ greatly. However, all implementations have some common elements. It requires the propagation of attributes through the syntactic structure of the program to enable the analysis. In the case of type checking, the analysis must pass on the type of a variable. Moreover, it does not only need to know the types of variables and constants, \ie leafs in a parse tree, but also the resulting type of an expression using them. For example, a integer added to a floating point value may result in a floating point value. To infer and propagate these attributes, the parse tree may need to be transverse~\cite{Wait74,VSSD07}.
 
 \subsection{Code Generation}
+\label{sec:background_codeGeneration}
 After the semantic analysis of the program,
 \unsure{em dash (---) here?}
 which, at this stage, is in the form of a parse tree, the compiler can generate the code. Here, the compiler can either generate the target code, \eg machine code, directly or translate the parse tree into an intermediate code. 
@@ -62,23 +67,20 @@ The most common issues when generation the target code are the evaluation order 
 Therefore, we will not discuss these issues in more detail.
 
 \subsection{Optimization}
-\label{sec:background_compiler_codeOptimization}
+\label{sec:background_codeOptimization}
 While the lexical, syntax, and semantic analysis combined with the code generation are the essential parts of a compiler, without which it would not work, the optimization step is also important. It used to apply either machine-independent or machine-dependent optimizations. The optimizations can be applied to the parse tree, a possible intermediate representation, and the generated target code depending on the optimization itself. While the removal of unreachable code, \eg code after a return statement, can most easily be performed on the parse tree, machine-dependent optimizations can, more appropriately, be performed on the target or intermediate code~\cite{Oliv07,VSSD07}.
 
-Two machine-independent optimizations that are often applied by compilers are constant propagation and constant folding. Constant propagation analyzes the code to find variables with constant values throughout all executions and replaces the variables in, \eg, expressions with their corresponding constant value. By itself, constant propagation may only result in marginal improvement, loading a constant literal instead of the values of a variable; however, in combination with constant folding it can result significant improvement. Constant folding evaluates expressions or subexpressions with constant values at compile time, resulting in less calculations. This can significantly increase the performance of a program especially if large expressions or expressions in loops can be folded. Therefore, propagating constant values through the code enables more constant folding and can improve its effectiveness~\cite{WeZa91}.  
+Two collaborating machine-independent optimizations that are often applied by compilers are constant propagation and constant folding. Constant propagation analyzes the code to find variables with constant values throughout all executions and replaces the variables in, \eg, expressions with their corresponding constant value. By itself, constant propagation may only result in marginal improvement, loading a constant literal instead of the values of a variable; however, in combination with constant folding it can result significant improvement. Constant folding evaluates expressions or subexpressions with constant values at compile time, resulting in less calculations at runtime. This can significantly increase the performance of a program especially if large expressions or expressions in loops can be folded. Propagating constant values through the code enables more constant folding and, therefore, can improve its effectiveness~\cite{WeZa91}.
+
+Another optimization technique, that can work in tandem with constant folding and propagation, is loop unrolling. When executing a loop, each iteration needs to check the halting condition and possible execute an increment statement which can result in significant overhead. Futhermore, since the condition is checked before each iteration, the different executions cannot be executed in parallel. To prevent or reduce the performance overhead from these issues, the loop body can be executed multiple times and the increment statement adjusted accordingly. Further, if the number of iterations is constant, the loop can be removed entirely and replaced by the repeating loop body~\cite{HuLe99}. In this case, constant propagation and unrolling can help evaluate the halting condition such that the loop can be unrolled. 
 
 \begin{itemize}
-    \item Optimize intermediate and target code
-    \item Optimizations that are hardware (in-)dependent
-    \begin{itemize}
-        \item Constant folding or constant propagation~\cite{BeDa94}
-        \item Loop unrolling~\cite{BeDa94}
-        \item Function inlining~\cite{BeDa94}
-        \item Peephole optimization~\cite{McKe65}
-    \end{itemize}
+    \item Function inlining~\cite{BeDa94}
+    \item Peephole optimization~\cite{McKe65}
 \end{itemize}
 
 \subsection{Tools}
+\label{sec:background_compilerTools}
 \begin{itemize}
     \item Why use tools
     \item \cite{PaFi11} states: Parsing is not a solved problem, despite its importance and
