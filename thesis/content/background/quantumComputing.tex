@@ -20,7 +20,7 @@ Models for Quantum Computers can be divided into three main categories, the \emp
 
 \subsection{Superposition}
 \label{sec:background_superposition}
-The first important property of quantum mechanics used by quantum computers is the idea of superposition. Qubits in superposition are often informally described as simultaneously having a value of $0$ and $1$ until their state is measured. However, a qubit in superposition is more formally a linear combination of its basis states. The basis states are the states where the qubit has a value of $0$, written $\ket{0} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$, and $1$, written $\ket{1} = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$~\cite{DiCh20}.
+The first important property of quantum mechanics used by quantum computers is the idea of superposition. Qubits in superposition are often informally described as simultaneously having a value of $0$ and $1$ until their state is measured. However, a qubit in superposition is more formally a linear combination of its basis states. The basis states are the states where the qubit has a value of $0$, written $\ket{0} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$, and $1$, written $\ket{1} = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$~\cite{DiCh20a}.
 Furthermore, the state can be reduced to a simple vector. Therefore, a state $\psi$ in superposition can be written as:
 \begin{equation*}
     \ket{\psi} = \alpha \ket{0} + \beta \ket{1} = \alpha \begin{pmatrix} 1 \\ 0 \end{pmatrix} + \beta \begin{pmatrix} 0 \\ 1 \end{pmatrix} = \begin{pmatrix} \alpha \\ \beta \end{pmatrix}.
@@ -58,7 +58,7 @@ A more formal definition for an entangled state uses the definition of a composi
         0 \\ 1
     \end{pmatrix}.
 \end{equation*} 
-When a quantum state cannot be expressed as a tensor product of two states, the state is entangled. The previous example is a case of a maximally entanglement Bell state~\cite{DiCh20, MHH19}, often denoted $\beta_{00}$, and can be expressed as the following:
+When a quantum state cannot be expressed as a tensor product of two states, the state is entangled. The previous example is a case of a maximally entanglement Bell state~\cite{DiCh20a, MHH19}, often denoted $\beta_{00}$, and can be expressed as the following:
 \begin{equation*}
     \beta_{00} = \frac{1}{\sqrt{2}} (\ket{00} + \ket{11}) = \frac{1}{\sqrt{2}} 
     \begin{pmatrix}
@@ -77,7 +77,7 @@ To calculate specific functions or intermediate values, quantum algorithms may n
 
 \subsection{Quantum Gates}
 \label{sec:background_quantumGates}
-In gate-based quantum computer, the transformations applied to the quantum data are represented by \emph{quantum gates}. Similar to quantum states, which can be represented by linear combinations of basis states, or vectors, quantum gates can be formulated as linear transformations of these combinations, or a matrix. Because the result of such a transformation also needs to be a valid quantum state, the transformation needs to be norm-preserving, or \emph{unitary}~\cite{DiCh20}. The most relevant and often used unitary gates are depicted in Tab.~\ref{tab:gates}
+In gate-based quantum computer, the transformations applied to the quantum data are represented by \emph{quantum gates}. Similar to quantum states, which can be represented by linear combinations of basis states, or vectors, quantum gates can be formulated as linear transformations of these combinations, or a matrix. Because the result of such a transformation also needs to be a valid quantum state, the transformation needs to be norm-preserving, or \emph{unitary}~\cite{DiCh20a}. The most relevant and often used unitary gates are depicted in Tab.~\ref{tab:gates}
 %\unsure{Add depications for gates in circuits?}
 
 \begin{table}[htp]
@@ -116,7 +116,7 @@ A matrix $U$ is unitary if it has an inverse matrix which is equal to its conjug
 \end{equation*}
 Therefore, all transformations applied to quantum states in a gate-based quantum computer must be reversible by definition. This limitation does not apply to classical computers where non-reversible transformations, \eg mapping an arbitrary bit to a specific value, are easily implementable. 
 
-To design a useful quantum computer or language, the set of gates should be \emph{universal}. A set of gates is universal if any gate can be simulated by a combination of the gates from the set with arbitrary accuracy~\cite{BrBr01}. An example for a universal set of gates is the combination of the Toffoli gate together with the Hadamard gate~\cite{DiCh20}.
+To design a useful quantum computer or language, the set of gates should be \emph{universal}. A set of gates is universal if any gate can be simulated by a combination of the gates from the set with arbitrary accuracy~\cite{BrBr01}. An example for a universal set of gates is the combination of the Toffoli gate together with the Hadamard gate~\cite{DiCh20a}.
 %\unsure{very short section, expand on universality?}
 \todo{Add paragraph on implicit measurement}
 
@@ -124,7 +124,7 @@ To design a useful quantum computer or language, the set of gates should be \emp
 \label{sec:background_measurement}
 For quantum computer to be of any use, we need a way to read out information about its state. However, the information we can obtain from a quantum system is limited by the quantum measurement postulate. The postulate states that the only way, to gain any information from a quantum system, is to measure it. When measuring a quantum state, the state irreversibly collapses to one of its basis states.
 Furthermore, this is a probabilistic transformation and the original state in superposition cannot be recovered from the result. 
-For a state $\ket{\psi} = \alpha \ket{0} + \beta \ket{1}$, the measurement collapses the state to $\ket{0}$ with a probability of $\abs{\alpha}^2$. Correspondingly, the state will collapse to $\ket{1}$ with a probability of $\abs{\beta}^2$ when measured~\cite{DiCh20}.
+For a state $\ket{\psi} = \alpha \ket{0} + \beta \ket{1}$, the measurement collapses the state to $\ket{0}$ with a probability of $\abs{\alpha}^2$. Correspondingly, the state will collapse to $\ket{1}$ with a probability of $\abs{\beta}^2$ when measured~\cite{DiCh20a}.
 
 Measurement can be represented as a measurement basis set $\{M_i\}_i$ which requires the following condition:
 \begin{equation*}
@@ -134,7 +134,7 @@ The probability that outcome $i$ is obtained when measuring a state $\ket{\psi}$
 \begin{equation*}
     \ket{\psi'} = \frac{M_i \ket{\psi}}{|M_i \ket{\psi}|} = \frac{M_i \ket{\psi}}{\sqrt{\Probability{[\text{observe }i]}}}.
 \end{equation*} 
-In contrast to all other transformations, measurements are neither unitary nor reversible and, therefore, are able to ``destroy'' information on the quantum state before the measurement~\cite{DiCh20}.
+In contrast to all other transformations, measurements are neither unitary nor reversible and, therefore, are able to ``destroy'' information on the quantum state before the measurement~\cite{DiCh20a}.
 %\improvement{already mentioned above, only mention once}
 
 \subsection{Relevant Algorithms}
