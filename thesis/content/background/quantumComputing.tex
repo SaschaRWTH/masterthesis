@@ -5,16 +5,18 @@
 %     \item From bits to qubits
 %     \item Entanglement
 % \end{itemize}
-While computers are prevalent and important in today's society, there are many relevant problems which classical computers can currently and perhaps will never realistically be able to solve. Quantum Computing (QC) is gaining more momentum as the technology that could solve at least some of these problems. For example, Quantum algorithms like Shor's algorithm~\cite{Shor97} could provide a significant improvement for prime factorization given sufficient technology. Therefore, it is estimated to be a valuable market with many of the largest technology companies as well as governments investing billions in the research and development of quantum technology~\cite{RDB*22, Pres18}. 
+While computers are prevalent and important in today's society, there are many relevant problems which classical computers cannot currently and perhaps will never realistically be able to solve. Quantum Computing (QC) is gaining more momentum as the technology that could solve at least some of these problems. For example, Quantum algorithms like Shor's algorithm~\cite{Shor97} could provide a significant improvement for prime factorization given sufficient technology. Therefore, it is estimated to be a valuable market with many of the largest technology companies as well as governments investing billions in the research and development of quantum technology~\cite{RDB*22, Pres18}. 
 %While there already exist detailed theoretical foundations~\cite{van20, Ying11,YYF12} and advanced algorithms for QC~\cite{ACR*10,BGB*18,LoCh19,Shor97}, the technology of quantum computers is said to be on the level of classical computers in the 1950s~\cite{CFM17}. 
 In the following section, we take a look at the basic concepts of a quantum computer and the core principles it relies on.
 
 Classical Computers are based on simple operations executed on bits, like \texttt{and}, \texttt{or}, and \texttt{not}. These bits can either have a value of $0$ or $1$. Similarly, at their core, quantum computers apply simple operations, like \texttt{controlled not}, and \texttt{Hadamard}, on quantum bits (qubits). 
 On a higher level, a classical computer executes operations on a register, consisting of multiple bits while a quantum computer operates on quantum registers, consisting of multiple qubits.
-In contrast to classical bits, quantum computers use the unique properties of quantum mechanics to enable qubits to have not just one value of either $0$ or $1$ but a combination of both. The phenomenon, where a particle or qubit exists in a combination of both states, is called \emph{superposition}. Additionally, quantum computers also use the idea of \emph{entanglement} to their advantage. Two qubits entangled when the value of one is dependent on the value of the other. The combination of superposition and entanglement enable quantum computers to solve specific problems more efficiently than classical computers~\cite{RDB*22}.
+In contrast to classical bits, quantum computers use the unique properties of quantum mechanics to enable qubits to have not just one value of either $0$ or $1$ but a combination of both. The phenomenon, where a particle or qubit exists in a combination of both states, is called \emph{superposition}. Additionally, quantum computers also use the idea of \emph{entanglement} to their advantage. Two qubits are entangled when the value of one is dependent on the value of the other. The combination of superposition and entanglement enables quantum computers to solve specific problems more efficiently than classical computers~\cite{RDB*22}.
 % , \eg prime factorization~\cite{Shor97}\unsure{Repeating info from paragraph above?}.
 
-Models for Quantum Computers can be divided into three main categories, the \emph{analog model}, the \emph{measurement-based model}, and the \emph{gate-based model}. The analog model uses smooth operations to evolve a quantum system over time such that the resulting system encodes the desired result with high probability. It is not clear whether this model allows for universal quantum computation or quantum speedup~\cite{DiCh20b}. Instead of smoothly evolving a system, the measurement-based model starts with a fixed quantum state, the cluster-state. The computation is accomplished by measuring qubits of the system, possibly depending on the results of previous measurements. While there are different measurement-based models, one technique to apply gates is to leverage quantum teleportation, so called gate teleportation~\cite{Jozs05}. The result is a bit-string of the measurement results~\cite{DiCh20b, Niel06}. Lastly, the gate-based model uses a digitized, discrete set of qubits that are manipulated by a sequence of operations represented by quantum gates. The result is obtained by measuring the qubits at the end of the computation. Although digital quantum computation is more sensitive to noise than analog computations, the digitization can also be used for quantum error correction~\cite{DMN13} and to mitigate the increased noise~\cite{DiCh20b}. Furthermore, because qubits are actively manipulated and not passively evolved, digital quantum computers are more flexible than analog ones~\cite{RDB*22}. Therefore, the gate-based model is the most common model and this thesis will mainly focus on it. 
+Models for Quantum Computers can be divided into three main categories, the \emph{analog model}, the \emph{measurement-based model}, and the \emph{gate-based model}. The analog model uses smooth operations to evolve a quantum system over time such that the resulting system encodes the desired result with high probability. It is not clear whether this model allows for universal quantum computation or quantum speedup~\cite{DiCh20b}. Instead of smoothly evolving a system, the measurement-based model starts with a fixed quantum state, the cluster-state. The computation is accomplished by measuring qubits of the system, possibly depending on the results of previous measurements. While there are different measurement-based models, one technique to apply gates is to leverage quantum teleportation, so called gate teleportation~\cite{Jozs05}. The result is a bit-string of the measurement results~\cite{DiCh20b, Niel06}. Lastly, the gate-based model uses a digitized, discrete set of qubits that are manipulated by a sequence of operations represented by quantum gates. The result is obtained by measuring the qubits at the end of the computation.
+\change{Intermediate measurements are also supported sometimes.}
+Although digital quantum computation is more sensitive to noise than analog computations, the digitization can also be used for quantum error correction~\cite{DMN13} and to mitigate the increased noise~\cite{DiCh20b}. Furthermore, because qubits are actively manipulated and not passively evolved, digital quantum computers are more flexible than analog ones~\cite{RDB*22}. Therefore, the gate-based model is the most common model and this thesis will mainly focus on it. 
 \unsure{Possible section on: no cloning/deleting~\cite{WoZu82, KuBr00}}
 % In contrast to the analog mode, both the other models were shown to be universal quantum computation models. (not specifically stated for gate in DiCh20b)!
 
@@ -26,7 +28,7 @@ Furthermore, the state can be reduced to a simple vector. Therefore, a state $\p
     \ket{\psi} = \alpha \ket{0} + \beta \ket{1} = \alpha \begin{pmatrix} 1 \\ 0 \end{pmatrix} + \beta \begin{pmatrix} 0 \\ 1 \end{pmatrix} = \begin{pmatrix} \alpha \\ \beta \end{pmatrix}.
 \end{equation*}
 
-The factors $\alpha$ and $\beta$ are the amplitudes of the basis states and are complex numbers. The factors must also satisfy the condition $\abs{\alpha}^2 + \abs{\beta}^2 = 1$. This is a result of the relation between the amplitudes and the probability to which basis state the state will collapse when measure, described in Sec.~\ref{sec:background_measurement}.
+The factors $\alpha$ and $\beta$ are the amplitudes of the basis states and are complex numbers. The factors must also satisfy the condition $\abs{\alpha}^2 + \abs{\beta}^2 = 1$. This is a result of the relation between the amplitudes and the probability to which basis state the state will collapse when measured, described in Sec.~\ref{sec:background_measurement}.
 
 Beside $\ket{0}$ and $\ket{1}$, there exist more relevant short hands for quantum state. For example, $\ket{+}$ and $\ket{-}$ are states in uniform superposition, \ie both basis state are equally likely, and often used when discussing quantum state und transformations. They are defined as follows:
 \begin{equation*}
@@ -37,10 +39,10 @@ Beside $\ket{0}$ and $\ket{1}$, there exist more relevant short hands for quantu
 
 \subsection{Entanglement}
 \label{sec:background_entanglement}
-Another important quantum mechanical concept is entanglement. Simply said, two qubits are entangled when their values depend on each other. An example would be a quantum system where two qubits are in superposition and equally likely to collapse to either $0$ or $1$; whichever value one qubit collapses to when measured, the second one will also collapse to the same values.
+Another important quantum mechanical concept is entanglement. Simply said, two qubits are entangled when their values depend on each other. An example would be a quantum system where two qubits are in superposition and equally likely to collapse to either $0$ or $1$; whichever value one qubit collapses to when measured, the second one will also collapse to the same value.
 Additionally, changes to one of the qubits can also affect the other one. This happens independent of the locations of the two qubits~\cite{RDB*22, HHHH09}.
 
-A more formal definition for an entangled state uses the definition of a composite system. Two separate quantum system can be represented as a single system with the tensor product of both systems. For example, the combined state $\ket{\psi}$ of the separate states $\ket{0}$ and $\ket{1}$ can be represented as:
+A more formal definition for an entangled state uses the definition of a composite system. Two separate quantum systems can be represented as a single system with the tensor product of both systems. For example, the combined state $\ket{\psi}$ of the separate states $\ket{0}$ and $\ket{1}$ can be represented as:
 \begin{equation*}
     \ket{\psi} 
     = \ket{0} \otimes \ket{1} 
@@ -77,7 +79,7 @@ To calculate specific functions or intermediate values, quantum algorithms may n
 
 \subsection{Quantum Gates}
 \label{sec:background_quantumGates}
-In gate-based quantum computer, the transformations applied to the quantum data are represented by \emph{quantum gates}. Similar to quantum states, which can be represented by linear combinations of basis states, or vectors, quantum gates can be formulated as linear transformations of these combinations, or a matrix. Because the result of such a transformation also needs to be a valid quantum state, the transformation needs to be norm-preserving, or \emph{unitary}~\cite{DiCh20a}. The most relevant and often used unitary gates are depicted in Tab.~\ref{tab:gates}
+In gate-based quantum computers, the transformations applied to the quantum data are represented by \emph{quantum gates}. Similar to quantum states, which can be represented by linear combinations of basis states, or vectors, quantum gates can be formulated as linear transformations of these combinations, or a matrix. Because the result of such a transformation also needs to be a valid quantum state, the transformation needs to be norm-preserving, or \emph{unitary}~\cite{DiCh20a}. The most relevant and often used unitary gates are depicted in Tab.~\ref{tab:gates}
 %\unsure{Add depications for gates in circuits?}
 
 \begin{table}[htp]
@@ -123,7 +125,7 @@ To design a useful quantum computer or language, the set of gates should be \emp
 \subsection{Measurement}
 \label{sec:background_measurement}
 For quantum computer to be of any use, we need a way to read out information about its state. However, the information we can obtain from a quantum system is limited by the quantum measurement postulate. The postulate states that the only way, to gain any information from a quantum system, is to measure it. When measuring a quantum state, the state irreversibly collapses to one of its basis states.
-Furthermore, this is a probabilistic transformation and the original state in superposition cannot be recovered from the result. 
+Furthermore, this is a probabilistic transformation and the original state in superposition cannot be recovered from the result. Therefore, in contrast to all other transformations, measurements are neither unitary nor reversible. 
 For a state $\ket{\psi} = \alpha \ket{0} + \beta \ket{1}$, the measurement collapses the state to $\ket{0}$ with a probability of $\abs{\alpha}^2$. Correspondingly, the state will collapse to $\ket{1}$ with a probability of $\abs{\beta}^2$ when measured~\cite{DiCh20a}.
 
 Measurement can be represented as a measurement basis set $\{M_i\}_i$ which requires the following condition:
@@ -134,8 +136,6 @@ The probability that outcome $i$ is obtained when measuring a state $\ket{\psi}$
 \begin{equation*}
     \ket{\psi'} = \frac{M_i \ket{\psi}}{|M_i \ket{\psi}|} = \frac{M_i \ket{\psi}}{\sqrt{\Probability{[\text{observe }i]}}}.
 \end{equation*} 
-In contrast to all other transformations, measurements are neither unitary nor reversible and, therefore, are able to ``destroy'' information on the quantum state before the measurement~\cite{DiCh20a}.
-%\improvement{already mentioned above, only mention once}
 
 \subsection{Relevant Algorithms}
 \label{sec:background_algorithms}
@@ -143,9 +143,9 @@ Since quantum computers differ greatly from classical computer not only in their
 %Although quantum computers have impressive technical abilities\change{write better introduction}, 
 they cannot function without specially designed algorithms. These algorithms needs to exploit the special quantum properties of qubits to achieve \emph{quantum advantage}, \ie a better complexity than any classical algorithm. One of the first algorithms to show its quantum advantage was the Deutsch–Josza algorithm~\cite{DeJo92}. Deutsch et al.\ define a problem that can be solved in exponential time on classical computer and present a quantum algorithm which can solve the problem in polynomial time. The Bernstein-Vazirani algorithm~\cite{BeVa93} is another example with shown quantum advantage, resulting in a polynomial speed up. However, currently, there does not exist a use case for either of the algorithms and, therefore, they are only of limited theoretical interest~\cite{DiCh20c}.  
 
-An algorithm with more potential for practical use is Shor's algorithm~\cite{Shor97}. It presents an more efficient, polynomial-time quantum implementation for the discrete logarithm, \ie find $r$ for a given $a$, $x$, $p$ such that $a^r = x \mod p$. The algorithm is of special interest because Shor also provides a reduction of prime factorization to order finding; order finding is a special case of the discrete logarithm where $x = 1$. Modern cryptography is often based on the complexity of factoring large prime numbers,
+An algorithm with more potential for practical use is Shor's algorithm~\cite{Shor97}. It presents a more efficient, polynomial-time quantum implementation for the discrete logarithm, \ie find $r$ for a given $a$, $x$, $p$ such that $a^r = x \mod p$. The algorithm is of special interest because Shor also provides a reduction of prime factorization to order finding; order finding is a special case of the discrete logarithm where $x = 1$. Modern cryptography is often based on the complexity of factoring large prime numbers,
 %\info{discrete log is also used in modern cryptography}
-\eg the commonly used RSA cryptosystem~\cite{RSA78}. Therefore, an advanced quantum computer could brake these systems with Shor's algorithm~\cite{MVZJ18}. Not only does this prospect provide a practical use-case for QC but it also results in the research field of \emph{post-quantum cryptography}~\cite{BeLa17}.  
+\eg the commonly used RSA cryptosystem~\cite{RSA78}. Therefore, an advanced quantum computer could break these systems with Shor's algorithm~\cite{MVZJ18}. Not only does this prospect provide a practical use-case for QC but it also results in the research field of \emph{post-quantum cryptography}~\cite{BeLa17}.  
 
 Another relevant algorithm or transformation is the quantum Fourier transform (QFT)~\cite{Copp02}. Beside being used as a subroutine in Shor's algorithm, it is also relevant for other algorithm, e.g. addition of quantum registers~\cite{Drap00}. Similar to the discrete Fourier transform~\cite{Wino78} which operates on vectors, the QFT$_{2^n}$ operates on the quantum equivalent of vector, quantum registers, of size $n$. Registers of size $n$ consist of $n$ qubits. From the register, the QFT extracts the present periodic features. Then, other algorithms can use these features for their calculations.
 
@@ -155,7 +155,7 @@ Despite the expansive theoretical foundations for QC, the current state of the a
 
 There exist many kinds of optimization techniques for quantum circuits. They are mostly concerned with optimizing the gate count of quantum circuits with the use of peephole optimizations, as described in Sec.~\ref{sec:background_codeOptimization}. These techniques can range from general rules~\cite{GaCh11, LBZ21}, that can be applied to all quantum circuits, to hardware-specific optimizations~\cite{KMO*23}. Furthermore, machine learning based optimization frameworks for quantum circuits are also gaining popularity~\cite{FNML21,LPM*24, RLB*24}.
 
-The most simple general optimizations are so called \emph{null gates}~\cite{GaCh11}. They are gate combinations or gates under specific conditions that are equivalent to the identity gate $I$. Therefore, any occurrence of such a null gate can be removed from the circuit. The most basic example for null gates is the double application of a self-inverse gate, i.e. a gate which is its own inverse. These include the $H, X, Y,$ and $Z$ gates. The identities are also depicted in Fig.~\ref{fig:nullgates_selfInverse}.
+The simplest general optimizations are so called \emph{null gates}~\cite{GaCh11}. They are gate combinations or gates under specific conditions that are equivalent to the identity gate $I$. Therefore, any occurrence of such a null gate can be removed from the circuit. The most basic example for null gates is the double application of a self-inverse gate, i.e. a gate which is its own inverse. These include the $H, X, Y,$ and $Z$ gates. The identities are also depicted in Fig.~\ref{fig:nullgates_selfInverse}.
 Furthermore, the same holds for any controlled version of a self-inverse gate such that the rule can also be applied to $CNOT$ and similar gates. 
 
 \begin{figure}[htp!]
@@ -169,7 +169,7 @@ Furthermore, the same holds for any controlled version of a self-inverse gate su
     \label{fig:nullgates_selfInverse}
 \end{figure}
 
-The second kind of null gates are gates that do not have an effect under specific conditions. For example, a controlled gate $U$ is not applied if we know that the control is $\ket{0}$. Similarly, the $X$ gate does not have an effect on a qubit in the $\ket{+}$ state. Hence, the two circuits depicted in Fig.~\ref{fig:nullgates_control} are null gates and semantically equivalent to an identity gate.
+The second kind of null gates are gates that do not have an effect under specific conditions. For example, a controlled gate $U$ has no effect on its qubits if we know that the control is $\ket{0}$. Similarly, the $X$ gate does not have an effect on a qubit in the $\ket{+}$ state. Hence, the two circuits depicted in Fig.~\ref{fig:nullgates_control} are null gates and semantically equivalent to an identity gate.
 \begin{figure}[htp!]
     \[
         \Qcircuit @C=1em @R=1em {
