@@ -81,16 +81,21 @@ Lastly, \emph{peephole optimization} is concerned with optimizing inefficient co
 
 \subsection{Tools}
 \label{sec:background_compilerTools}
-\begin{itemize}
-    \item Why use tools
-    \item \cite{PaFi11} states: Parsing is not a solved problem, despite its importance and
-    long history of academic study. Because it is tedious and
-    error-prone to write parsers by hand, researchers have spent
-    decades studying how to generate efficient parsers from high-
-    level grammars
-    \item What are different existing tools?
-    \item flex/bison
-    \item yacc
-    \item ANTLR
-    \item \dots
-\end{itemize}
+A compiler is a complex program that can not only require a lot of coding but also is also likely to include errors when written from scratch. While the earlier syntactic stages use general algorithms, writing a custom lexer and parser can require a substantial workload and is prone to errors. Therefore, there exist many tools that can either help create a lexer and parser or generate them entirely~\cite{PaFi11, ZLY17}. In the following, we can to briefly discuss different available compiler generation tools.
+
+Two tool for compiler generation, often used in tandem, are the Fast Lexical Analyzer (\emph{Flex})\footnote{\url{https://github.com/westes/flex}} and GNU \emph{Bison}\footnote{\url{https://github.com/akimd/bison}}~\cite{DoSt99}. 
+The Flex is a lexer generator while Bison is a general-purpose parser generator. Both generators target C and C++ code with Bison having the experimental feature to support Java. 
+Both tools are an extension and improvement of previous tool, \emph{Lex} and \emph{Yacc} respectively. 
+Bison implements a bottom-up parser and can parse most grammars. However, the tool is optimized for $LR(1)$ grammars, \ie bottom-up parsing with a lookahead of a single token~\cite{ZLY17,Aaby03,DoSt99}. 
+
+While Flex and Bison are separate tools for the lexing and parsing of program code, \emph{ANTLR}\footnote{\url{https://github.com/antlr/antlr4}}~\cite{PaQu95} combines both purposes into a single tool. ANTLR stands for ``ANother Tool for Language Recognition'' and can be used to generate lexers as well as parsers. In contrast to Bison, it implements top-down parsing and can recognize any $LL(k)$ grammar with $k > 1$. Additionally, while Flex and Bison are mainly targeting C and C++, ANTLR can generate lexers and scanners in a variety of languages, including C++, Java, Python, and C\#.
+With its newest version ANTLR4, the lexing and parsing rules can be given in the form of a context-free grammar with the terminals of the grammar given as regular expressions. At the beginning of each grammar, the name of the grammar is given and it is indicated whether the grammar describes a lexer, parser, or a general grammar, possibly containing both. The grammar rules can be either lexer or parser rules. They alway begin with a rule name, followed by a colon and the different alternatives, separated by a vertical bar, and terminated with a semicolon. While parsing rule names are given in lowercase letters, lexer rule names must begin with upper case letters.
+
+\begin{figure}[htp]
+    \centering
+    \lstinputlisting[style=ANTLR]{../figures/code/simple_exp.g4}
+    \caption{Simple ANTLR4 grammar for expressions.}
+    \label{fig:example_antlr4}
+\end{figure}
+
+A simple ANTLR4 grammar is depicted in Fig.~\ref{fig:example_antlr4}. Firstly, is indicates that this grammar describes a general lexer-parser combination and gives it the name \mbox{``simple\_exp''}. Then, a parsing rule called ``expression'' is defined where the expression is either just an integer or an integer, and operator and another expression. Lastly, the operator and integer lexing rules are defined. The operator is either the ``+'' or ``-'' character and the integer is a regular expression for an arbitrary sequence of number characters without a leading $0$.
