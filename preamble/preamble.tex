@@ -43,12 +43,7 @@
 \input{../preamble/config}
 
 
-\addtolength{\evensidemargin}{-7mm}\addtolength{\oddsidemargin}{7mm}
-\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
-% \captionsetup[subfloat]{font=scriptsize, labelformat=parens, labelsep=space, listofformat=subparens}
-
-\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-
+% Defining colors:
 \definecolor{grey}{rgb}{0.8,0.8,0.8}
 \definecolor{red}{rgb}{1,0,0}
 \definecolor{green}{rgb}{0,1,0}
@@ -57,6 +52,22 @@
 \definecolor{lightgray}{rgb}{.95,.95,.95}
 \definecolor{darkgray}{rgb}{.4,.4,.4}
 \definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\definecolor{ao(english)}{rgb}{0.0, 0.5, 0.0}
+\definecolor{applegreen}{rgb}{0.55, 0.71, 0.0}
+\definecolor{ferngreen}{rgb}{0.31, 0.47, 0.26}
+\definecolor{commentgreen}{rgb}{0.42, 0.7, 0.2}
+% \definecolor{commentgreen}{rgb}{0.42, 0.46, 0.2}
+
+
+
+
+\addtolength{\evensidemargin}{-7mm}\addtolength{\oddsidemargin}{7mm}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+% \captionsetup[subfloat]{font=scriptsize, labelformat=parens, labelsep=space, listofformat=subparens}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
 
 \newcommand{\blankpage}{
 	% \ifdefined\PROPOSAL{}
@@ -166,7 +177,7 @@
 	framexbottommargin=4pt,                  % Extra margin at the bottom
 	xleftmargin=.05\textwidth,                % Left margin
 	xrightmargin=.05\textwidth,               % Right margin
-	commentstyle=\color{green},              % Style for comments
+	commentstyle=\color{commentgreen},              % Style for comments
 	morecomment=[l]{//},                     % Line comment style
 	morecomment=[s]{/*}{*/},                 % Multiline comment style
 	showstringspaces=false,                  % Do not mark string spaces
@@ -198,3 +209,6 @@
 \usepackage{footnote}
 \makesavenoteenv{tabular}
 \makesavenoteenv{table}
+
+
+
