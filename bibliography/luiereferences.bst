@@ -434,7 +434,8 @@ FUNCTION {format.isbn}
       "ISBN " swap$ *
     }
   if$
-}FUNCTION {remove.textunderscore}
+}
+FUNCTION {remove.textunderscore}
 { 't :=
   ""
   { t empty$ not }
@@ -455,7 +456,7 @@ FUNCTION {format.doi}
     { "" }
     {
       new.block
-      "\doi{" doi remove.textunderscore * "}" *
+      "\mbox{\doi{" doi remove.textunderscore * "}}" *
     }
   if$
 }

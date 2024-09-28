@@ -477,6 +477,34 @@ End of customized bst file
     %: (def) No ISSN 
 %------\ans=x(==)-------
 %>>ISSN NUMBER:
+
+% Functions to remove underscore
+% FUNCTION {remove.textunderscore}
+% { 't :=
+% ""
+% { t empty$ not }
+% { t #1 #18 substring$ "{\textunderscore }" =
+%     { "_" *
+%       t #19 global.max$ substring$ 't :=
+%     }
+%     { t #1 #1 substring$ *
+%       t #2 global.max$ substring$ 't :=
+%     }
+%   if$
+% }
+% while$
+% }
+
+% FUNCTION {format.doi}
+% { doi empty$
+%   { "" }
+%   {
+%     new.block
+%     "\doi{" doi remove.textunderscore * "}" *
+%   }
+% if$
+% }
+
 %<<DOI NUMBER:
   doi,%: Include DOI as "doi: number"
 % url-doi,%: Format DOI as URL //dx.doi.org/doi (must give url options!)
