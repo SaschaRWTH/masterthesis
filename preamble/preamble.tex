@@ -244,5 +244,6 @@
 \makesavenoteenv{tabular}
 \makesavenoteenv{table}
 
-
-
+% Overwrite doi command to include hyperlink
+% # TODO: DOES NOT WORK FOR {_} or _ 
+\newcommand*{\doi}[1]{\href{http://dx.doi.org/#1}{doi: #1}}

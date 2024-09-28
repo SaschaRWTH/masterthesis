@@ -456,7 +456,8 @@ FUNCTION {format.doi}
     { "" }
     {
       new.block
-      "\mbox{\doi{" doi remove.textunderscore * "}}" *
+      % "\mbox{\doi{" doi remove.textunderscore * "}}" *
+      "\mbox{\doi{" doi * "}}" *
     }
   if$
 }
