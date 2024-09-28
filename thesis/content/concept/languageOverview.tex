@@ -1,44 +1,90 @@
 \section{Language Overview}
 \begin{itemize}
-    \item Given an overview of the different feature of the language\
+    \item Given an overview of the different feature of the language
     \item How do they work and what is the reason for implementing them
     \item Why are some feature (\eg implicit iteration) \emph{not} implemented
 \end{itemize}
 
 \subsection{Blocks and Scopes}
-\begin{itemize}
-    \item Basic structure of Luie
-    \item Consists of blocks and statements
-    \item One main block
-    \item Symbol table that handles scopes
-    \item All blocks have scope 
-\end{itemize}
+\label{sec:concept_blocksAndScope}
+Similar to many other languages, Luie uses code blocks and corresponding scopes. Both the code blocks and scopes are used to structure the code and enable the reuse of identifiers in different contexts. Each Luie program is contained in the main code block. This main code block can contain arbitrarily many other code blocks. In turn, these code blocks can also contain any number of nested blocks. However, the main code block can only exist once and is the parent block of all others. Therefore, it also cannot depend on any other block. The main block not only differs from the others in terms of hierarchy but it is also the only block that can contain composite gate definitions. The composite gates are defined at the top of the main code block and are followed by other declarations or statements. 
+
+Similar to the main code block, all other code blocks also consist of declarations and statements. A new code block is defined either in the definition of a composite gate or in the body of a control flow primitive; this includes the if-statement, else-statement, and for-loop. Each code block has a unique scope.
+
+Scopes represent the variable context of a code block. Since each scope corresponds to one code block, they are also hierarchically structured. In turn, the parent of a scope is the scope that directly contains this scope, while ancestors are all scopes that also indirectly contain the scope.\improvement{bad formulation}
+In contrast, the descendant of a scope are all scopes that are directly and indirectly contained in the scope. Furthermore two scopes are independent if one is neither an ancestor or descendant of the other. \info{same language can be applied to code blocks} 
+In a given scope, the program can access all variables previously defined in this scope and all its ancestors, however not the variables of any descendants.  
+In contrast, two independent scope do not have access to the variables defined in the other scope. Therefore, two independent if-statements can define a variable with the same name in their scope. Additionally, a scope can also overwrite the definition of a variable of an ancestor with its own definition while the ancestor's definition is not affected.
 
 \subsection{Data Types}
+\label{sec:concept_dataTypes}
+Luie is mainly focused on being a quantum language with quantum control flow; this is also reflected in its data types. The language operates mostly on two types of quantum data, registers and qubits. Both behave as described in Sec.~\ref{sec:background_quantumComputing} where a register represents an array of qubits with a fixed length.
+\unsure{Here or in implementation: while to the outsite register array of qubits, internally qubit special case of register (with length 1).}
+\dots
 \begin{itemize}
     \item Different data types
     \begin{itemize}
         \item Register
         \item Qubits (Registers with size 1)
-        \item Iterators, in more detail in Sec.~\ref{sec:control_flow}
+        \item Iterators, in more detail in Sec.~\ref{sec:concept_controlFlow}
     \end{itemize}
 \end{itemize}
 
 
 \subsection{Basic Operations}
+\label{sec:concept_basicOperations}
+\begin{itemize}
+    \item Provides predefined gate
+    \item Simple single qubit gates: x, y, z, h
+    \item Simple multi qubit gates: cx, ccx
+    \item Parameterized gates: p
+    \item Overall universal gate set, any gate can be defined with composite gates for later use
+\end{itemize}
 
 \subsection{Control Flow}
-\label{sec:control_flow}
+\label{sec:concept_controlFlow}
+\begin{itemize}
+    \item different kinds of control flow primitives
+    \item qif-/else-statements
+    \begin{itemize}
+        \item describe
+    \end{itemize}
+    \item for-loops
+    \begin{itemize}
+        \item describe
+    \end{itemize}
+\end{itemize}
 
 \subsection{Expressions}
+\label{sec:concept_expressions}
+The language allows for complex expression that are evaluated at compile time. These expression can be used to access specific indices of a register or define the range of a for loop. Besides the typical operations like addition and multiplication, the language also implements different functions. In the following, we want to present the operations and different functions that expressions can use, what data types they operate on, and how they behave. 
+
+\dots
 \begin{itemize}
     \item Consists of expressions, terms and factors
     \begin{itemize}
         \item Expressions consist of expression, operator, and term or just a term
         \item Term consists of term, operator, and factor or just a factor
         \item Factor consists of expression in parentheses, a negated factor, number, identifier or function call
+        \item Different functions
     \end{itemize}
-    \item Inherent order of operations
 \end{itemize}
 
 \subsection{Composite Gates}
+\label{sec:concept_compositeGates}
+\begin{itemize}
+    \item Similar to composite gates in language OpenQASM
+    \item Useful for gate combinations commonly used,
+    \item Can also make code more readable (indirect code comments)
+    \item Some significant changes
+    \item Can input registers (not implicit iteration)
+    \item Access to control flow statements provided by luie
+    \item Example of composite gate, quantum Fourier transform depicted in Fig.~\ref{fig:qft_example}
+\end{itemize}
+
+\begin{figure}[htp]
+    \centering     
+    \lstinputlisting[style=Luie]{../figures/code/qft.luie}
+    \caption{Luie gate definition for the Quantum Fourier Transform.}
+    \label{fig:qft_example}
+\end{figure}

@@ -82,6 +82,7 @@
 
 \graphicspath{{../figures/}}
 
+% # TODO: Possibly use minted (https://github.com/gpoore/minted) for better code blocks and syntax highlighting
 
 \lstloadlanguages{C,C++,csh,Java}
 \lstset{
@@ -187,6 +188,39 @@
 				qubit, array, int, stretch, qubit, uint, box, ctrl, negctrl, 
 				return, for, while, end, break, continue, do, def, kernel, 
 				const, stretch, delay, gate, qubit, measure, measure_all},  % OpenQASM 3 new keywords
+	keywordstyle=\color{cyan},               % Style for quantum keywords
+}
+
+\lstdefinestyle{Luie}{                 
+	basicstyle=\footnotesize\ttfamily,       % Basic font style
+	numbers=left,                            % Line numbers on the left
+	numberstyle=\tiny,                       % Style of line numbers
+	numbersep=5pt,                           % Distance of line numbers from code
+	tabsize=2,                               % Tab size
+	extendedchars=true,                      % Allow extended characters
+	breaklines=true,                         % Break long lines
+	frame=tlrb,                              % Frame around the listing
+	stringstyle=\color{blue}\ttfamily,       % Style for strings
+	showspaces=false,                        % Do not show spaces
+	showtabs=false,                          % Do not show tabs
+	framexleftmargin=17pt,                   % Extra margin on the left
+	framexrightmargin=5pt,                   % Extra margin on the right
+	framexbottommargin=4pt,                  % Extra margin at the bottom
+	xleftmargin=.05\textwidth,                % Left margin
+	xrightmargin=.05\textwidth,               % Right margin
+	commentstyle=\color{commentgreen},              % Style for comments
+	morecomment=[l]{//},                     % Line comment style
+	morecomment=[s]{/*}{*/},                 % Multiline comment style
+	showstringspaces=false,                  % Do not mark string spaces
+	morekeywords= {
+		gate, measure, reset, barrier,                 % QASM 2.0 keywords
+		qif, cx, h, x, y, z, s, t, rx, ry, rz, % Quantum gates
+		const, 
+		sizeof, power, range, in,
+		qubit, register, ctrl, negctrl, 
+		for, while, end, do, def, kernel, 
+		measure
+	},  % OpenQASM 3 new keywords
 	keywordstyle=\color{cyan},               % Style for quantum keywords
 }
 
