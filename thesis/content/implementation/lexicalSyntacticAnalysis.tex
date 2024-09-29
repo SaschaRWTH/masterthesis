@@ -17,7 +17,11 @@ The entry point for the grammar is a parsing rule called \texttt{parse}. It stat
 
 While syntactically it would be equal to say the main block consists of gate declarations and a code block, the code generation implementation requires the main code block to directly hold the declarations and statements. Internally, each code block object holds a list of declarations and statements which, in turn, can hold references to other codeblocks. However, a block itself cannot hold a reference to another block. Furthermore, the code generation is only called on the main code block which, then, recursively calls the code generation for each declaration and statement. Therefore, the main code block needs to contain the declarations and statements directly, otherwise the code generation will alway generate an empty program. 
 
-gate declarations...
+There are three kinds of declaration rules in the grammar. The first is the declaration rule for qubits and registers. It start with the register keyword lexer token, followed by an optional expression in brackets giving the size. If no size is given, a qubit is created; otherwise, a register with the given size is created. The identifier for the qubit or register is the last part of the rule. 
+
+Next, the constant declaration rule is used to declare constants that can be used at compile time, \eg for the size of registers or to given the number of loop iterations. Similar to register and qubit declarations rule, the rule start with a constant keyword token. Then, the identifier is given and separated from the type of the constant with a colon. Lastly the expression for the value of the constant is given after an equality sign.
+
+The final declaration is used for composite gate. 
 \begin{figure}[htp]
     \centering
     \lstinputlisting[style=ANTLR]{../figures/code/grammar_declarations.g4}
