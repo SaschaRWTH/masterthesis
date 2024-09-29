@@ -28,18 +28,22 @@ Luie is mainly focused on being a quantum language with quantum control flow; th
         \item Qubits (Registers with size 1)
         \item Iterators, in more detail in Sec.~\ref{sec:concept_controlFlow}
     \end{itemize}
+    \item How are qubits and register declared?
 \end{itemize}
 
 
 \subsection{Basic Operations}
 \label{sec:concept_basicOperations}
 \begin{itemize}
-    \item Provides predefined gate
-    \item Simple single qubit gates: x, y, z, h
-    \item Simple multi qubit gates: cx, ccx
     \item Parameterized gates: p
     \item Overall universal gate set, any gate can be defined with composite gates for later use
 \end{itemize}
+Any language needs some basic operations to manipulate its data type. While these operations may be addition, multiplication, and similar ones, quantum computers\unsure{gate-based quantum computer, not generally} manipulate their data with gates. Luie provides multiple predefined gates with which the qubits and registers can be manipulated. The syntax for applying gates to qubits is similar to other quantum language; the name of the gate is given and all parameters are listed next, separated with commas. 
+
+The first kind of gate set natively available are the basic single qubit gates; these include the $X$, $Y$, and $Z$ gates as well as the Hadamard gate $H$. The logical extension of single qubit gates is the second gate set, the multi-qubit gates; they include the controlled-not gate $CX$ and the Toffoli gate $CCX$. These gates are not required for the overall gate set to be universal because they can easily be simulated with the control flow abilities provided by Luie. However, they are included because most programmers are used to them.
+\unsure{bad reason, write better one!}
+Finally, the parameterized gates are the last gate set. In contrast to the basic single and multi-qubit gates, they are not constant in their behavior but depend on a parameter. This parameter is given as an expression and is evaluated at compile time; it is given in parenthesis after the gate itself. Currently, the only parameterized gate available is the phase gate $p(\lambda)$.
+The respective behavior and mathematical definition of all predefined gates in Luie is discussed in Sec.~\ref{sec:background_quantumGates}. Since the language provides both the Toffoli and Hadamard gates, the overall gate set is universal. Furthermore, any gates that are not predefined, can easily be implemented as composite gate; they are described in Sec.\ref{sec:concept_compositeGates}. 
 
 \subsection{Control Flow}
 \label{sec:concept_controlFlow}
