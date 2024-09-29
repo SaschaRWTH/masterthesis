@@ -2,9 +2,9 @@ declaration         : registerDeclaration | constDeclaration;
 
 registerDeclaration : REGISTERKEYWORD 
                       ('[' size=expression ']')? 
-                      IDENTIFIER ';';
+                      id=IDENTIFIER ';';
                       
-constDeclaration    : CONSTANTKEYWORD identifier=IDENTIFIER 
+constDeclaration    : CONSTANTKEYWORD id=IDENTIFIER 
                       ':' type=TYPE '=' 
                       exp=expression';';
 

@@ -21,7 +21,10 @@ There are three kinds of declaration rules in the grammar. The first is the decl
 
 Next, the constant declaration rule is used to declare constants that can be used at compile time, \eg for the size of registers or to given the number of loop iterations. Similar to register and qubit declarations rule, the rule start with a constant keyword token. Then, the identifier is given and separated from the type of the constant with a colon. Lastly the expression for the value of the constant is given after an equality sign.
 
-The final declaration is used for composite gate. 
+The final declaration rule is used for composite gate. Again, it starts with a corresponding keyword and is followed by the identifier of the gate. Next, the optional\todo{Should gate parameters be optional?} gate parameter rule is given in parenthesis. The gate parameter rule matches any number of identifiers, separated by commas, requiring at least one identifier. Lastly, the gate declaration rule ends with a code block rule. 
+
+All declaration rules are given in Fig.\ref{fig:implementation_grammarDeclarations}. Note that the depicted grammar is semantically equal to the grammar used in the implementation; however, some of the formatting and naming was adjusted for the thesis.
+\unsure{should this be specifically stated?}
 \begin{figure}[htp]
     \centering
     \lstinputlisting[style=ANTLR]{../figures/code/grammar_declarations.g4}
