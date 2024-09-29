@@ -1,6 +1,6 @@
 grammar simple_exp;
 
-expression : INTEGER OPERATOR expression
+expression : INTEGER op=OPERATOR expression
            | INTEGER;
 
 OPERATOR   : '+'
