@@ -1,12 +1,30 @@
-\section{Semantic analysis}
+\section{Semantic Analysis}
+\label{sec:implementation_semenaticAnalayis}
+The second step in our compilation process is the semantic analysis of the input program. The analysis checks for any semantic errors in the code that can be detected before the next compilation step, the code generation. Our implementation of the semantic analysis differentiates between a declaration analysis and type checking. The declaration analysis is concerned with checking for errors related to the declaration of variables. For example, when a variable is used, it check whether it was declared previously or, when a variable is declared, the analysis ensure that the identifier is not in use in the current scope. In contrast, the type checking ensures that the type of a variable is consistent with the use of the variable. 
+
+Both analyses are implemented as separate \texttt{Listeners}.
+\todo{describe in \ref{sec:implementation_syntax_dataStructuresClasses}} 
+This is done to separate both classes and give them concrete purposes while making the overall structure of the compiler more modular. In turn, since both analyses are implemented separately, they currently each require a transversal of the parse tree making the semantic analysis more inefficient. However, this can easily be addressed by writing a \texttt{Listener} that wraps both analyses, transverses the parse tree only once, and calls the corresponding function for each wrapped analysis.     
+
+\subsection{Declaration Analysis}
+\label{sec:implementation_declarationAnalayis}
+The declaration analysis reports any errors that caused by the use of identifiers in invalid contexts; these are the use of an undeclared variable, the declaration of a variable in a context where it is already defined, and the use of a qubit in a code block which is guarded by itself.
+\todo{Define when a code block is guarded by a qubit.}
+Additionally, it also reports a warning when a variable is declared but never used.
+
+For its analysis, the class creates a symbol table and adds any symbol that is declared. Further, is executes all other functions required for a valid analysis with the symbol table, like pushing scopes onto and popping them from the stack in the symbol table at the locations in the parse tree transversal where it is required. Before adding a symbol to the table, \ie every time the parse tree transversal exits a declaration, the \texttt{Listener} checks whether the identifier is already declared in the current context; if this is the case, the corresponding error is reported. Similarly, each time an identifier is referenced outside of a declaration, the analysis ensures that the variable is defined, otherwise it reports the corresponding error as well. Lastly, whenever a register rule is encountered in the transversal, the analysis not only checks that the variable is declared but also whether the current code block is guarded by the referenced register. If this is the case, the analysis reports an error. While the register parsing rule is only used for gate applications and if-statements and not for function calls such as \texttt{sizeof}, only performing the check the register rule cannot result in an invalid use of an identifier. This is the case because all function calls result in constant values and only refer to properties of a register, not the register itself; therefore, the compiled program will not have a reference to the register in the controlled context.\todo{Cannot check for all cases, some need to be at generation time}
+
+While the symbol table suffices for reporting the previous errors, it does not track the usage of symbols. Therefore, it cannot be used for the unused symbol warning. For this analysis, the class contains a dictionary that maps a symbol to the number of references. Each time a symbol is added to the symbol table, the corresponding entry in the dictionary is initialized to zero. Then, for every reference to the symbol, its usage counter is incremented. At the end of the tree transversal, specifically when exiting the main code block, the analysis iterates over all entries in the dictionary and reports a warning whenever the usage counter is still $0$. However, there is an exception if an identifier is the underscore character so that it can be used as a throwaway variable, similar to other programming language.  
+
+\subsection{Type Checking}
+\label{sec:implementation_typeCheckingAnalayis}
+... type checking and different errors it reports
+
+\subsection{Error Handling}
+\label{sec:implementation_semanticAnalayis_errorHandling}
 \begin{itemize}
-    \item What is semantic analysis used for?
-    \item How is it implemented in Luie?
-    \item Different types of semantic analysis
-    \item Errors
-    \begin{itemize}
-        \item Types of errors: Critical, warning
-        \item Different critical errors (Type, undefined, \dots)
-        \item Different warnings (invalid range, \dots)
-    \end{itemize}
+    \item Describe the relevant parts of error handling (used by the semantic analysis)
+    \item Error handlers, 
+    \item How are errors reported \dots
+    \item error context
 \end{itemize}
