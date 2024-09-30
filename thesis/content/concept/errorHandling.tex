@@ -11,3 +11,17 @@ An invalid range warning can occur in the context of for loops. They iterate ove
 The unused symbol warning is raised when a symbol, \eg a register of composite gate, is defined in the source code but never used. The unused symbol does not have any negative effect on the compilation and the optimization step can easily remove, \eg, an unused register. Therefore, this is only a warning and the program an be compiled. However, an unused symbol may indicate, that the wrong symbol was used somewhere else or part of the program is no longer used, hence, warning the user of the unused symbol may prevent untended behavior.
 
 \subsection{Critical Errors}
+The list of critical errors, often just referred to as errors, is more extensive than the list of warnings. It includes the invalid access, number of arguments for gates and functions, and size errors. Furthermore, there are errors for the attempted declaration of a variable that is already declared, an undeclared and type error, and, lastly, an error for the invalid use of a qubits in a guarded code block.
+
+The first error ist he invalid access error. It occurs when a register is accessed an index $i$, \ie $i$ is either smaller than $0$ or larger than $size - 1$, where $size$ is the size of the register. While this error could easily be ignored and would cause no issue when compiling the program, the resulting code would be an invalid circuit description. 
+
+Secondly, the invalid number of arguments error for gates and functions is caused when the number of arguments given to either a gate or function is not as expected. For example, an the Hadamard gate, when not controlled, always expects one argument while the controlled-not gate requires two. Similarly, the \texttt{sizeof}-function operates one expertly one argument. The compiler cannot proceed when given to few arguments; for the opposite case, dropping any leftover arguments would result in an unexpected behavior. Additionally, too many arguments indicate an issue in the program. Therefore, the compiler reports an error for both cases and aborts the compilation.
+
+invalid size
+
+redeclaration error
+undeclared error
+
+type error
+
+(invalid) use of guard error 

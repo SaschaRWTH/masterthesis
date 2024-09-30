@@ -435,12 +435,12 @@ FUNCTION {format.isbn}
     }
   if$
 }
-FUNCTION {remove.textunderscore}
+FUNCTION {remove.underscoreBraces}
 { 't :=
   ""
   { t empty$ not }
   { t #1 #18 substring$ "{\textunderscore }" =
-      { "_" *
+      { "\textunderscore " *
         t #19 global.max$ substring$ 't :=
       }
       { t #1 #1 substring$ *
@@ -456,8 +456,8 @@ FUNCTION {format.doi}
     { "" }
     {
       new.block
-      % "\mbox{\doi{" doi remove.textunderscore * "}}" *
-      "\mbox{\doi{" doi * "}}" *
+      "\mbox{\doi{" doi remove.underscoreBraces * "}}" *
+      % "\mbox{\doi{" doi * "}}" *
     }
   if$
 }
