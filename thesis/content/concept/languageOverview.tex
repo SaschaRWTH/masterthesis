@@ -20,15 +20,24 @@ In contrast, two independent scope do not have access to the variables defined i
 \label{sec:concept_dataTypes}
 Luie is mainly focused on being a quantum language with quantum control flow; this is also reflected in its data types. The language operates mostly on two types of quantum data, registers and qubits. Both behave as described in Sec.~\ref{sec:background_quantumComputing} where a register represents an array of qubits with a fixed length.
 \unsure{Here or in implementation: while to the outsite register array of qubits, internally qubit special case of register (with length 1).}
-\dots
+Both registers and qubits are declared similarly. First, the \texttt{qubit} keyword is used to indicate the declaration. In the case of a register, the size of the register is given in brackets. Lastly, the identifier for the register or qubit is specified. For classical data types in most language, the variables need to be explicitly initialized. In quantum computers, however, qubits can only be initialized to $\ket{0}$. Therefore, Luie does not require or allow for an initialization value for qubits and registers but always defaults to $\ket{0}$ for all qubits and register entries.
+
+The second class of data types in Luie are classical data types. They can be divided into constant values, constant variables, and loop iterators. In contrast to most classical language with similar data type, they are not referenced in the compiled program; they are only used at compile time and, therefore, must all have a constant value of known behavior. 
+\todo{expand on this idea}
+Constant values are the most simple data types and represent any value given directly in the program code. Currently, they can only be integers. 
+
+Similar to constant values, constant variables, often just called constants, also have a constant values that is calculated when they are declared. However, they can not only be an integer but also unsigned integers and floating point values. Furthermore, they can be given by an expression when declared and reused as often as needed in the context they were declared in. Constants are declared with the \texttt{const} keyword and need to be given an identifier as well as th type of the constant. The type is either the \texttt{int}, \texttt{uint}, or \texttt{double} keyword. Lastly, an expression for the value of the constant is given.  
+
+The loop iterator data type is declared when creating a loop and is also only accessible in the loop body. Its values corresponds to the current loop iteration, \eg for the first iteration $0$ and the last one $n - 1$ where $n$ is the number of iterations. Loop iterators are usually not implement as a special data type but by iterating, \eg, an integer; however, Luie does not allow of mutable, classical data type and, therefore, cannot increment an integer to iterate over a loop. In turn, it requires a special data type which value is constant for each iteration. 
 \begin{itemize}
     \item Different data types
     \begin{itemize}
         \item Register
         \item Qubits (Registers with size 1)
         \item Iterators, in more detail in Sec.~\ref{sec:concept_controlFlow}
+        \item constants (classical values)
+        \item All classical data type are compile-time only
     \end{itemize}
-    \item How are qubits and register declared?
 \end{itemize}
 
 

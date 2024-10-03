@@ -1,7 +1,7 @@
 \section{Error Handling}
 Generally, an important part of a program is error handling; useful and precise error messages are essential for comfortable interactions with the program. This is especially the case for compilers where the user should not only easily understand what the issue is but also where in the source code the error occurred.  
 
-Our compiler has two types of errors with different severity. The first type is the warning. A warning from the compiler can indicate issues in the source code that may cause unintended behavior. However, the issues itself does not prevent the compilation of the program and is simply an indication that there my be something wrong. In contrast, the critical error is cause by a flaw in the source program that prevents the correct compilation. In the following, we will discuss the different warnings and critical errors, the compiler my raise and what their meaning is.
+Our compiler has two types of errors with different severity. The first type is the warning. A warning from the compiler can indicate issues in the source code that may cause unintended behavior. However, the issues itself does not prevent the compilation of the program and is simply an indication that there may be something wrong. In contrast, the critical error is caused by a flaw in the source program that prevents the correct compilation and will result in the abortion of the compilation. In the following, we will discuss the different warnings and critical errors, the compiler may raise and how they are caused. Furthermore, we discuss why they are either a warning or critical error. 
 
 \subsection{Warnings}
 The compiler can throw two different kinds of warnings. The first is the invalid range warning and the second is the unused symbol warning.
@@ -17,11 +17,11 @@ The first error ist he invalid access error. It occurs when a register is access
 
 Secondly, the invalid number of arguments error for gates and functions is caused when the number of arguments given to either a gate or function is not as expected. For example, an the Hadamard gate, when not controlled, always expects one argument while the controlled-not gate requires two. Similarly, the \texttt{sizeof}-function operates one expertly one argument. The compiler cannot proceed when given to few arguments; for the opposite case, dropping any leftover arguments would result in an unexpected behavior. Additionally, too many arguments indicate an issue in the program. Therefore, the compiler reports an error for both cases and aborts the compilation.
 
-invalid size
+Another error is the invalid size error. It occurs then a register is declared with an invalid size. A size is invalid if it is less or equal to $0$. A register with non entries cannot be used for anything and, likely, indicates an issue in the program while a register with a negative amount of entries is impossible. Therefore the compilation is aborted and the error is thrown.
 
-redeclaration error
-undeclared error
+The next two errors are concerned with the declaration of variables in a given context; they are the undeclared and already-declared errors. An undeclared error is raised when a variable is used in a context where it is not defined. In this case, the symbol table does not have a symbol stored for the given identifier and the compiler cannot continue. In contrast, the already-declared error occurs when a variable is declared in a context where the same variable identifier has already been assigned to a different symbol. While the compiler could overwrite the previous declaration, this can easily lead to unexpected behavior and, in turn, most language do not allow a declaration in the same scope to be overwritten. 
 
-type error
+The type error is thrown when a variables is used in a function or gate but is not the required type. Languages with loose typing may be able to convert some types to the required type by, for example, parsing the integer value of a string. However, this can not only result in unexpected behavior and hard to debug errors in the code but, in the case of a quantum language, it also would require the conversion from classical to quantum data which is not easily achievable.
+\improvement{change, dont like formulation} 
 
-(invalid) use of guard error 
+Finally, the last error is the use-of-guard error; it occurs when a qubit is reference in the context that is guarded by itself. While the compiler can easily translate any such occurrence, they result in a invalid circuit description. As described in Sec.~\ref{sec:background_branching}, a gate that operates on and is controlled by the same qubit cannot be reversible. Therefore, the compiler prevents the generation of an invalid circuit and aborts the compilation. 
