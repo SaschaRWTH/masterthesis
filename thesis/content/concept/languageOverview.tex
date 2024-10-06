@@ -43,30 +43,34 @@ The loop iterator data type is declared when creating a loop and is also only ac
 
 \subsection{Basic Operations}
 \label{sec:concept_basicOperations}
-\begin{itemize}
-    \item Parameterized gates: p
-    \item Overall universal gate set, any gate can be defined with composite gates for later use
-\end{itemize}
 Any language needs some basic operations to manipulate its data type. While these operations may be addition, multiplication, and similar ones, quantum computers\unsure{gate-based quantum computer, not generally} manipulate their data with gates. Luie provides multiple predefined gates with which the qubits and registers can be manipulated. The syntax for applying gates to qubits is similar to other quantum language; the name of the gate is given and all parameters are listed next, separated with commas. 
 
 The first kind of gate set natively available are the basic single qubit gates; these include the $X$, $Y$, and $Z$ gates as well as the Hadamard gate $H$. The logical extension of single qubit gates is the second gate set, the multi-qubit gates; they include the controlled-not gate $CX$ and the Toffoli gate $CCX$. These gates are not required for the overall gate set to be universal because they can easily be simulated with the control flow abilities provided by Luie. However, they are included because most programmers are used to them.
 \unsure{bad reason, write better one!}
 Finally, the parameterized gates are the last gate set. In contrast to the basic single and multi-qubit gates, they are not constant in their behavior but depend on a parameter. This parameter is given as an expression and is evaluated at compile time; it is given in parenthesis after the gate itself. Currently, the only parameterized gate available is the phase gate $p(\lambda)$.
-The respective behavior and mathematical definition of all predefined gates in Luie is discussed in Sec.~\ref{sec:background_quantumGates}. Since the language provides both the Toffoli and Hadamard gates, the overall gate set is universal. Furthermore, any gates that are not predefined, can easily be implemented as composite gate; they are described in Sec.\ref{ce} 
+The respective behavior and mathematical definition of all predefined gates in Luie is discussed in Sec.~\ref{sec:background_quantumGates}. Since the language provides both the Toffoli and Hadamard gates, the overall gate set is universal. Furthermore, any gates that are not predefined, can easily be implemented as composite gate; they are described in Sec.~\ref{sec:concept_compositeGates}.
+
+However, one feature not provided for gate applications is implicit iteration. Implicit iteration allows gates that operate on a single qubit to be applied to an entire register instead by giving the register as a parameter. Since Luie provides an loop statements with which a gate can explicitly be applied to entire register with additional control over the application, implicit iteration is not implemented in the language.  
 
 \subsection{Control Flow}
 \label{sec:concept_controlFlow}
 \begin{itemize}
-    \item different kinds of control flow primitives
     \item qif-/else-statements
     \begin{itemize}
-        \item describe
-    \end{itemize}
-    \item for-loops
-    \begin{itemize}
-        \item describe
+        \item if statement in super position
+        \item optional else statement
+        \item does not allow for boolean expressions, only single qubit parameter
+        \item guards codeblock
+        \item can include statements, declarations
+        \item declarations however always performed, not depending on value of guard
+        \item can similarly to for loops increase number of qubits, however not as bad, because only one declaration instead of a declaration for each iteration 
     \end{itemize}
 \end{itemize}
+The main focus of the proposed language is quantum control flow. Therefore, Luie provides two different control flow statements, a loop statement with a fixed number of iterations and an if statement operating of data in superposition. 
+
+The loop statement can be used to iterate over a code block a fixed number of times. While the number of iterations needs to be known at compile time, it can depend on constants know at compile time such as the size of a register. However, it can, \eg, not depend on the measurement of a qubit or even the value of a qubit in superposition. This relates back to the principle of synchronization, as described in Sec.~\ref{sec:background_controlflow_synchronization}. Additionally, the body of the loop can depend on iteration index, \ie the current value of the iterator. Therefore, the loop statement can, \eg, iterate over a register or part of it and apply a series of gates to each qubit. Furthermore, the loop body can also include all statements can declarations available for each code bock. In turn, the loop statement can contain nested loops or parts of its body can be guarded by an if statement. However, the target language of the compiler and quantum computers in general do not have a concept of local variable. Therefore, while declarations can be performed, a declaration in a loop body is translated to a ``global'' declaration of a qubit for each iteration. This can significantly increase the qubit count of the program. To optimize the current implementation, a single qubit could be declared that is reset or measured at the end of each iteration and, thereby, reducing the required number of qubits.
+
+If statements
 
 \subsection{Expressions}
 \label{sec:concept_expressions}
@@ -85,15 +89,9 @@ The language allows for complex expression that are evaluated at compile time. T
 
 \subsection{Composite Gates}
 \label{sec:concept_compositeGates}
-\begin{itemize}
-    \item Similar to composite gates in language OpenQASM
-    \item Useful for gate combinations commonly used,
-    \item Can also make code more readable (indirect code comments)
-    \item Some significant changes
-    \item Can input registers (not implicit iteration)
-    \item Access to control flow statements provided by luie
-    \item Example of composite gate, quantum Fourier transform depicted in Fig.~\ref{fig:qft_example}
-\end{itemize}
+Similar to OpenQASM, Luie also allows for the declaration of composite gates. They can be used to declare a custom gate that applies the gate combination specified in the gate body. This can be particularly useful for gate combinations often used in the code to reduce redundancy and, further, improve the readability of the code. For example, the swap gate can be defined on two qubits where three controlled-not gates are applied such that the values of both qubits are swapped. In this case, not only are three gates reduced to only one but the code clearly indicated that the values are swapped without prior knowledge on the effect of the controlled-not gates.
+
+While the concept of a composite gate is also available in OpenQASM, Luie expands on the possibilities provided by OpenQASM's implementation. Firstly, the gate does not only allow for simple gate application statements but also for the control flow statements provided by Luie; this includes the loop statements and if statements in superposition, only qubit and register declarations are prohibited in the body of gate declarations. In contrast to composite gates in OpenQasm, not only qubits are allowed as parameter but also registers. Therefore, registers can be given as parameters and the loop statement can iterate over them resulting in gates that can depend on the length of a register and do not need to be reimplemented for each different size. However, in contrast to OpenQASM, the language currently does not allow of parameterized composite gates.   
 
 \begin{figure}[htp]
     \centering     
@@ -101,3 +99,5 @@ The language allows for complex expression that are evaluated at compile time. T
     \caption{Luie gate definition for the Quantum Fourier Transform.}
     \label{fig:qft_example}
 \end{figure}
+
+Two examples for composite gates are depicted in Fig.~\ref{fig:qft_example}. The first gate is a simple definition for the commonly used, and often predefined, \texttt{swap} gate. Below, a gate definition for the quantum Fourier transform is given. It not only references the previous swap gate, but also uses both loop and if statements. Firstly, the gate iterates over all qubits in the given register $reg$ with size $n$. In each iteration, the gate first applies the Hadamard gate to the qubits and, again, iterates over all remaining qubits in the register and applies the phase gate depending on the value of the qubit in superposition. Additionally, the parameter for the phase gate is calculated based on the offset of both indices. After iterating through the entire register and applying the corresponding gate, the gate swaps each qubit at index $i$ with the qubit at index $n - i$ for $0 \geq i \geq \floor*{\frac{n}{2}}$. 
