@@ -1,9 +1,7 @@
 \section{Language Overview}
-\begin{itemize}
-    \item Given an overview of the different feature of the language
-    \item How do they work and what is the reason for implementing them
-    \item Why are some feature (\eg implicit iteration) \emph{not} implemented
-\end{itemize}
+In the following section, we discuss the different concepts that the language provides for writing quantum programs; we discuss their behavior and some use cases for them. Additionally, we explain why some features of other languages were not incorporated and the reasons for some special behaviors. Firstly, we discuss code blocks and their corresponding variables contexts, or scopes. Then, we introduce the data types that are available in the language. Next, the basic operations as well as the more complex control flow statements are listed and explained. This is followed by an overview of the possible expressions and the available operations and build in functions. Lastly, we discuss the composite gates of the language. 
+
+The following description is a high level overview of the concepts and functionalities of the language. The concrete syntax and implementation of these features is discussed in Ch.~\ref{ch:implementation}.
 
 \subsection{Blocks and Scopes}
 \label{sec:concept_blocksAndScope}
@@ -29,17 +27,6 @@ Constant values are the most simple data types and represent any value given dir
 Similar to constant values, constant variables, often just called constants, also have a constant values that is calculated when they are declared. However, they can not only be an integer but also unsigned integers and floating point values. Furthermore, they can be given by an expression when declared and reused as often as needed in the context they were declared in. Constants are declared with the \texttt{const} keyword and need to be given an identifier as well as th type of the constant. The type is either the \texttt{int}, \texttt{uint}, or \texttt{double} keyword. Lastly, an expression for the value of the constant is given.  
 
 The loop iterator data type is declared when creating a loop and is also only accessible in the loop body. Its values corresponds to the current loop iteration, \eg for the first iteration $0$ and the last one $n - 1$ where $n$ is the number of iterations. Loop iterators are usually not implement as a special data type but by iterating, \eg, an integer; however, Luie does not allow of mutable, classical data type and, therefore, cannot increment an integer to iterate over a loop. In turn, it requires a special data type which value is constant for each iteration. 
-\begin{itemize}
-    \item Different data types
-    \begin{itemize}
-        \item Register
-        \item Qubits (Registers with size 1)
-        \item Iterators, in more detail in Sec.~\ref{sec:concept_controlFlow}
-        \item constants (classical values)
-        \item All classical data type are compile-time only
-    \end{itemize}
-\end{itemize}
-
 
 \subsection{Basic Operations}
 \label{sec:concept_basicOperations}
@@ -54,39 +41,27 @@ However, one feature not provided for gate applications is implicit iteration. I
 
 \subsection{Control Flow}
 \label{sec:concept_controlFlow}
-\begin{itemize}
-    \item qif-/else-statements
-    \begin{itemize}
-        \item if statement in super position
-        \item optional else statement
-        \item does not allow for boolean expressions, only single qubit parameter
-        \item guards codeblock
-        \item can include statements, declarations
-        \item declarations however always performed, not depending on value of guard
-        \item can similarly to for loops increase number of qubits, however not as bad, because only one declaration instead of a declaration for each iteration 
-    \end{itemize}
-\end{itemize}
 The main focus of the proposed language is quantum control flow. Therefore, Luie provides two different control flow statements, a loop statement with a fixed number of iterations and an if statement operating of data in superposition. 
 
 The loop statement can be used to iterate over a code block a fixed number of times. While the number of iterations needs to be known at compile time, it can depend on constants know at compile time such as the size of a register. However, it can, \eg, not depend on the measurement of a qubit or even the value of a qubit in superposition. This relates back to the principle of synchronization, as described in Sec.~\ref{sec:background_controlflow_synchronization}. Additionally, the body of the loop can depend on iteration index, \ie the current value of the iterator. Therefore, the loop statement can, \eg, iterate over a register or part of it and apply a series of gates to each qubit. Furthermore, the loop body can also include all statements can declarations available for each code bock. In turn, the loop statement can contain nested loops or parts of its body can be guarded by an if statement. However, the target language of the compiler and quantum computers in general do not have a concept of local variable. Therefore, while declarations can be performed, a declaration in a loop body is translated to a ``global'' declaration of a qubit for each iteration. This can significantly increase the qubit count of the program. To optimize the current implementation, a single qubit could be declared that is reset or measured at the end of each iteration and, thereby, reducing the required number of qubits.
 
-If statements
+In contrast to loop statements, the if statements do not depend on constant data known at compile time; their execution, however, depends on the value of a qubit in super position. Further, the guard of the statement can only be a single qubit, not a register, and cannot include boolean expressions.
+\unsure{explain why no boolean expressions?}
+The body of the statement can contain any other statements, including further if and loops statements, as well as declaration. When compiled, each gate application inside the body is guarded by the given qubit and translated to a controlled version of the gate where the guard is the control. However, the declaration is not dependent on the value of the guard. Therefore, similar to declarations inside loop statements, the declaration is always performed independent of the guard's value. In turn, the declaration of qubits or register inside an if statement can increase the qubit count but not to the same extend as the declaration in loop statements because it is only performed once and not for each iteration. Additionally, the if statement also offers an optional else case besides the main code block. In this case, the translated statements of the else block are controlled by the negated guard. 
 
 \subsection{Expressions}
 \label{sec:concept_expressions}
-The language allows for complex expression that are evaluated at compile time. These expression can be used to access specific indices of a register or define the range of a for loop. Besides the typical operations like addition and multiplication, the language also implements different functions. In the following, we want to present the operations and different functions that expressions can use, what data types they operate on, and how they behave. 
+The language allows for complex expression that are evaluated at compile time. These expression can be used to access specific indices of a register or define the range of an iterator used by a loop statement. Besides the typical operations like addition and multiplication, the language also implements different functions. However, the targeted quantum computers should not need to and, in some cases, cannot evaluate these expressions, their values need to be not only constant but also evaluated at compiler time; they can neither depend on the measurement nor the value of a qubit.  
 
-\dots
-\begin{itemize}
-    \item Consists of expressions, terms and factors
-    \begin{itemize}
-        \item Expressions consist of expression, operator, and term or just a term
-        \item Term consists of term, operator, and factor or just a factor
-        \item Factor consists of expression in parentheses, a negated factor, number, identifier or function call
-        \item Different functions
-    \end{itemize}
-\end{itemize}
+The first kind of operations are the basic operations; they include addition and subtraction, multiplication and division, and the negation. The grammar of the language is designed such that the operations inherently follow the order of operations. Additionally, parenthesis can be used to adjust this order. The operations operate either on an integer value or identifier. If a integer is given, it can easily be parsed to an integer and used with the operations. However, the identifier can either be a constant or an iterator. For either, the compiler looks up the current value in the symbol table and executes the other operations. 
 
+Besides basic operations, the language provides more complex functions that can be used for specific calculations. Firstly, the \texttt{sizeof} function takes a register as an input and returns the size of the given register; this can be useful for creating a loop statement that iterates over the size of a register. Furthermore, it can be used to create registers with the same size of another. Next, the \texttt{power} function takes two expressions as parameters, evaluates them and raises the first parameter's value to the value of the second parameter. Lastly, similar to the \texttt{power} function, the \texttt{min} and \texttt{max} functions both take two expressions as parameters and return the minimum and maximum value of the evaluated expressions respectively.    
+
+Luie provides two different expression for creating ranges. Since they create ranges, or more specifically loop iterators, and the other operations only operate on basic numeric types, \eg integers and floating point values, they are not grouped together with the others but implemented separately. The first way to define a range is to give the start and end values separated by two dots, \eg $1\texttt{..}9$ for iterating from $1$ to $9$. In this case, both the start and end values are included in the iteration. However, this expression can only take integers for the start and end values not expressions; this limitation is imposed such that the expression remains readable. The other operation for creating ranges is the \texttt{range} keyword followed by the start and end values in parenthesis and separated by a comma, \eg $\texttt{range}(1, 9)$. For this expression, the parameters can also be given as expressions. Futhermore, the \texttt{range} expression also provides a short hand, where only the length $len$ of the range is given. In this case, it will always start from $0$ and iterate to $len - 1$. This case is most handy for creating ranges to iterate over registers. 
+
+Lastly, in contrast to many other languages, the access of a register is not implemented as an expression. A register access, \ie a qubit, is not a classical data type and cannot be used in any context other than as a gate parameter or as an if statement guard. Therefore, it is implemented as a separate grammar rule and not as an expression.
+
+\todo{limitations: no implicit casting, currently all values in expression same type}
 \subsection{Composite Gates}
 \label{sec:concept_compositeGates}
 Similar to OpenQASM, Luie also allows for the declaration of composite gates. They can be used to declare a custom gate that applies the gate combination specified in the gate body. This can be particularly useful for gate combinations often used in the code to reduce redundancy and, further, improve the readability of the code. For example, the swap gate can be defined on two qubits where three controlled-not gates are applied such that the values of both qubits are swapped. In this case, not only are three gates reduced to only one but the code clearly indicated that the values are swapped without prior knowledge on the effect of the controlled-not gates.
@@ -100,4 +75,4 @@ While the concept of a composite gate is also available in OpenQASM, Luie expand
     \label{fig:qft_example}
 \end{figure}
 
-Two examples for composite gates are depicted in Fig.~\ref{fig:qft_example}. The first gate is a simple definition for the commonly used, and often predefined, \texttt{swap} gate. Below, a gate definition for the quantum Fourier transform is given. It not only references the previous swap gate, but also uses both loop and if statements. Firstly, the gate iterates over all qubits in the given register $reg$ with size $n$. In each iteration, the gate first applies the Hadamard gate to the qubits and, again, iterates over all remaining qubits in the register and applies the phase gate depending on the value of the qubit in superposition. Additionally, the parameter for the phase gate is calculated based on the offset of both indices. After iterating through the entire register and applying the corresponding gate, the gate swaps each qubit at index $i$ with the qubit at index $n - i$ for $0 \geq i \geq \floor*{\frac{n}{2}}$. 
+Two examples for composite gates are depicted in Fig.~\ref{fig:qft_example}. The first gate is a simple definition for the commonly used, and often predefined, \texttt{swap} gate. Below, a gate definition for the quantum Fourier transform is given. It not only references the previous swap gate, but also uses both loop and if statements. Firstly, the gate iterates over all qubits in the given register $reg$ with size $n$. In each iteration, the gate first applies the Hadamard gate to the qubits and, again, iterates over all remaining qubits in the register and applies the phase gate depending on the value of the qubit in superposition. Additionally, the parameter for the phase gate is calculated based on the offset of both indices. After iterating through the entire register and applying the corresponding gate, the gate swaps each qubit at index $i$ with the qubit at index $n - i$ for $0 \geq i \geq \floor*{\frac{n}{2}}$.
