@@ -5,5 +5,40 @@
     \item Example graph
 \end{itemize}
 
+\subsection{Optimization Rules}
+\begin{itemize}
+    \item Described in Sec.~\ref{sec:background_circuitOptimization}
+\end{itemize}
+
 \subsection{Circuit Graph}
 \label{sec:concept_circuitGraph}
+
+\begin{itemize}
+    % Quick link to paper: https://quantum-journal.org/papers/q-2023-11-08-1176/pdf/
+    \item Why rules could be applied directly to code, can be tedious and error prone, must adjust for many cases
+    \item eg 2 consecutive gate on one wire may be separated by many gate applications (on separate wires) in code
+    \item abstraction in useful
+    \item Rules applied to circuit graph described by \cite{KMO*23}
+    \item describe graph
+    \begin{itemize}
+        \item Graph acyclic and directed
+        \item Input and output node for each qubit
+        \item Each has only one outgoing or incoming vertex respectively
+        \item For each gate node with as many input and output vertices as qubit parameters (e.g. H gate 1 in and out and CX 2 in and out respectively)
+        \item Each vertices pair (of incoming and outgoing vertex) represent a node to which the gate is applied
+        \item Therefore, for each qubit, there exists one path from its input node to its output node such that all gates that are applied to it are visited in order of application
+    \end{itemize}
+    \item Create graph from program code
+    \begin{itemize}
+        \item How to systematically create graph
+        \item Get all declaration
+        \item Foreach, create input/output node pair
+        \item \dots
+    \end{itemize}
+    \item Apply optimization rules to graph instead of code
+    \begin{itemize}
+        \item (Systematically) iterate through subgraphs 
+        \item Check if there is an equivalent, more efficient/cost-effective subgraph
+        \item replace subgraph with optimized one 
+    \end{itemize}
+\end{itemize}
