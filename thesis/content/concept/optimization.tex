@@ -1,21 +1,20 @@
 \section{Optimization}
-\begin{itemize}
-    \item General information about optimization
-    \item peephole optimization
-    \begin{itemize}
-        \item Optimize target code
-        \item because we use circuit graph for simplicity
-    \end{itemize}
-    \item Some ``native'' optimizations
-    \begin{itemize}
-        \item Constant folding
-        \item \dots
-    \end{itemize}
-\end{itemize}
+Our compiler does not only translate the source language Luie to the target language OpenQASM but can also apply optimizations to the program. Since quantum programs must be deterministic and, therefore, most language constructs are translated at compile time, many classical optimizations are inherently applied. The following optimizations are discuss in more detain in Sec.~\ref{sec:background_codeOptimization}.
+
+The first kind of inherent optimizations are constant propagation and constant folding. 
+While the target language does allow for expressions, they need to be constant. Furthermore, some language features that depend on expressions have no equivalent in the target language so that they, and their corresponding expressions, need to be evaluated at compile time; this is the case for, \eg, the control statements. Therefore, any variable is always constant and its value is propagated to be used in the evaluation of expressions. Further, each expression is evaluated at compile time such that constant propagation and constant folding are inherently applied.
+
+Secondly, loop unrolling is always applied to all loop statements. OpenQASM does not allow for loop statements or any other method for the iteration of commands, besides the restrictive implicit iteration. Furthermore, quantum computer in general cannot provide the ability to iterate over gates since they operate on static circuits. Therefore, to allow for loop statements in our language, the loop is unrolled entirely at compile time. Additionally, for each iteration the current values of the loop iterator is propagated as a constant through the loop body.   
+
+The last inherent optimization is function inlining. Our language provides the ability to define custom gates that consist of an arbitrary combination of gate applications and, possibly, control flow statements. While OpenQASM has a similar functionality, the composite gate OpenQASM provides are more restrictive; for example, they do not allow for registers as arguments to the gate. Furthermore, in contrast to classical computers, quantum computers do not natively support function calls or similar. Therefore, each time a composite gate is used, the compiler inline the gate body at the call site of the gate.   
 
 \subsection{Optimization Rules}
+After the code is translated, the compiler can perform additional peephole optimizations; these are not inherent to the translation of the program and, therefore, are optional. Furthermore, the user can specify which optimizations are applied when using the compiler. In the following section, we discuss the different optimization rules that can be applied. 
 \begin{itemize}
     \item Described in Sec.~\ref{sec:background_circuitOptimization}
+    \item Peephole optimizations rules performed by compiler or available
+    \item Null gates
+    \item Peeping Control (technically also Null gates, but implementation differs -> differentiation)
 \end{itemize}
 
 \subsection{Circuit Graph}
@@ -28,7 +27,7 @@ Therefore, many simple optimization rules may not be applied when using a simpli
 The circuit graph is a graphical description of a quantum graph; it is a acyclic and directed graph. For each qubit in the circuit, there exist both an input node and an output node. Furthermore, each input node as exactly one outgoing vertex while each output node as exactly one incoming vertex. Besides the input and output nodes, all other nodes represent gates in the circuit. All gate nodes the number of incoming vertices is equivalent to the number of outgoing vertices. Additionally, the number of incoming, or outgoing, vertices is the same as the number of parameters of the gate. Importantly, in this case, any qubits controlling the application of the gate, \eg the first qubit in a controlled-not gate, do also count to the number of parameters. In turn, their exists a vertices pair of an incoming and outgoing vertex each that represent a qubit to which the gate is applied. Therefore, for each qubit, there exists one path from its input node to its output node such that all gates that are applied to it are visited in order of application.
 
 \subsubsection{Graph Construction}
-When using the circuit graph to optimize the quantum program, the first step is to systematically construct the graph from the program. The creation of the graph starts with the input and output nodes for each qubit in the circuit. For each declaration of a qubit in the program, a input and output node pair is created. If a register is declared, a pair is created separately for each qubit in the register, \ie for a register with size $n$, $n$ pairs are created in total. Next, the gate applications in the program can be iterated. For each gate application, a corresponding gate node is created. To insert this node into the graph, each qubit parameter requires an incoming vertex to this node and a corresponding outgoing vertex from the node. Additionally, the incoming node must come from the gate that was previously applied to the qubit or the input node if no gate was applied yet. Similarly, the outgoing gate must lead to the either the next applied gate or the corresponding output. Therefore, for each qubit, the vertex coming into the output node can be diverted to the gate node and an outgoing vertex from the gate to the output node can be created. Repeating this step for all gate applications in the program result in the circuit graph.  
+When using the circuit graph to optimize the quantum program, the first step is to systematically construct the graph from the program. The creation of the graph starts with the input and output nodes for each qubit in the circuit. For each declaration of a qubit in the program, a input and output node pair is created. If a register is declared, a pair is created separately for each qubit in the register, \ie for a register with size $n$, $n$ pairs are created in total. Next, the gate applications in the program can be iterated. For each gate application, a corresponding gate node is created. To insert this node into the graph, each qubit parameter requires an incoming vertex to this node and a corresponding outgoing vertex from the node. Additionally, the incoming node must come from the gate that was previously applied to the qubit or the input node if no gate was applied yet. Similarly, the outgoing gate must lead to the either the next applied gate or the corresponding output. Therefore, for each qubit, the vertex coming into the output node can be diverted to the gate node and an outgoing vertex from the gate to the output node can be created. Repeating this step for all gate applications in the program result in the circuit graph.
 
 An example of a simple, unoptimized circuit graph is depicted in Fig.~\ref{fig:circuit_graph_unoptimized}. For simplicity, all applied gates are depicted in their corresponding node of the circuit graph. The circuit consist of three qubits, $q_0$, $q_1$, and $q_2$; their input and output nodes are depicted on the left and right of the graph respectively and are labeled with the corresponding qubit. Firstly, an $X$ is applied to the first qubit $q_0$. Than, a controlled-not gate is applied to the first two qubits $q_0$ and $q_1$, where $q_0$ is the controlling qubit. Simultaneously, two Hadamard gates $H$ are applied to the third qubit $q_2$. Lastly, another $X$ gate is applied to the first qubit $q_0$ while another controlled-not gate is applied to the second and third qubits $q_1$ and $q_2$. In this case, the second qubit $q_1$ is the controlling qubit.
 
