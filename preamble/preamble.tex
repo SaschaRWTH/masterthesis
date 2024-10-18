@@ -229,6 +229,30 @@
 	keywordstyle=\color{cyan},               % Style for quantum keywords
 }
 
+\lstdefinestyle{bashstyle}{
+    language=bash,
+    basicstyle=\ttfamily\small,        % Font style and size
+    keywordstyle=\color{blue},         % Keywords like 'if', 'else'
+    stringstyle=\color{green!60!black}, % Strings in commands
+    commentstyle=\color{gray},         % Comments
+    showstringspaces=false,            % Don't show spaces in strings
+    frame=single,                      % Frame around the code
+    framerule=0.5pt,                   % Thickness of frame
+    tabsize=4,                         % Tab size
+    breaklines=false,                   % Line breaking if long
+    captionpos=b,                      % Caption position at the bottom
+    numbers=left,                      % Line numbers on the left
+    numberstyle=\tiny\color{gray},     % Style of line numbers
+	framexleftmargin=17pt,                   % Extra margin on the left
+	framexrightmargin=5pt,                   % Extra margin on the right
+	framexbottommargin=4pt,                  % Extra margin at the bottom
+	xleftmargin=.05\textwidth,                % Left margin
+	xrightmargin=.05\textwidth,               % Right margin
+	morekeywords= {
+		input, output, verbose, optimization
+	}
+}
+
 
 \usepackage[loadshadowlibrary,colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 \newcommandx{\unsure}[2][1=]{\todo[shadow, linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
@@ -250,7 +274,6 @@
 \makesavenoteenv{table}
 
 % Overwrite doi command to include hyperlink
-% # TODO: DOES NOT WORK FOR {_} or _ 
 \newcommand*{\doi}[1]{\href{http://dx.doi.org/#1}{doi: #1}}
 
 
