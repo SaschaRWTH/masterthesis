@@ -40,9 +40,10 @@ The respective behavior and mathematical definition of all predefined gates in L
 However, one feature not provided for gate applications is implicit iteration. Implicit iteration allows gates that operate on a single qubit to be applied to an entire register instead by giving the register as a parameter. Since Luie provides an loop statements with which a gate can explicitly be applied to entire register with additional control over the application, implicit iteration is not implemented in the language.  
 
 \subsection{Measurements}
-\begin{itemize}
-    \item Short paragraph about how measurements are handled/added
-\end{itemize}
+\label{sec:concept_measurement}
+For a quantum circuit to be of any use, measurements are required. However, there are many options for implementing measurements. Our language only implements implicit measurements and does not allow the explicit measurement of a qubit at an arbitrary point in the circuit. While explicit measurement may allow for more flexibility and manual optimization of qubit usage, both approaches are equivalent. Furthermore, our language focuses mainly on control flow statements so that we decided on a simple approach for the measurement of qubits. Additionally, explicit measurement statements in the language would require further classical data types to store the result of the measurement; this would increase the overall complexity of the language and require the user to add additional declarations for each explicit measurement.
+
+In our language, the measurements are implicitly added at the end of each qubit wire. Thus, the compiler declares both a bit for each qubit and a classical register for each quantum register. Next, each qubit and quantum register is measured and the result of the measurement is added to the corresponding bit or classical register.
 
 \subsection{Control Flow}
 \label{sec:concept_controlFlow}
