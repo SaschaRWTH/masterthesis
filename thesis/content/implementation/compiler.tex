@@ -7,6 +7,7 @@
     \item How are different parts called
     \item How do they interact?
     \item Discuss general concepts and classes used by compiler
+    \item IO Handler
 \end{itemize}
 
 \subsection{Symbols}
@@ -17,3 +18,40 @@
 \subsection{Scope}
 
 \subsection{Symbol Table}
+
+\subsection{Command Line Interface}
+As the interface between the programmer and the compiler itself, the command line interface (CLI) is an essential part of the compiler. 
+Its purpose is to interact with the programmer and created the compiler data which specifies the behavior of the compiler. 
+To achieve this, the CLI consists of two different parts. The first are the attributes that are used to annotate the compiler data class and the second part is the CLI Handler; it parses the input arguments and creates the compiler data from them. Additionally, it print the help text to the console if needed.
+
+An attribute is a C\# class that can be used to annotate fields and properties of another class; together with reflection, it can be used to create a modular and easily extendable compiler data class with parameters and descriptions for each compiler data property. Reflection allows programs to get information on types of loaded assemblies. In our case, we are interested in the information on classes, more specifically information on properties of the compiler data class. We create custom attributes with a class that inherits from the \texttt{Attribute} class and contains the required information about the properties we need. With reflection, our program can get a list of all properties with specific attributes and use their information to create, \eg, the help text of the CLI. In turn, we have two custom attributes in our program. The first it the \texttt{CLIParameterAttribute} which specifies both the short and long name of an attribute corresponding to the compiler data property. For example, in the case of the input path property, the short name is a lower case ``i'' and the long name is ``input''. The second attribute is the \texttt{CLIDescriptionAttribute}; it contains a description for the property it is applied to. Then, this description can be display in the help text. In the case of the input path property, the description describes that the parameter describes the path to the input file. The code for the input path property example is depicted in Fig.~\ref{fig:implementation_inputPathAttribute}.
+
+\begin{figure}[htp]
+    \centering
+    \begin{lstlisting}[language=csh]
+[CLIParameter('i', "input")]
+[CLIDescription("Path to the input file.")]
+public string InputPath { get; set; } = string.Empty;
+    \end{lstlisting}
+    \caption{The input path property declaration with its parameter and description attribute.}
+    \label{fig:implementation_inputPathAttribute}
+\end{figure}
+
+To parse the command line arguments and create the compiler data from it, the command line interface class is used; it consists of functions to parse the arguments and print the help text to the console. Since the syntax for the CLI argument input is very basic, the command line parsing itself is basic. The input string is split at each space and given to the function as a string array. First, the function retrieves the CLI parameter attributes for all compiler data properties. Then, it iterates over the string array and, for each array entry, checks whether the parameter attribute matches the string; for example, in the case of the input path property, the string would have to be either ``-i'' or ``--input''. If this is the case, \dots
+\begin{itemize}
+    \item What are C\# attributes? and What is reflection?
+    \begin{itemize}
+        \item Can annotate fields and properties of a class
+        \item To create custom attribute, inherit from Attribute class
+        \item Allow programs to get information on types of loaded assemblies, 
+        \item in our case we are interested in info on classes, more specifically interessted in attributes of the compiler data class  
+    \end{itemize}
+    \item two different attributes
+    \item cli parameter and cli parameter description
+\end{itemize}
+
+CLI Handler
+\begin{itemize}
+    \item parses different arguments
+    \item prints cli help text
+\end{itemize}
