@@ -1,23 +1,24 @@
 \section{Compiler}
-\begin{itemize}
-    \item Static compiler class
-    \begin{itemize}
-        \item General information
-    \end{itemize}
-    \item How are different parts called
-    \item How do they interact?
-    \item Discuss general concepts and classes used by compiler
-    \item IO Handler
-\end{itemize}
+% \begin{itemize}
+%     \item Static compiler class
+%     \begin{itemize}
+%         \item General information
+%     \end{itemize}
+%     \item How are different parts called
+%     \item How do they interact?
+%     \item Discuss general concepts and classes used by compiler
+%     \begin{itemize}
+%         \item Compiler data
+%         \item IO Handler
+%     \end{itemize}
+% \end{itemize}
+The compiler consists of multiple classes and stages that work together to compile and optimize the given program. While most of the compiler can be divided into discrete stages, there are multiple overarching classes and commonly used structures that do not belong to a certain stage. In the following section, we discuss the implementation of general functionalities and introduce the commonly used structures.
 
-\subsection{Symbols}
-\begin{itemize}
-    \item List different kinds of symbols and there structure
-\end{itemize}
+When the compiler program is started, the main function calls the Command Line Interface class to parse the arguments to the compiler data class. The compiler data is used to enable and control the compilation process; it contains all required information such as the path to the input and output files. Furthermore, it specifies which optimizations are to be applied to the compiled program. Lastly, it indicates, whether the compilation process is to be executed verbosely. 
 
-\subsection{Scope}
+After the compiler data is parsed, the main function passes it to the compile function of the compiler class. This is a static class containing general compilation and printing functionalities as well as corresponding properties. We implement it as a static class so that all parts of the program can easily access its functions and properties. The first property of the compiler is the \texttt{Printer} function; its default value is the native console printing function of C\# but it can be set to any arbitrary function that takes a string as an input and does not return anything. While this property is not changed in a normal compilation process, it is used to check the console output of the compiler in the test cases. Secondly, the verbose property indicates whether the compiler prints not only the errors to the user but also the warnings and informational logs.
 
-\subsection{Symbol Table}
+The compile function handles the entire remaining compilation process. First, it retrieves the program code from the given input path. For the reading and saving of files, a separate \texttt{IOHandler} class exists that has some basic logic for reading and writing files. Then, the parse tree is created and passed to the semantic analysis of the compiler. Here all errors and warning are printed to the used. If any errors are thrown, the compilation is aborted. Next, the code is generated from the parse tree. If the compilation resulted in error, again, the compilation is arbored. After the code is generated, it is optimized based on the optimizations given in the compiler data. Lastly, the resulting program is written to the file specified by the output path.
 
 \subsection{Command Line Interface}
 As the interface between the programmer and the compiler itself, the command line interface (CLI) is an essential part of the compiler. 
@@ -37,21 +38,15 @@ public string InputPath { get; set; } = string.Empty;
     \label{fig:implementation_inputPathAttribute}
 \end{figure}
 
-To parse the command line arguments and create the compiler data from it, the command line interface class is used; it consists of functions to parse the arguments and print the help text to the console. Since the syntax for the CLI argument input is very basic, the command line parsing itself is basic. The input string is split at each space and given to the function as a string array. First, the function retrieves the CLI parameter attributes for all compiler data properties. Then, it iterates over the string array and, for each array entry, checks whether the parameter attribute matches the string; for example, in the case of the input path property, the string would have to be either ``-i'' or ``--input''. If this is the case, \dots
+To parse the command line arguments and create the compiler data from it, the command line interface class is used; it consists of functions to parse the arguments and print the help text to the console. Since the syntax for the CLI argument input is very basic, the command line parsing itself is basic. The input string is split at each space and given to the function as a string array. First, the function retrieves the CLI parameter attributes for all compiler data properties. Then, it iterates over the string array and, for each array entry, checks whether the parameter attribute matches the string; for example, in the case of the input path property, the string would have to be either ``-i'' or ``--input''. If this is the case, the corresponding parsing function, depending on the matched argument, is called with the string array and a reference to current index. A reference to the index is used to allow for further changes to the index, depending on the number of possible arguments for a parameter. For example, the verbose parameter will always return true and not change the index while a path parameter will increment the index and return the next string of the array. If no attribute can be matched or an argument exception is thrown in the process, the compiler will notify the user of the invalid or missing argument and print the help text to clarify the compiler options.
+
+The help text is created based on the attributes of the properties in the compiler data class. Firstly, the function retrieves both the parameter and description attributes. Since the compiler data class does not include the help parameter, as it is only used in the CLI context, the help text manually prints its information. Then, the parameters are iterated. For each parameter, a matching description is searched. If no description can be found, the text defaults to a message indicating that non is available. Lastly, both the parameter and corresponding description are printed to the console.
+
+\subsection{Symbols}
 \begin{itemize}
-    \item What are C\# attributes? and What is reflection?
-    \begin{itemize}
-        \item Can annotate fields and properties of a class
-        \item To create custom attribute, inherit from Attribute class
-        \item Allow programs to get information on types of loaded assemblies, 
-        \item in our case we are interested in info on classes, more specifically interessted in attributes of the compiler data class  
-    \end{itemize}
-    \item two different attributes
-    \item cli parameter and cli parameter description
+    \item List different kinds of symbols and there structure
 \end{itemize}
 
-CLI Handler
-\begin{itemize}
-    \item parses different arguments
-    \item prints cli help text
-\end{itemize}
+\subsection{Scope}
+
+\subsection{Symbol Table}
