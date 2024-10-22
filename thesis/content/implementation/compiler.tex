@@ -42,11 +42,38 @@ To parse the command line arguments and create the compiler data from it, the co
 
 The help text is created based on the attributes of the properties in the compiler data class. Firstly, the function retrieves both the parameter and description attributes. Since the compiler data class does not include the help parameter, as it is only used in the CLI context, the help text manually prints its information. Then, the parameters are iterated. For each parameter, a matching description is searched. If no description can be found, the text defaults to a message indicating that non is available. Lastly, both the parameter and corresponding description are printed to the console.
 
-\subsection{Symbols}
-\begin{itemize}
-    \item List different kinds of symbols and there structure
-\end{itemize}
 
 \subsection{Scope}
+\begin{itemize}
+    \item what does a scope represent
+    \item when is it used?
+    \item What are the different properties of a scope
+\end{itemize}
+
+
+\subsection{Symbols}
+One part that is used in most stages of the compilation process, mainly the semantic analysis and code generation, are the symbols; they are used to store all necessary information on data type, composite gates, and similar object in the language. The basis is an abstract symbol class that consists of an identifier and error context property. The identifier uniquely identifies a symbol in the scope it is used while the error context saves information about the symbol and its declaration environment to be used for possible error messages. In total there are eight different symbols that are derived from the class. In the following, we discuss these symbols and how they are used in the compiler. The hierarchy of the symbol classes is depicted in an UML diagram in Fig.~\ref{fig:implementation_uml_symbols}.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=.9\textwidth]{../figures/uml_symbols.pdf}
+    \caption{UML diagram of the different symbols.}
+    \label{fig:implementation_uml_symbols}
+\end{figure}
+
+There are three different symbol for quantum data types. The first kind is the register. Futhermore, it is the basis of all other quantum data type symbols. Besides the inherited properties, it consists of an expression that represents the size of the register. The expression specifying the size of the register may not be evaluable when its symbols is crease because the value of some identifiers may be known only at generation time.\todo{Introduce ``generation time'' as phrase with clear meaning}
+For example, the body of a loop statement is unrolled at generation time and the values of the loop iterator depends on this iteration. In turn, the value of the iterator identifier may not be known when the register symbol is created. Therefore, instead of saving a constant value, the symbol specifies the expression for its size. Then, when the code is generated and all values are know, the expression can be evaluated.    
+
+Next, the qubit symbol inherits from the register. While physically the qubit is the basic element and a register consist of qubits, in our case, it is useful to assume that a qubit is a special case of a register where the size is one so that the qubit can inherit the register symbol properties and functions. Furthermore, instead of differentiating between a qubit and register declaration, a register declaration is sufficient for this hierarchy, only requiring a differentiation when printing the code. In turn, all registers with size one are inherently optimized to be qubit in the target code. Besides setting the size to one, the qubit symbol has no additional attributes.
+
+The last quantum data type symbol is the register access. This symbol is necessary because the access of a register is not implemented as an expression. Since a register access cannot be used in any expression and only in the context of a gate application or if statement, instead of implementing special quantum expressions, that can only be used in limited cases, we create another symbol. The register access symbol inherit from the qubit symbol as it can be used whenever a qubit symbol can be used. For example, in the case of a gate application statement, a list of qubits, to which the gate is applied, is saved. In turn, since each register access is a qubit, no additional list or differentiation is required for the gate application, only a virtual function to return the translated qubit code. The symbol also contains an integer expression that specified which index is accessed and the register which is accessed. Similar to the size expression of the register symbol, the expression is saved since it may not be evaluable when the symbol is created.
+
+There are two symbol for classical data; these are the constant symbol and the loop iterator. The constant symbol represents a constant variable of differing types. To allow for different variable types, the symbol has a generic parameter \texttt{T}. Additionally, the generic parameter is restricted to implementing the number interface, indicating that it is a numeric type. Furthermore, as with the other symbols where a property may depend on a value that is not know at the time of creation, the constant symbol value is given by an expression. This expression is of the type \texttt{T}.
+
+Secondly, the loop iterator symbol is the other symbol used to represent classical data; however, it is specifically designed for the loop statement of our language and its special properties. It is used to unroll the loop body and propagate the value of the current iteration of the loop. To achieve this, the symbol contains the start and end indices as integer expression; they can be evaluated when the code is being generated. Furthermore, the symbol contains a current value property which contains the value of the current iteration. When the code for the loop body is unrolled by being iterated, any reference to the iterator symbol will evaluate to the current value.  
+
+The last three symbol are all related to the composite gates. Firstly, there is the composite gate symbol itself. It is created when a composite gate is declared and, later on, is used whenever it is referenced in a gate application statement. 
+
+Parameter and parameter access\dots
 
 \subsection{Symbol Table}
