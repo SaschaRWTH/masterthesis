@@ -18,31 +18,18 @@ While the symbol table suffices for reporting the previous errors, it does not t
 
 \subsection{Type Checking}
 \label{sec:implementation_typeCheckingAnalayis}
-\begin{itemize}
-    \item What does type checking do?
-    \begin{itemize}
-        \item checks the use of symbols
-        \item ensure that they are used in a valid context
-    \end{itemize}
-    \item How is this accomplished?
-    \begin{itemize}
-        \item for each use of an identifier, the type of the symbol is checked
-        \item Register only allows either register, and if index is given, cannot be qubit, any parameter type checking is skipped
-        \item Identifier in factor rule can only either be loop iterator or constant symbol, because numeric value is required, in turn, eg register is not valid
-        \item for gate application, all given registers are checked, is not register type error, composite gates allow registers, constant gates only qubits
-        \item furthermore, number of arguments is checked against required
-        \item if statement requires qubit or register with qubit access
-        \item range is checked for valid range, can throw invalid range exception
-        \item when leaving the gate rule, and an identifier is given, corresponding symbol needs to be a composite gate
-        \item function allows for identifiers when using size of function, only allows registers
-        \item 
-    \end{itemize}
-    \item Similar to declaration analysis, symbol table is used
-    \item All declarations correctly add the symbols so that the info can be used to for the type checking, additionally the scopes are pushed  
-\end{itemize}
 Type checking is used to ensure that any use of a symbol occurs in a valid context for this symbol. For example, while a qubit symbol can be used as the argument for a gate application, it does not represent a classical numerical value and, therefore, cannot be used in the context of a factor. Similar to the declaration analysis, a symbol table is used and all symbols, that are declared while traversing the tree, are added to it. Additionally, the scopes are also pushed and popped according to the traversal to allow differently typed variables in independent scopes.
 
-To check the use of a symbol, each grammar rule where an identifier can be used checks its type. To do this, each function gets the identifier string and retrieves the corresponding symbol information from the symbol table. In the case of the register rule, only register symbols are allowed. The 
+To check the use of a symbol, each grammar rule where an identifier can be used checks its type. For this, each function gets the identifier string and retrieves the corresponding symbol information from the symbol table. In the case of the register rule, only register symbols are allowed. However, if an index is given, \ie a register is accessed, the given register symbol cannot be a qubit. 
+
+Next, identifiers in the factor rule can only be either a loop iterator or constant symbol because a classical numeric value is required in expressions. In turn, register symbols, \eg, are not valid. In contrast, the size of function does only allow for register symbols. Since the size of function is the only one that takes identifiers as arguments and not expressions, it is the only one that requires type checking.
+
+While identifiers in expressions can only reference classical data, gate applications require quantum data types as arguments. In this case, all symbols given as arguments are checked. If they are not a register, a type error is reported. Furthermore, while composite gate allow register are arguments, this is not the case the predefined gate. Therefore, for predefined gates, all symbols that are not qubit are reported. Additionally, after the arguments where checked, it is ensured that the number of given arguments is equal to the number of required arguments. Besides the predefined gate, composite gate can also be applied. In turn, they are referenced with their identifier. Therefore, in the gate grammar rule, only composite gate symbols are valid. 
+
+Similar to the application of predefined gates, the if statement requires either a qubit or register access symbol. If they are not given, again, a type error is reported. In contrast, the range rule is not checked for type error but for an invalid range; this error is reported if the start index is greater or equal to the end index, \ie the size of the range would either be zero or negative. 
+In all cases where a quantum data type is required, 
+\todo{Check is actually true!}
+if the given symbol is a parameter, the type checking is skipped and any issues are reported when the code is generated.
 
 \subsection{Error Handling}
 \label{sec:implementation_semanticAnalayis_errorHandling}
