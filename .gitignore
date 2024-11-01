@@ -9,6 +9,7 @@
 *.synctex(busy)
 
 *thesis.lof
+*thesis.lot
 
 # Ignore temporary draw.io files
 .$*.drawio.bkp
