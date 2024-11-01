@@ -18,7 +18,31 @@ While the symbol table suffices for reporting the previous errors, it does not t
 
 \subsection{Type Checking}
 \label{sec:implementation_typeCheckingAnalayis}
-... type checking and different errors it reports
+\begin{itemize}
+    \item What does type checking do?
+    \begin{itemize}
+        \item checks the use of symbols
+        \item ensure that they are used in a valid context
+    \end{itemize}
+    \item How is this accomplished?
+    \begin{itemize}
+        \item for each use of an identifier, the type of the symbol is checked
+        \item Register only allows either register, and if index is given, cannot be qubit, any parameter type checking is skipped
+        \item Identifier in factor rule can only either be loop iterator or constant symbol, because numeric value is required, in turn, eg register is not valid
+        \item for gate application, all given registers are checked, is not register type error, composite gates allow registers, constant gates only qubits
+        \item furthermore, number of arguments is checked against required
+        \item if statement requires qubit or register with qubit access
+        \item range is checked for valid range, can throw invalid range exception
+        \item when leaving the gate rule, and an identifier is given, corresponding symbol needs to be a composite gate
+        \item function allows for identifiers when using size of function, only allows registers
+        \item 
+    \end{itemize}
+    \item Similar to declaration analysis, symbol table is used
+    \item All declarations correctly add the symbols so that the info can be used to for the type checking, additionally the scopes are pushed  
+\end{itemize}
+Type checking is used to ensure that any use of a symbol occurs in a valid context for this symbol. For example, while a qubit symbol can be used as the argument for a gate application, it does not represent a classical numerical value and, therefore, cannot be used in the context of a factor. Similar to the declaration analysis, a symbol table is used and all symbols, that are declared while traversing the tree, are added to it. Additionally, the scopes are also pushed and popped according to the traversal to allow differently typed variables in independent scopes.
+
+To check the use of a symbol, each grammar rule where an identifier can be used checks its type. To do this, each function gets the identifier string and retrieves the corresponding symbol information from the symbol table. In the case of the register rule, only register symbols are allowed. The 
 
 \subsection{Error Handling}
 \label{sec:implementation_semanticAnalayis_errorHandling}
