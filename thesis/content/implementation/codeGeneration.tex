@@ -1,10 +1,16 @@
 \section{Code Generation}
-\begin{itemize}
-    \item How is code generated?
-    \item Important classes and abstractions
-\end{itemize}
+\label{sec:implementation_codeGen}
+To generate the target code, first, the parse tree is traverse and the source code is translated to an in-memory representation consisting of objects corresponding to different language concept. These concepts can be divided into three different kinds, statements, declarations, and code blocks. All of the objects implement an interface; it requires a translation function that translates the source code representation to the target code representation. The target code representation is a collection of objects that describe an OpenQASM program; they can be translated directly to the textual OpenQASM code. In the following, we discuss the generation of the source code representation from the parse tree, the translation from the source code to the target code representation, and any other utilities that are used in the process.
 
+\subsection{Source Code Representation}
+\label{sec:implementation_sourceCode}
+Similar to the implementation of the semantic analysis, the parse tree is traversed with another custom listener. However, in contrast to the semantic analysis, the code generation listener does not directly interact with a symbol table but uses a separate code generation handler.
 
-\subsection{Expressions}
+The code generation handler facilitates the creation of the source code representation when traversing the parse tree. Firstly, it contains a main code block; this code block is initiated as an empty code block without a parent when the handler is created. Furthermore, it will hold, directly or indirectly, the references to all other source code objects. The second important property is the symbol table. The handler implements different methods for interaction with this table. For example, it contains methods for both pushing and popping scopes as well as guards. Additionally, the handler implants unique functions for each symbol that can be added to the table, with a protected general function. This is done because some symbols need additional logic when they are added to the symbol table. For example, when a register symbol is added to the table, a register declarations is also added to the current code block.
 
-\subsection{Composite Gates}
+\subsection{Translation}
+\label{sec:implementation_translation}
+
+\subsection{Target Code Representation}
+\label{sec:implementation_targetCode}
+

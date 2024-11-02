@@ -1,4 +1,5 @@
 \section{Compiler}
+\label{sec:implementation_compiler}
 % \begin{itemize}
 %     \item Static compiler class
 %     \begin{itemize}
@@ -23,6 +24,7 @@ To interact with the printer property of the compiler, there are a variety of di
 The compile function handles the entire remaining compilation process. First, it retrieves the program code from the given input path. For the reading and saving of files, a separate \texttt{IOHandler} class exists that has some basic logic for reading and writing files. Then, the parse tree is created and passed to the semantic analysis of the compiler. Here all errors and warning are printed to the used. If any errors are thrown, the compilation is aborted. Next, the code is generated from the parse tree. If the compilation resulted in error, again, the compilation is arbored. After the code is generated, it is optimized based on the optimizations given in the compiler data. Lastly, the resulting program is written to the file specified by the output path.
 
 \subsection{Command Line Interface}
+\label{sec:implementation_cli}
 As the interface between the programmer and the compiler itself, the command line interface (CLI) is an essential part of the compiler. 
 Its purpose is to interact with the programmer and created the compiler data which specifies the behavior of the compiler. 
 To achieve this, the CLI consists of two different parts. The first are the attributes that are used to annotate the compiler data class and the second part is the CLI Handler; it parses the input arguments and creates the compiler data from them. Additionally, it print the help text to the console if needed.
@@ -45,6 +47,7 @@ To parse the command line arguments and create the compiler data from it, the co
 The help text is created based on the attributes of the properties in the compiler data class. Firstly, the function retrieves both the parameter and description attributes. Since the compiler data class does not include the help parameter, as it is only used in the CLI context, the help text manually prints its information. Then, the parameters are iterated. For each parameter, a matching description is searched. If no description can be found, the text defaults to a message indicating that non is available. Lastly, both the parameter and corresponding description are printed to the console.
 
 \subsection{Symbols}
+\label{sec:implementation_symbols}
 One part that is used in most stages of the compilation process, mainly the semantic analysis and code generation, are the symbols; they are used to store all necessary information on data type, composite gates, and similar object in the language. The basis is an abstract symbol class that consists of an identifier and error context property. The identifier uniquely identifies a symbol in the scope it is used while the error context saves information about the symbol and its declaration environment to be used for possible error messages. In total there are eight different symbols that are derived from the class. In the following, we discuss these symbols and how they are used in the compiler. The hierarchy of the symbol classes is depicted in an UML diagram in Fig.~\ref{fig:implementation_uml_symbols}.
 
 \begin{figure}[htp]
@@ -70,6 +73,7 @@ The last three symbol are all related to the composite gates. Firstly, there is 
 The second kind of composite gate related symbols are parameter and parameter access symbols. Both represent an argument to a composite gate and serve as a placeholder for the symbol of the argument that if passed when the gate is applied. When inlining, the placeholder, \ie the parameter symbol, is mapped to the given argument. Furthermore, while the composite gates themselves can only operate on the previously discuss quantum data type symbols, the programmer does not specify the type of the argument, which can be both a qubit or quantum register, when declaring the composite gate. Therefore, we introduce a symbol which will ignore type checking until the composite gate is called and the arguments are specified. Then, if an argument is of an invalid type for a specific use, a type error is thrown. Similar to the register access, an additional parameter access symbol is required because an access cannot be represented as an expression; it inherits from the parameter symbol, has a reference to the parameter that is access and an integer expression that evaluates to the access index at generation time.
 
 \subsection{Symbol Table}
+\label{sec:implementation_symbolTable}
 The symbol table is a data structure that saves all symbol information and offers function for adding new symbols and retrieving symbol information. For example, a new symbol can be added with the \texttt{AddSymbol} function and symbol information can be obtained based on the identifier with with \texttt{GetSymbolInfo} function.
 
 To allow for different symbol contexts, the scope data structure is used. Scopes are used enable the declaration of different variables with the same identifier in independent scopes, \ie two scope where neither is the others ancestor nor descendent. The scope class contains an identifier dictionary that maps a string, in this case representing the identifier, to the corresponding symbol. Because of the quantum if statement, a scope can also be guarded by a qubit. Therefore, a scope has an optional guard symbol that either references the symbol that guards the scope, and all descendants, or is null. Lastly, the scope contains a reference to the code block it belongs to. While the parse tree is traversed, each statement is added to the code block of the current scope. Later, the code block can be passed along in the generation to, \eg, create the loop statement belonging to the scope. 
