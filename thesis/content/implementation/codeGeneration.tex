@@ -1,6 +1,6 @@
 \section{Code Generation}
 \label{sec:implementation_codeGen}
-To generate the target code, first, the parse tree is traverse and the source code is translated to an in-memory representation consisting of objects corresponding to different language concept. These concepts can be divided into three different kinds, statements, declarations, and code blocks. All of the objects implement the \texttt{ITranslatable} interface; it requires a translation function that translates the source code representation to the target code representation. In turn, they are often referred to as translatables. The target code representation is a collection of objects that describe an OpenQASM program; they can be translated directly to the textual OpenQASM code. In the following, we discuss the generation of the source code representation from the parse tree, the translation from the source code to the target code representation, and any other utilities that are used in the process.
+To generate the target code, first, the parse tree is traverse and the source code is translated to an in-memory representation consisting of objects corresponding to different language concept. These concepts can be divided into three different kinds, statements, declarations, and code blocks. All of the objects implement the \texttt{ITranslatable} interface; it requires a translation function that translates the source code representation to the target code representation. In turn, they are often referred to as translatables. The target code representation is a collection of objects that describe an OpenQASM program; they can be translated directly to the textual OpenQASM code. In the following, we discuss the generation of the source code representation from the parse tree, the translation from the source code to the target code representation, and any other utilities that are used in the process.\todo{How are expressions created and evaluated?}
 
 \subsection{Source Code Representation}
 \label{sec:implementation_sourceCode}
@@ -14,9 +14,15 @@ The first example of a translatable is the register declaration; as described pr
 
 The most basic translatable is the code block. It represents a block of code in the source program and, in turn, contains all statements and declaration contained in the block; they are saved in a list of translatables. Next, the code block object also contains a reference to its parent code block. If the code block is the main block of the program, the parent is set to null. While each variable has a unique identifier, this identifier is only unique in the context of its declaration and an independent context may contain a declaration for the same identifier. Therefore, the identifiers used in the source code may not be usable in the target code. To solve this issue, each declaration is assigned a new unique identifier. The code block contains a dictionary that maps all its declarations to the corresponding unique identifiers. Besides these three properties, the code block implements some functions to add translatables to the list and some utility functions to, \eg, retrieve the unique identifiers for declarations.
 
-% statements
+Another type of translatables are the declarations. While there are multiple different declarations, \eg register and composite gate declarations, in our source language, most concepts are not translated to a corresponding declaration in the target language; in turn, there currently only exists one possible declaration. However, for extensibility, the compiler contains an abstract declaration class; it include symbol property with a reference to the symbol that is declared by the declaration. The register declaration inherits from the abstract class and is the only required declaration. 
 
-% declarations
+The third group of translatables are statements. Each statement inherits from an abstract statement class. Each statement contains an error context that corresponds to the source code location of the statement. In total, there are six different statements. 
+
+The first two are the different gate application statements, the composite gate statement and the gate application statement. Since the implementation of the translation differs so greatly, they are implemented as two differed statements. Both contain a gate property; however, while the gate property of the composite gate statement is a composite gate, the gate application statements contains a predefined gate in its property. Furthermore, they both contain a parameters property. In this case, while the gate application statement simply saves a list of symbols, the composite gate contains a dictionary that maps the parameter symbols used in the composite gates to the symbols given as arguments.
+
+Next, three statements are related to the control flow of the program. Firstly, the loop statements, contains both the loop iterator symbol and the body of the loop in the form of a code block. Similarly, the quantum if statement also contains a reference to its code block. Additionally, the statement includes a guard property which holds the symbol guarding the execution of the code block. Furthermore, the else statement simply inherits from the if statement and contains no additional properties.
+
+Lastly, in contrast to most other statements, the skip statement does not contain any additional properties. All the different translatables, including the code block, statements, and declarations, are depicted in Fig.~\ref{fig:implementation_uml_translatables}. 
 
 \begin{figure}[htp]
     \centering
@@ -25,11 +31,22 @@ The most basic translatable is the code block. It represents a block of code in 
     \label{fig:implementation_uml_translatables}
 \end{figure}
 
-% Code Generation Context
-
-
 \subsection{Translation}
 \label{sec:implementation_translation}
+To create the target code representation, that can be translated to the final program, the translatables, \ie code blocks, declarations, and statements, need to be translated. For this, all translatables implement a translation function, that takes the code generation context and returns the target code representation in the form of a \texttt{QASMProgram} object.
+
+The code generation context contains all additional, relevant information for the code generation that is not already contained in the translatable objects themselves; this may include information that is not known at the time the translatables are created and instead injected when they are translated. The first property is the current block which holds a reference to the code block for which the code is generated. Since all statements must be contained in a block, there must also always exist a current code block. The block, \eg, contains a dictionary that maps the declarations to the corresponding identifiers; this dictionary filled while translating the declarations. Therefore, the information must be injected with the help of the code generation context. 
+
+Similarly, the code generation context holds the symbol table that is generated while creating the source code representation. However, this symbol table may be changed while the code is translated. For example, composite gates are inlined where they are applied. However, the translation of the composite gate require an empty symbol table as they do not have access to any symbols outside the scope of the composite gate. In turn, the translation of the composite gate cannot use the symbol table of its current block, but must create a new one. The symbol table itself is used to retrieve symbol information for, \eg, the evaluation of expressions where it may be used to get the value of a constant symbol.
+
+Lastly, the context contains a dictionary that maps a parameter to a symbol. This is used for the translation of the composite gates. Since there may exist nested composite gates, \ie a composite gate that calls another composite gate, the dictionary contained in each composite gate statement is not sufficient for the translation alone. In turn, for each composite gate translation the corresponding mappings are added to the dictionary.
+
+% Translation of 
+% Code block,
+% Declaration,
+% Statements
+
+% expression evaluation
 
 \subsection{Target Code Representation}
 \label{sec:implementation_targetCode}
