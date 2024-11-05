@@ -41,13 +41,17 @@ Similarly, the code generation context holds the symbol table that is generated 
 
 Lastly, the context contains a dictionary that maps a parameter to a symbol. This is used for the translation of the composite gates. Since there may exist nested composite gates, \ie a composite gate that calls another composite gate, the dictionary contained in each composite gate statement is not sufficient for the translation alone. In turn, for each composite gate translation the corresponding mappings are added to the dictionary.
 
-% Translation of 
-% Code block,
-% Declaration,
-% Statements
+The translation of any source code representation will always start with a code block translation as it is always the root of a program. However, our target code representation does not contain a code block equivalent. In turn, instead of translating the code block directly, a new program object is created and each translatable, contained in the code block, is translated individually and added to the code block. Then, the resulting program object is returned.
 
-% expression evaluation
+In contrast, the register declaration has an equivalent in the target language. In this case, this is the qubit declaration code. However, as previously described, the identifier that is declared may not be unique. In turn, the symbol table is used to create an identifier that is unique in the resulting program. Futhermore, this identifier is added to the dictionary of the current block so that any reference to the declaration can be mapped to the newly created unique identifier. While the size of a register declaration is given in the form of an expression, the target code objects requires a constant integer value. Therefore, the size expression is also evaluated before the code object is created. 
+
+Of the statements, the skip statement is the easiest to translate; it represents an empty operation and, therefore, is translated by returning an empty program object. Similarly, the gate application statement has a simple translation. Since the target language also contains gate application statements, the translation simply needs to convert the gate and parameters to the target code representation. This can be accomplished with some simple helper functions and look ups. In contrast, the composite gate statement does not have any target code equivalent and is, instead, inlined. In turn, the composite gate translation simply calls the translation for the body code block and injects some parameter mappings. Then, the translation of the body is returned.
+
+The translation of the loop statements is, in principle, similar to the translation of a composite gate; it also contains a code block which is translated. However, the code block is not inlined once but needs to be translated multiple times, each time with a different value for the iterator. To achieve this, both the start index and end index expressions are evaluated. Next, the current value of the iterator is set to the start index and a for loop is executed till the current value is equal to or larger than the end value. For each iteration, the code block is translated and added to a program. At the end, the program consists of the unrolled loop statement and is returned. 
+
+Lastly, the translation of the if and else statements are mostly identical. In our target language, OpenQASM, the desired behavior for both the if and else statement can be accomplished by adding a control and negative control to each gate application statement in the code block respectively. For this, the program object contains a function to add a guard. In this function, all code objects are iterated and the guard is added to each gate application code. For the else statement, a negated guard can easily be added. Therefore, the translation of the if and else statements consists of translating the code block and adding the guard symbol as a possibly negated guard to it. 
 
 \subsection{Target Code Representation}
 \label{sec:implementation_targetCode}
 
+\subsection{Expressions}
