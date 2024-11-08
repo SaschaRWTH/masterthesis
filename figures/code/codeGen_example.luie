@@ -1,0 +1,11 @@
+gate c_h_reg(control, reg) do
+    qif control do
+        for i in range(sizeof(reg)) do
+            h reg[i];
+        end
+    end
+end
+
+qubit c;
+qubit[3] a;
+c_h_reg c, a;
