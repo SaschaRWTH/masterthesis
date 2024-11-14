@@ -1,0 +1,122 @@
+\section{Translation}
+\label{sec:concept_translation}
+Formal definition for translation function implemented by compiler
+
+Begin with definition of symbol table
+\begin{align*}
+    SymbolTable := \{st \mid st : Identifier \dashrightarrow &(\{\texttt{const}\} \times \mathbb{R})\\
+                                                    \cup    &(\{\texttt{qubit}\} \times \mathbb{N} \times Identifier)\\
+                                                    \cup    &(\{\texttt{gate}\} \times CodeBlock \times Identifier^+)
+                                                    \}
+\end{align*}
+\unsure{is $Identifier^+$ a valid notation?}
+
+at root translation function $trans$ from luie source code to OpenQASM target code
+\begin{align*}
+    trans : \ & Luie \dashrightarrow QASM\\
+    trans(GD_1 \dots GD_n \ blk) = \ & \texttt{OPENQASM 3.0;}\\
+                & \texttt{include "stdgates.inc";}\\
+                & bt(blk, update(update(update(st_\epsilon, GD_1), ...), GD_n))
+\end{align*}  
+in this case $st_\epsilon$ the empty symbol table
+
+next, translation of block $bt$ function from block and symbol table to OpenQASM code.  
+\begin{align*}
+    bt : \ & CodeBlock \times SymbolTable \to QASM\\
+    bt(t_1 \dots t_n, st_1) = \ &  tr_1 \quad \text{where } (tr_1, st_2) = tt(t_1, st_1)\\
+    & \dots\\
+    & tr_n \quad \text{where } (tr_n, \_) = tt(t_n, st_n)\\
+\end{align*}
+\todo{define symbol table}
+
+$tt$ is a translation function that can translate both declarations and statements and, besides the qasm code, returns the symbol tables resulting from the declaration or statement
+
+\begin{align*}
+    tt : \ & (Declaration \cup Statement) \times SymbolTable \to QASM \times SymbolTable\\
+    tt(t, st) = \ & \begin{cases}
+        dt(t, st)  \quad &\text{if } t \in Declarations\\
+        (ct(t, st), st) &\text{otherwise }
+    \end{cases}  
+\end{align*}
+
+declaration translation $dt$ and statement translation $ct$ differ, in that the declaration translation return an updates symbol tables while the statement translation does not. 
+
+\begin{align*}
+    dt : \ & Declaration \times SymbolTable \to QASM \times SymbolTable\\
+    dt(\underbrace{\texttt{qubit q;}}_{decl}, st) = \ & (\texttt{qubit } uid\texttt{;}, update(st, decl))\\
+    dt(\underbrace{\texttt{qubit[} n \texttt{] q;}}_{decl}, st) = \ & (\texttt{qubit[}n \texttt{] } uid\texttt{;}, update(st, decl))\\
+    dt(\underbrace{\texttt{const } id \texttt{ = } exp \texttt{;}}_{decl}, st) = \ & (\epsilon, update(st, decl))
+\end{align*}
+
+declaration translation uses update function $update$ to create new symbol tables based on input symbol tables with new entries corresponding to given declaration
+
+\begin{align*}
+    update : \ & Declaration \times SymbolTable \to SymbolTable\\
+    update(\texttt{qubit } id\texttt{;}, st) = \ & st[id \mapsto (\texttt{qubit}, 1, uid)]\\
+    update(\texttt{qubit[}n \texttt{] } id{;}, st) = \ & st[id \mapsto (\texttt{qubit}, n, uid)]\\
+    update(\texttt{const } id \texttt{ = } exp \texttt{;}, st) = \ & st[id \mapsto (\texttt{const}, at(exp, st))]\\
+    update(\texttt{gate } a_1, \dots, a_n \texttt{ do } blk \texttt{ end}, st) = \ & st[id \mapsto (\texttt{gate}, blk, a_1, \dots, a_n)]
+\end{align*}
+
+\todo{$uid$ as newly created unique identifier for code}
+where $at$ is the arithmetic translation of the expression $exp$.
+
+
+\begin{align*}
+    at : \ & Expression \times SymbolTable \to \mathbb{R}\\
+    at(z, st) = \ & z\\
+    at(id, st) = \ & val \quad \text{if } st[id] = (\texttt{const}, val)\\
+    at(exp_1 + exp_2, st) = \ & at(exp_1, st) + at(exp_2, st)\\
+    at(exp_1 - exp_2, st) = \ & at(exp_1, st) + at(exp_2, st)\\
+    at(exp_1 * exp_2, st) = \ & at(exp_1, st) + at(exp_2, st)\\
+    at((exp), st) = \ & at(exp, st)\\
+    at(-exp, st) = \ & -at(exp, st)
+\end{align*}
+
+
+\begin{align*}
+    ct : \ & Statement \times SymbolTable \to QASM\\
+    ct(\texttt{skip;}, st) = \ & \epsilon
+\end{align*}
+
+\begin{equation*}
+    ct(gate \ a_1, \dots, a_n\texttt{;}, st) = 
+    \begin{cases}
+        gate \ qt(a_1, st), \dots, qt(a_2, st); \quad &\text{if } gate \in ConstGates\\
+        kt(blk, st[p_1 \mapsto a_1, \dots, p_n \mapsto a_n]) \quad &\text{otherwise }\\
+        &\text{and } st[gate] = (\texttt{gate}, blk, p_1, \dots, p_n)
+    \end{cases}
+\end{equation*}
+\todo{fix: formatting}
+
+additional qubit translation function to differentiate between qubit argument and register access argument
+\todo{define $GateArgument$ for $qt$}
+\begin{align*}
+    qt :\ & \displaystyle GateArgument \times SymbolTable \to GateArgument\\
+    qt(qubit, st) = \ & uid \quad\quad\quad \text{if } st[qubit] + (\texttt{qubit}, 1, uid)\\
+    qt(qubit[n], st) = \ & uid\texttt{[}n\texttt{]} \quad \text{if } st[qubit] + (\texttt{qubit}, m, uid) \text{ and } m > n
+\end{align*}
+
+\begin{align*}
+    ct(\texttt{for } id \texttt{ in } start\texttt{..}end \texttt{ do } blk \texttt{ end}, st) = \ 
+        & kt(blk, st[id \mapsto (\texttt{const}, start)])\\
+        & \dots\\
+        & kt(blk, st[id \mapsto (\texttt{const}, end)])\\
+        ct(\texttt{if } id \texttt{ do } blk \texttt{ end}, st) = \ 
+            &  control(uid, kt(blk, st)) \\
+            & \text{if } st[id] = (qubit, 1, uid)\\
+        ct(\texttt{if } id[n] \texttt{ do } blk \texttt{ end}, st) = \ 
+            &  control(uid[n], kt(blk, st)) \\
+            & \text{if } st[id] = (qubit, m, uid) \text{ and } m > n
+\end{align*}
+
+\begin{align*}
+    control : \ & QubitArgument \times QASM \to QASM\\
+    control(q, gateApp_1\texttt{;} ...\texttt{;} gateApp_2) = \ & control(q, gateApp_1)\texttt{;}\\
+        & ...\\
+        & control(q, gateApp_n)\texttt{;}\\
+    control(q, gate \ a_1, \dots, a_n ) = \ & \texttt{ctrl(1) @ } gate \ q, a_1, \dots, a_n\texttt{;}\\
+    control(q, \texttt{ctrl(}i \texttt{) @ } gate \ a_1, \dots, a_n ) = \ & \texttt{ctrl(}i+1 \texttt{) @ } gate \ q, a_1, \dots, a_n\texttt{;}
+\end{align*}
+
+the cases for a negative control function work similarly
