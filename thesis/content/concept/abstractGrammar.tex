@@ -3,20 +3,28 @@
 Define syntax of Luie $Luie$, use to define translations in following section.
 
 \begin{align*}
-    \mathbb{R}: \ & r \\
-    \mathbb{Z}: \ & z \\
+    CFG = \ & \{V, \Sigma, R, prg \}\\ 
+    V = \ & \{ exp, rExp, gate, constGate, stm\\ 
+            & \ \ dcl, gDcl, blk, t, prg\}\\ 
+    \Sigma = \ & \{ z, id, \texttt{..}, \texttt{range}, \texttt{(}, \texttt{)}, \dots\} 
+\end{align*}
+
+\begin{align*}
+    \mathbb{N}: \ & z \\
     Identifier: \ & id \\
     Expression: \ & exp ::= r \mid id \mid exp_1 + exp_2 \mid exp_1 - exp_2 \mid exp_1 * exp_2 \mid \dots\\
-    RangeExpression: \ & rExp ::= z_1 .. z_2 \mid \texttt{range(} exp \texttt{)} \mid \texttt{range(} exp_1, exp_2 \texttt{)}\\
-    Gate: \ & gate ::= id \mid \texttt{x} \mid \texttt{y} \mid \texttt{z} \mid \texttt{cx} \mid \texttt{cxx}\\
+    RangeExpression: \ & rExp ::= n_1 .. n_2 \mid \texttt{range(} exp \texttt{)} \mid \texttt{range(} exp_1, exp_2 \texttt{)}\\
+    Gate: \ & gate ::= id \mid constGate\\
+    ConstGate: \ & constGate ::= \texttt{x} \mid \texttt{y} \mid \texttt{z} \mid \texttt{cx} \mid \texttt{ccx}\\
     Statement: \ & stm ::= \texttt{qif } id \texttt{ do }  blk \texttt{ end} \mid \\
                & \quad \quad \texttt{for } id \texttt{ in } rExp \texttt{ do } blk \texttt{ end} \mid \\
                & \quad \quad gate \ id_1, \dots, id_n \texttt{;} \mid \\
                & \quad \quad \texttt{skip;}\\
-    Declaration: \ & dcl ::= \texttt{const } id \texttt{ :double = } exp \texttt{;} \mid \\
+    Declaration: \ & dcl ::= \texttt{const } id \texttt{ = } exp \texttt{;} \mid \\
                  & \quad \quad \texttt{qubit } id \texttt{;} \mid \\
                  & \quad \quad \texttt{qubit[} exp \texttt{] } id \texttt{;}\\
     GateDeclaration: \ & gDcl::= \texttt{gate } id \texttt{ (}id_1, \dots, id_n\texttt{) do } blk \texttt{ end}\\
-    Block: \ & blk::= (stm \mid dcl)^*\\
-    Program: \ & prg ::= gDcl^* \ blk 
+    Block: \ & blk::= t_1 \dots t_n \mid \epsilon\\
+    Translatable : \ & t::= stm \mid dcl
+    Program: \ & prg ::= gDcl_1 \dots gDcl_n \ blk \mid blk 
 \end{align*}

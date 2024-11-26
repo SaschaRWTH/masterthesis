@@ -6,7 +6,7 @@ Begin with definition of symbol table
 \begin{align*}
     SymbolTable := \{st \mid st : Identifier \dashrightarrow &(\{\texttt{const}\} \times \mathbb{R})\\
                                                     \cup    &(\{\texttt{qubit}\} \times \mathbb{N} \times Identifier)\\
-                                                    \cup    &(\{\texttt{gate}\} \times CodeBlock \times Identifier^+)
+                                                    \cup    &(\{\texttt{gate}\} \times Block \times Identifier^+)
                                                     \}
 \end{align*}
 \unsure{is $Identifier^+$ a valid notation?}
@@ -22,7 +22,7 @@ in this case $st_\epsilon$ the empty symbol table
 
 next, translation of block $bt$ function from block and symbol table to OpenQASM code.  
 \begin{align*}
-    bt : \ & CodeBlock \times SymbolTable \dashrightarrow QASM\\
+    bt : \ & Block \times SymbolTable \dashrightarrow QASM\\
     bt(t_1 \dots t_n, st_1) = \ &  tr_1 \quad \text{where } (tr_1, st_2) = tt(t_1, st_1)\\
     & tr_n \quad \text{where } (tr_2, st_3) = tt(t_2, st_2)\\
     & \dots\\
@@ -46,7 +46,7 @@ declaration translation $dt$ and statement translation $ct$ differ, in that the 
 \begin{align*}
     dt : \ & Declaration \times SymbolTable \dashrightarrow QASM \times SymbolTable\\
     dt(\underbrace{\texttt{qubit q;}}_{decl}, st) = \ & (\texttt{qubit } uid\texttt{;}, update(st, decl))\\
-    dt(\underbrace{\texttt{qubit[} n \texttt{] q;}}_{decl}, st) = \ & (\texttt{qubit[}n \texttt{] } uid\texttt{;}, update(st, decl))\\
+    dt(\underbrace{\texttt{qubit[} exp \texttt{] q;}}_{decl}, st) = \ & (\texttt{qubit[} at(exp) \texttt{] } uid\texttt{;}, update(st, decl))\\
     dt(\underbrace{\texttt{const } id \texttt{ = } exp \texttt{;}}_{decl}, st) = \ & (\epsilon, update(st, decl))
 \end{align*}
 
@@ -55,7 +55,7 @@ declaration translation uses update function $update$ to create new symbol table
 \begin{align*}
     update : \ & Declaration \times SymbolTable \dashrightarrow SymbolTable\\
     update(\texttt{qubit } id\texttt{;}, st) = \ & st[id \mapsto (\texttt{qubit}, 1, uid)]\\
-    update(\texttt{qubit[}n \texttt{] } id{;}, st) = \ & st[id \mapsto (\texttt{qubit}, n, uid)]\\
+    update(\texttt{qubit[} exp \texttt{] } id{;}, st) = \ & st[id \mapsto (\texttt{qubit}, at(exp), uid)]\\
     update(\texttt{const } id \texttt{ = } exp \texttt{;}, st) = \ & st[id \mapsto (\texttt{const}, at(exp, st))]\\
     update(\texttt{gate } a_1, \dots, a_n \texttt{ do } blk \texttt{ end}, st) = \ & st[id \mapsto (\texttt{gate}, blk, a_1, \dots, a_n)]
 \end{align*}
@@ -85,7 +85,7 @@ where $at$ is the arithmetic translation of the expression $exp$.
     ct(gate \ a_1, \dots, a_n\texttt{;}, st) = 
     \begin{cases}
         gate \ qt(a_1, st), \dots, qt(a_2, st); \quad &\text{if } gate \in ConstGates\\
-        kt(blk, st[p_1 \mapsto a_1, \dots, p_n \mapsto a_n]) \quad &\text{otherwise }\\
+        bt(blk, st[p_1 \mapsto a_1, \dots, p_n \mapsto a_n]) \quad &\text{otherwise }\\
         &\text{and } st[gate] = (\texttt{gate}, blk, p_1, \dots, p_n)
     \end{cases}
 \end{equation*}
@@ -95,17 +95,17 @@ additional qubit translation function to differentiate between qubit argument an
 \todo{define $GateArgument$ for $qt$}
 \begin{align*}
     qt :\ & \displaystyle GateArgument \times SymbolTable \dashrightarrow GateArgument\\
-    qt(qubit, st) = \ & uid \quad\quad\quad \text{if } st[qubit] + (\texttt{qubit}, 1, uid)\\
-    qt(qubit[n], st) = \ & uid\texttt{[}n\texttt{]} \quad \text{if } st[qubit] + (\texttt{qubit}, m, uid) \text{ and } m > n
+    qt(qubit, st) = \ & uid \quad\quad\quad \text{if } st[qubit] = (\texttt{qubit}, 1, uid)\\
+    qt(qubit[n], st) = \ & uid\texttt{[}n\texttt{]} \quad \text{if } st[qubit] = (\texttt{qubit}, m, uid) \text{ and } m > n
 \end{align*}
 
 \begin{align*}
     ct(\texttt{for } id \texttt{ in } rExp \texttt{ do } blk \texttt{ end}, st) = \ 
-        & kt(blk, st[id \mapsto (\texttt{const}, start)])\\
-        & kt(blk, st[id \mapsto (\texttt{const}, start + 1)])\\
+        & bt(blk, st[id \mapsto (\texttt{const}, start)])\\
+        & bt(blk, st[id \mapsto (\texttt{const}, start + 1)])\\
         & \dots\\
-        & kt(blk, st[id \mapsto (\texttt{const}, end - 1)])\\
-        & kt(blk, st[id \mapsto (\texttt{const}, end)])\\
+        & bt(blk, st[id \mapsto (\texttt{const}, end - 1)])\\
+        & bt(blk, st[id \mapsto (\texttt{const}, end)])\\
         & \text{where } (start, end) = rt(rExp, st)
 \end{align*}
 
