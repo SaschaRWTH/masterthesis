@@ -31,7 +31,7 @@ Lastly, the \emph{control reversal} optimization rule optimizes a controlled-not
 While it is possible to directly apply optimizations to the program code or internal representation of the code, this approach can be tedious and error prone. For example, the easiest approach would be to iterate over the code and search for code sequences with more efficient but equivalent alternatives, similar to the peephole optimization patterns on classical computers presented in Sec.~\ref{sec:background_codeOptimization}. However, two consecutive gates operating on a single wire may be separated by multiple gate applications on different wires in the programmatic description. 
 Therefore, many simple optimization rules may not be applied when using a simplistic algorithm. A more complex approach would be to subdivide the program into lists of gate applications where the wires, being operated on by each list, are disjunct. While this approach can result in the application of more optimization rules, it will also miss possible applications and already requires a complex implementation. Furthermore, improving on this method only increases its complexity and, in turn, makes it more prone to errors and generally tedious to work with and debug. Therefore, the language does not directly apply the optimizations to the program but uses a circuit graph description, based on the graph described by Kreppel et al.~\cite{KMO*23}, to apply the optimizations.
 
-The circuit graph is a graphical description of a quantum circuit; it is an acyclic and directed graph. For each qubit in the circuit, there exists both an input node and an output node. Furthermore, each input node has exactly one outgoing vertex while each output node has exactly one incoming vertex. Besides the input and output nodes, all other nodes represent gates in the circuit. For all gate nodes, the number of incoming vertices is equivalent to the number of outgoing vertices. Additionally, the number of incoming, or outgoing, vertices is the same as the number of arguments for the gate. Importantly, in this case, any qubits controlling the application of the gate, \eg the first qubit in a controlled-not gate, also count to the number of arguments. In turn, there exists a vertex pair of an incoming and outgoing vertex each that represent a qubit to which the gate is applied. Therefore, for each qubit, there exists one path from its input node to its output node such that all gates that are applied to it are visited in order of application.
+The circuit graph is a graphical description of a quantum circuit; it is an acyclic and directed graph. For each qubit in the circuit, there exists both an input node and an output node. Furthermore, each input node has exactly one outgoing edge while each output node has exactly one incoming edge. Besides the input and output nodes, all other nodes represent gates in the circuit. For all gate nodes, the number of incoming edges is equivalent to the number of outgoing edges. Additionally, the number of incoming, or outgoing, edges is the same as the number of arguments for the gate. Importantly, in this case, any qubits controlling the application of the gate, \eg the first qubit in a controlled-not gate, also count to the number of arguments. In turn, there exists an edge pair of an incoming and outgoing edge each that represent a qubit to which the gate is applied. Therefore, for each qubit, there exists one path from its input node to its output node such that all gates that are applied to it are visited in order of application.
 
 % Formal Definition
 Extension of graph definition, includes set of qubits $Q$ associated with graph and relations between input, output nodes and qubit $Q_V$ as well as the edges and qubits $Q_E$. 
@@ -43,8 +43,22 @@ Extension of graph definition, includes set of qubits $Q$ associated with graph 
     Q_V &\subseteq \{ (v, q) \mid v \in I \cup O \land q \in Q \}\\
 \end{align*}
 
+Additionally, to be a valid circuit graph, the conditions, as described above, must hold:
+\begin{align*}
+    \forall i \in I :\ & (\exists_{=1} v \in (O \cup G) \text{ such that } (i, v) \in E ) \ \land\\
+                       & (\exists_{=1} q \in Q \text{ such that } (i, q) \in Q_V) \\
+    \forall o \in O :\ & (\exists_{=1} v \in (I \cup G) \text{ such that } (o, v) \in E) \ \land\\
+                       & (\exists_{=1} q \in Q \text{ such that } (o, q) \in Q_V) \\
+    \forall g \in G :\ & |g| = 2n \quad \text{where } n \text{ Number of arguments for gate of } g\\
+    \forall e \in E :\ & (\exists_{=1} q \in Q \text{ such that } (e, q) \in Q_E)\\
+    \forall q \in Q :\ & (\exists_{=1} i \in I \text{ such that } (i, q) \in Q_V) \land\\
+                       & (\exists_{=1} o \in O \text{ such that } (o, q) \in Q_V) \\
+    \forall v \in V \setminus O :\ & (\exists v': (v', v) \in E) \implies\\
+                                   & (\exists q, v'' : ((v', v), q) \in Q_E \land (v, v'') \in E \land ((v, v''), q) \in Q_E)
+\end{align*}
+
 \subsubsection{Graph Construction}
-When using the circuit graph to optimize a quantum program, the first step is to systematically construct the graph from the program. The creation of the graph starts with the input and output nodes for each qubit in the circuit. For each declaration of a qubit, an input and output node pair is created. If a register is declared, a pair is created separately for each qubit in the register, \ie for a register with size $n$, $n$ pairs are created in total. Next, the gate applications in the program can be iterated. For each gate application, a corresponding gate node is created. To insert this node into the graph, each qubit argument requires an incoming vertex to this node and a corresponding outgoing vertex from the node. Additionally, the incoming node must come from the gate that was previously applied to the qubit or, if no gate was applied beforehand, the input node. Similarly, the outgoing vertex must lead to either the next applied gate or the corresponding output. Therefore, for each qubit, the vertex coming into the output node can be diverted to the gate node and an outgoing vertex, from the gate to the output node, can be created. Repeating this step for all gate applications in the program results in the corresponding circuit graph.
+When using the circuit graph to optimize a quantum program, the first step is to systematically construct the graph from the program. The creation of the graph starts with the input and output nodes for each qubit in the circuit. For each declaration of a qubit, an input and output node pair is created. If a register is declared, a pair is created separately for each qubit in the register, \ie for a register with size $n$, $n$ pairs are created in total. Next, the gate applications in the program can be iterated. For each gate application, a corresponding gate node is created. To insert this node into the graph, each qubit argument requires an incoming edge to this node and a corresponding outgoing edge from the node. Additionally, the incoming node must come from the gate that was previously applied to the qubit or, if no gate was applied beforehand, the input node. Similarly, the outgoing edge must lead to either the next applied gate or the corresponding output. Therefore, for each qubit, the edge coming into the output node can be diverted to the gate node and an outgoing edge, from the gate to the output node, can be created. Repeating this step for all gate applications in the program results in the corresponding circuit graph.
 
 An example of a simple, unoptimized circuit graph is depicted in Fig.~\ref{fig:circuit_graph_unoptimized}. For simplicity, all applied gates are depicted inside of the corresponding node in the circuit graph. The circuit consists of three qubits, $q_0$, $q_1$, and $q_2$. Their input and output nodes are depicted on the left and right of the graph respectively and are labeled with the corresponding qubit. Firstly, an $X$ gate is applied to the first qubit $q_0$. Then, a controlled-not gate is applied to the first two qubits $q_0$ and $q_1$, where $q_0$ is the control qubit. Simultaneously, two Hadamard gates $H$ are applied to the third qubit $q_2$. Lastly, another $X$ gate is applied to the first qubit $q_0$ while another controlled-not gate is applied to the second and third qubits $q_1$ and $q_2$. In this case, the second qubit $q_1$ is the control qubit.
 
@@ -79,11 +93,6 @@ An example optimization process of a circuit graph depicted in Fig.~\ref{fig:cir
 
 In the next optimization round, the two $X$ gates on the first qubit wire are applied consecutively. Therefore, they can both be removed from the circuit. Finally, the combination of an $X$ gate child of an input node followed by a controlled-not gate can, again, be optimized such that the $CX$ gate is replaced with a simple $X$ gate on the third qubit wire. The result is a circuit where the first qubit remains unchanged and only an $X$ gate is applied to the second and third qubit. This result is also depicted in Fig~\ref{fig:circuit_graph_optimized_complete}.   
 
-\subsubsection{Graph Translation}
-After all possible optimizations rules were applied and no others were enabled in turn, the only remaining step is to translate the circuit graph back to a programmatic description. The qubits for the circuit are easily declared by iterating over all input or output nodes. Additionally, the qubit count can be reduced by leaving out all unused qubits, \ie no gates are applied to them. This is the case if the wire path only consists of the input and output nodes. In the case of the optimized circuit, depicted in Fig.~\ref{fig:circuit_graph_optimized_complete}, the first qubit $q_0$ can be skipped when adding the declarations to the translated program. 
-
-For the gate applications, the only requirement is that, if a gate node is a descendent of another, its translated gate application statement must come after the statement of the ancestor node. Therefore, for most circuit graphs there are multiple possible programs describing the circuit correctly. For example, when translating the optimized graph described above, the order of the $X$ gate applications to both the second and third qubit is irrelevant such that both possibilities, \ie either applying the gate to $q_1$ or $q_2$ first, are valid translations of the program. Furthermore, while iterating over all input or output nodes and adding the corresponding qubit and register declarations to the beginning of the program is the easiest approach, the order and placement of the declarations is also arbitrary as long as they are declared before their first use. 
-
 % Pseudo code for algorithm
 \SetKwComment{Comment}{/* }{ */}
 \begin{algorithm}
@@ -94,19 +103,10 @@ For the gate applications, the only requirement is that, if a gate node is a des
         $repeat \gets false$\;
         \ForEach(\Comment*[f]{Iterate through all qubits}){$q \in Q$}
         {
-            $start \gets i \quad \text{where } (i, q) \in Q_V \land i \in I$\;
-            $p \gets [start]$ \Comment*[r]{Create path that starts with $start$}
-            \ForEach(\Comment*[f]{Check all rules for applicability}){$r \in R$}{
-                \If{$r$ can be applied to $p$}{
-                    apply $r$ to $p$\;
-                    $repeat \gets true$\;
-                    $break$\;
-                }
-            }
+            $start \gets i \quad \text{where } (i, q) \in Q_V \land i \in I$\Comment*[f]{$I$ set of input nodes}
             $last \gets start$\;
-            \For(\Comment*[f]{Iterate paths up to $max$ rule length}){$i \gets 1$ \KwTo $max$}{
-                $last \gets v \quad \text{where } ((last, v), q) \in Q_E$\;
-                append $last$ to $p$\;
+            $p \gets [start]$ \Comment*[r]{Create path that starts with $start$}
+            \For(\Comment*[f]{Iterate paths up to $max$ rule length}){$i \gets 0$ \KwTo $max$}{
                 \ForEach(\Comment*[f]{Check all rules for applicability}){$r \in R$}{ 
                     \If{$r$ can be applied to $p$}{
                         apply $r$ to $p$\;
@@ -114,7 +114,15 @@ For the gate applications, the only requirement is that, if a gate node is a des
                         $break$\;
                     }
                 }
+                $last \gets v \quad \text{where } ((last, v), q) \in Q_E$\; 
+                append $last$ to $p$\;
             }
         }
     }
 \end{algorithm}
+
+\subsubsection{Graph Translation}
+After all possible optimizations rules were applied and no others were enabled in turn, the only remaining step is to translate the circuit graph back to a programmatic description. The qubits for the circuit are easily declared by iterating over all input or output nodes. Additionally, the qubit count can be reduced by leaving out all unused qubits, \ie no gates are applied to them. This is the case if the wire path only consists of the input and output nodes. In the case of the optimized circuit, depicted in Fig.~\ref{fig:circuit_graph_optimized_complete}, the first qubit $q_0$ can be skipped when adding the declarations to the translated program. 
+
+For the gate applications, the only requirement is that, if a gate node is a descendent of another, its translated gate application statement must come after the statement of the ancestor node. Therefore, for most circuit graphs there are multiple possible programs describing the circuit correctly. For example, when translating the optimized graph described above, the order of the $X$ gate applications to both the second and third qubit is irrelevant such that both possibilities, \ie either applying the gate to $q_1$ or $q_2$ first, are valid translations of the program. Furthermore, while iterating over all input or output nodes and adding the corresponding qubit and register declarations to the beginning of the program is the easiest approach, the order and placement of the declarations is also arbitrary as long as they are declared before their first use. 
+

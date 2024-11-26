@@ -10,6 +10,7 @@
 
 *thesis.lof
 *thesis.lot
+*thesis.loa
 
 # Ignore temporary draw.io files
 .$*.drawio.bkp
