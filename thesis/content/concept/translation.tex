@@ -24,8 +24,10 @@ next, translation of block $bt$ function from block and symbol table to OpenQASM
 \begin{align*}
     bt : \ & CodeBlock \times SymbolTable \dashrightarrow QASM\\
     bt(t_1 \dots t_n, st_1) = \ &  tr_1 \quad \text{where } (tr_1, st_2) = tt(t_1, st_1)\\
+    & tr_n \quad \text{where } (tr_2, st_3) = tt(t_2, st_2)\\
     & \dots\\
-    & tr_n \quad \text{where } (tr_n, \_) = tt(t_n, st_n)\\
+    & tr_n \quad \text{where } (tr_{n - 1}, st_n) = tt(t_{n - 1}, st_{n - 1})\\
+    & tr_n \quad \text{where } (tr_n, \_) = tt(t_n, st_n)
 \end{align*}
 \todo{define symbol table}
 
