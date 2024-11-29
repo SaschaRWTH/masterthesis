@@ -1,6 +1,26 @@
 \pagenumbering{roman}
 \begin{appendices}
 %\addcontentsline{toc}{part}{\appendixname}
+\chapter{Translations}
+\label{appendix:translation}
+
+\begin{align*}
+    nControl : \ & QubitArgument \times QASM \to QASM\\
+    nControl(qArg, qStm_1 \dots qStm_n) = \ & nControl(qArg, qStm_1)\\
+        & ...\\
+        & nControl(qArg, qStm_n)\\
+    nControl(qArg, qubitDcl) = \ & qubitDcl\\
+\end{align*}
+\begin{align*}
+    &nControl(qArg, cGate \ a_1, \dots, a_n ) =  \texttt{negctrl(1) @ } cGate \ qArg, a_1, \dots, a_n\texttt{;}\\
+    &nControl(qArg, cGate \ \texttt{negctrl(}n\texttt{) @ } a_1, \dots, a_n ) = \\
+    & \quad \quad \quad \quad \texttt{negctrl(}n + 1\texttt{) }cGate \ qArg, a_1, \dots, a_n\texttt{;}\\
+    &nControl(qArg, \texttt{ctrl(}i \texttt{) @ } cGate \ a_1, \dots, a_n ) = \\
+    & \quad \quad \quad \quad \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}1\texttt{) } cGate \ a_1, ..., a_i, qArg, a_{i+1} \dots, a_n\texttt{;}\\
+    &nControl(qArg, \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n\texttt{) @ } cGate \ a_1, \dots, a_n ) = \\
+    & \quad \quad \quad \quad \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n + 1\texttt{) @ } cGate \ a_1, ..., a_i, qArg, a_{i+1} \dots, a_n\texttt{;}
+\end{align*}
+
 \chapter{Grammar Terminals}
 \label{appendix:grammar_terminals}
 \lstinputlisting[]{../figures/code/grammar_terminals.g4}
