@@ -19,7 +19,7 @@ Three grammar rules that are used in the context of gate applications are the ga
 \begin{align*}
     Gate: \ & gate ::= id \mid cGate\\
     ConstGate: \ & cGate ::= \texttt{x} \mid \texttt{y} \mid \texttt{z} \mid \texttt{cx} \mid \texttt{ccx}\\
-    QubitArgument: \ & qArg ::= id \mid id[exp]\\
+    QubitArgument: \ & qArg ::= id \mid id[exp]
 \end{align*}
 
 Next, the declaration rules $dcl$ and $gDcl$ are used to declare qubits, register, or constant variables and gate declaration respectively. Each requires an identifier given by the $id$ rule. In the case of the constant and register declaration, the value and size are given by an expression. Additionally, the gate declaration requires a list of identifiers for the arguments and the code block of the composite gate.
@@ -27,7 +27,7 @@ Next, the declaration rules $dcl$ and $gDcl$ are used to declare qubits, registe
     Declaration: \ & dcl ::= \texttt{const } id \texttt{ = } exp \texttt{;} \mid \\
                  & \quad \quad \quad \quad \texttt{qubit } id \texttt{;} \mid \\
                  & \quad \quad \quad \quad \texttt{qubit[} exp \texttt{] } id \texttt{;}\\
-    GateDeclaration: \ & gDcl::= \texttt{gate } id \texttt{ (}id_1, \dots, id_n\texttt{) do } blk \texttt{ end}\\
+    GateDeclaration: \ & gDcl::= \texttt{gate } id \texttt{ (}id_1, \dots, id_n\texttt{) do } blk \texttt{ end}
 \end{align*}
 
 The statement rule $stm$ can either be an if-statement, with an optional else-block, a loop statement, a gate application statement, or a skip statement. The qubit argument rule is used for both the if-statement, to specify the control qubit, and the gate application statement, to specify the arguments. Additionally, the range expression is used to specify the range of the loop-statement. The block rule is used for the body of the if-statement, the optional else-block, and the loop statement.
@@ -36,7 +36,7 @@ The statement rule $stm$ can either be an if-statement, with an optional else-bl
                  & \quad \quad \quad \quad \texttt{qif } qArg \texttt{ do }  blk_1 \texttt{ else } blk_2 \texttt{ end} \mid\\
                  & \quad \quad \quad \quad \texttt{for } id \texttt{ in } rExp \texttt{ do } blk \texttt{ end} \mid \\
                  & \quad \quad \quad \quad gate \ qArg_1, \dots, qArg_n \texttt{;} \mid \\
-                 & \quad \quad \quad \quad \texttt{skip;}\\
+                 & \quad \quad \quad \quad \texttt{skip;}
 \end{align*}
 
 The last grammar rules are the block rule $blk$, which specifies a possibly empty list of translatables, the translatable rule $t$, which can either be a statement or declaration, and the program rule $prg$, which consists of an optional list of gate declarations and a code block. 
@@ -58,7 +58,7 @@ Since we define some auxiliary functions that operate on OpenQASM code, a reduce
 A qubit or register is declared by the qubit declaration rule $qubitDcl$ . It requires an identifier for the symbol and, in the case of a register, a size in the form of a constant natural number. 
 \begin{align*}
     QubitDeclaration: \ & qubitDcl::= \texttt{qubit } id \texttt{;} \mid\\
-    & \hspace{6em} \texttt{qubit[}n\texttt{] } id \texttt{;}\\
+    & \hspace{6em} \texttt{qubit[}n\texttt{] } id \texttt{;}
 \end{align*}
 
 A gate is applied with the gate application rule $gateApp$. There are four different kinds of gate application, one with no control, two with arbitrarily many positive or negative control qubits, and one with both arbitrarily positive and negative control qubits. The number of control qubits is given as a natural number. 
@@ -66,7 +66,7 @@ A gate is applied with the gate application rule $gateApp$. There are four diffe
 GateApplication: \ & gateApp::= cGate \ qArg_1, ..., qArg_n \texttt{;} \mid\\
 & \quad \quad \quad \texttt{ctrl(}n\texttt{)} \texttt{ @ } qGate \ qArg_1, ..., qArg_n \texttt{;} \mid\\
 & \quad \quad \quad \texttt{negctrl(}n\texttt{)} \texttt{ @ } qGate \ qArg_1, ..., qArg_n \texttt{;} \mid\\
-    & \quad \quad \quad \texttt{ctrl(}n_1\texttt{)} \texttt{ @ } \texttt{negctrl(}n_2\texttt{)} \texttt{ @ } qGate \ qArg_1, ..., qArg_n \texttt{;}\\
+    & \quad \quad \quad \texttt{ctrl(}n_1\texttt{)} \texttt{ @ } \texttt{negctrl(}n_2\texttt{)} \texttt{ @ } qGate \ qArg_1, ..., qArg_n \texttt{;}
 \end{align*}
 
 Lastly, in our reduced grammar, an OpenQASM program consist of a header and a list of statements that can be either a gate application or gate declaration.
