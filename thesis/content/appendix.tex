@@ -12,13 +12,13 @@
     nControl(qArg, qubitDcl) = \ & qubitDcl\\
 \end{align*}
 \begin{align*}
-    &nControl(qArg, cGate \ a_1, \dots, a_n ) =  \texttt{negctrl(1) @ } cGate \ qArg, a_1, \dots, a_n\texttt{;}\\
-    &nControl(qArg, cGate \ \texttt{negctrl(}n\texttt{) @ } a_1, \dots, a_n ) = \\
-    & \quad \quad \quad \quad \texttt{negctrl(}n + 1\texttt{) }cGate \ qArg, a_1, \dots, a_n\texttt{;}\\
-    &nControl(qArg, \texttt{ctrl(}i \texttt{) @ } cGate \ a_1, \dots, a_n ) = \\
-    & \quad \quad \quad \quad \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}1\texttt{) } cGate \ a_1, ..., a_i, qArg, a_{i+1} \dots, a_n\texttt{;}\\
-    &nControl(qArg, \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n\texttt{) @ } cGate \ a_1, \dots, a_n ) = \\
-    & \quad \quad \quad \quad \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n + 1\texttt{) @ } cGate \ a_1, ..., a_i, qArg, a_{i+1} \dots, a_n\texttt{;}
+    &nControl(qArg, cGate \ qArg_1, \dots, qArg_n ) =  \texttt{negctrl(1) @ } cGate \ qArg, qArg_1, \dots, qArg_n\texttt{;}\\
+    &nControl(qArg, cGate \ \texttt{negctrl(}n\texttt{) @ } qArg_1, \dots, qArg_n ) = \\
+    & \quad \quad \quad \quad \texttt{negctrl(}n + 1\texttt{) }cGate \ qArg, qArg_1, \dots, qArg_n\texttt{;}\\
+    &nControl(qArg, \texttt{ctrl(}i \texttt{) @ } cGate \ qArg_1, \dots, qArg_n ) = \\
+    & \quad \quad \quad \quad \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}1\texttt{) } cGate \ qArg_1, ..., qArg_i, qArg, qArg_{i+1} \dots, qArg_n\texttt{;}\\
+    &nControl(qArg, \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n\texttt{) @ } cGate \ qArg_1, \dots, qArg_n ) = \\
+    & \quad \quad \quad \quad \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n + 1\texttt{) @ } cGate \ qArg_1, ..., qArg_i, qArg, qArg_{i+1} \dots, a_n\texttt{;}
 \end{align*}
 
 \chapter{Grammar Terminals}

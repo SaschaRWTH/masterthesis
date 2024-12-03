@@ -3,7 +3,7 @@
 The syntax of our programming language $Luie$ is defined by the context-free grammar $CFG_{Luie}$. It consists of a set of non-terminals $V_{Luie}$, terminals $\Sigma_{Luie}$, and grammar rules $R_{Luie}$ as well as the start symbol $prg_{Luie}$. The terminal symbol $n$ represents a natural number, while $id$ represents an identifier. The grammar rules $R_{Luie}$ are discussed in the following.
 \begin{align*}
     CFG_{Luie} = \ & \{V_{Luie}, \Sigma_{Luie}, R_{Luie}, prg \}\\ 
-    V_{Luie} = \ & \{ exp, rExp, gate, cGate, qArg stm,\\ 
+    V_{Luie} = \ & \{ exp, rExp, gate, cGate, qArg, stm,\\ 
             & \ \  dcl, gDcl, blk, t, prg\}\\ 
     \Sigma_{Luie} = \ & \{n, id, \texttt{..}, \texttt{range}, \texttt{(}, \texttt{)}, \texttt{+}, \texttt{-}, \\
                & \ \ \texttt{x}, \texttt{y}, \texttt{z}, \texttt{cx}, \texttt{ccx}, \texttt{[}, \texttt{]}, \dots \} \quad \quad \texttt{where } n \in \mathbb{N}, id \in Identifier
@@ -55,19 +55,21 @@ Since we define some auxiliary functions that operate on OpenQASM code, a reduce
                & \ \ \texttt{x}, \texttt{y}, \texttt{z}, \texttt{cx}, \texttt{ccx}, \texttt{[}, \texttt{]}, \dots \} \quad \quad \texttt{where } n \in \mathbb{N}, id \in Identifier
 \end{align*}
 
-\dots
+A qubit or register is declared by the qubit declaration rule $qubitDcl$ . It requires an identifier for the symbol and, in the case of a register, a size in the form of a constant natural number. 
 \begin{align*}
     QubitDeclaration: \ & qubitDcl::= \texttt{qubit } id \texttt{;} \mid\\
-    & \quad \quad \quad \quad \quad \texttt{qubit[}n\texttt{] } id \texttt{;}\\
+    & \hspace{6em} \texttt{qubit[}n\texttt{] } id \texttt{;}\\
 \end{align*}
 
+A gate is applied with the gate application rule $gateApp$. There are four different kinds of gate application, one with no control, two with arbitrarily many positive or negative control qubits, and one with both arbitrarily positive and negative control qubits. The number of control qubits is given as a natural number. 
 \begin{align*}
-GateApplication: \ & gateApp::= cGate \ a_1, ..., a_n \texttt{;} \mid\\
-& \quad \quad \quad \texttt{ctrl(}n\texttt{)} \texttt{ @ } qGate \ a_1, ..., a_n \texttt{;} \mid\\
-& \quad \quad \quad \texttt{negctrl(}n\texttt{)} \texttt{ @ } qGate \ a_1, ..., a_n \texttt{;} \mid\\
-    & \quad \quad \quad \texttt{ctrl(}n_1\texttt{)} \texttt{ @ } \texttt{negctrl(}n_2\texttt{)} \texttt{ @ } qGate \ a_1, ..., a_n \texttt{;}\\
+GateApplication: \ & gateApp::= cGate \ qArg_1, ..., qArg_n \texttt{;} \mid\\
+& \quad \quad \quad \texttt{ctrl(}n\texttt{)} \texttt{ @ } qGate \ qArg_1, ..., qArg_n \texttt{;} \mid\\
+& \quad \quad \quad \texttt{negctrl(}n\texttt{)} \texttt{ @ } qGate \ qArg_1, ..., qArg_n \texttt{;} \mid\\
+    & \quad \quad \quad \texttt{ctrl(}n_1\texttt{)} \texttt{ @ } \texttt{negctrl(}n_2\texttt{)} \texttt{ @ } qGate \ qArg_1, ..., qArg_n \texttt{;}\\
 \end{align*}
 
+Lastly, in our reduced grammar, an OpenQASM program consist of a header and a list of statements that can be either a gate application or gate declaration.
 \begin{align*}
     QASMStatement: \ & qStm::= gateApp \mid qubitDcl \mid \epsilon\\
     QASM: \ & qasm ::= qStm_1 \dots qStm_n\\
