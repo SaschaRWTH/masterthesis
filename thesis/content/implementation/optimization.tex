@@ -1,41 +1,47 @@
 \section{Optimization}
 The implementation of the compiler does not only translate the custom language to OpenQASM 3 but
 %also implements inherit optimizations on the program
-and allows for optimization on the translated circuit. 
-To apply the optimization to the translated circuit, the circuit description, \ie the program, is used to build a circuit graph, as described in Sec.~\ref{sec:concept_circuitGraph}. Next, an algorithm iterates over the graph and checks whether a list of optimization rules is applicable to a part of the graph. If a rule is applicable, the rule is applied. The process of iterating over the entire graph is repeated for as long as rules where applied in the previous iteration over the graph. When the optimization of the circuit is completed, the graph is translated back to a programmatic description of the circuit and the result is returned.
+also allows for optimizations on the translated circuit. 
+To apply the optimization to the translated circuit, the circuit description is used to build a circuit graph, as described in Sec.~\ref{sec:concept_circuitGraph}. Next, an algorithm iterates over the graph and checks whether a list of optimization rules is applicable to a part of the graph. If a rule is applicable, the rule is applied. The process of iterating over the entire graph is repeated for as long as rules where applied in the previous iteration over the graph. When the optimization of the circuit is completed, the graph is translated back to a programmatic description of the circuit and the result is returned.
 
-In the following, we will discuss the implementation of the different steps in the optimization process. This includes the circuit graph in general, the construction of the graph based on the program, and the translation of the graph back to a circuit. Further, we discuss the implementation of the optimization rules and the optimization algorithm in  general.
+In the following, we will discuss the implementation of the different steps in the optimization process. This includes the circuit graph in general, the construction of the graph based on the program, and the translation of the graph back to a circuit. Further, we discuss the implementation of the optimization rules and the optimization algorithm in general.
 
 \subsection{Circuit Graph}
-\begin{itemize}
-    \item Basic structure of circuit
-    \item Graph construction
-    \item Graph translation
-    \item Some auxillary constructs ands functions
-    \begin{itemize}
-        \item Paths
-        \item Removal of nodes
-        \item replacing paths
-    \end{itemize} 
-\end{itemize}
+The basis of the circuit graph implementation are interfaces for basic graph elements, \ie an edge, node, graph, and path interface. They stipulate the basic properties and function the elements require. For example, while the edge interface contains an start and end node, the graph interface contains a list of nodes and edges as well as function to add and remove nodes and edges. Based on these interfaces basic edge, graph, node, and path classes are implemented. They implement the different basic functionalities required by the interfaces. Lastly, these basic elements are extended intro circuit graph elements, circuit nodes, edges, a wire path, and, finally, the circuit graph. Additionally, the circuit node is extended further to input, output, and gate nodes.
 
-Graph construction
+The circuit graph is constructed from a \texttt{QASMProgram} input. First, all qubit and register declarations are selected from the program; for each qubit declaration, a graph qubit is created and the corresponding input and output nodes are added to the graph. In the case of a register declaration, the same creation is repeated for each qubit in the register. Similarly, all gate application statements are selected from the program; for each statement, a gate node is created and inserted into the graph by inserting the node at the end of the wire path for each qubit argument to the gate. The result is the complete circuit graph. 
 
-Graph translation
-\begin{itemize}
-    \item Important attributes
-    \begin{itemize}
-        \item Gates applied in correct order
-        \item But when to apply which gate?
-        \item In many cases arbitrary (example) 
-    \end{itemize}
-    \item Eager translation
-    \begin{itemize}
-        \item Translate each wire as much as possible
-        \item Switch to other wire only if entirely translated 
-        \item or node can only be translated if other wire is translated first (up to the node) 
-    \end{itemize}
-\end{itemize} 
+When translating the circuit graph back into a programmatic description, often, multiple translations are valid. For example, given a circuit with two qubit $q_0$ and $q_1$ with a Hadamard gate $H$ being applied to both, in the program, it does not matter whether the gate is applied to $q_0$ or $q_1$ first. The only requirement for the order of gate applications is that, if a gate $G_0$ is applied to a qubit before another gate $G_1$ on same wire, in the resulting program, the statement corresponding to $G_0$ must come before the statement of $G_1$. For our translation, we implement an eager approach where a single wire path is translated as far as possible. If a gate is reached for which other gates need to be translated first, the translation switches to the wire path that needs to be translated first. 
+
+First a dictionary $curr$ is created where, for each qubit, a current node is initialized to the successor of the input node. Additionally, the first qubit is set as the current qubit $q$. Next, the main algorithm is repeated for as long as a qubit exists where the current node is not the output node. In the main body, the current node $g$ of the current qubit $q$ is selected. If $g$ is an output node, the current qubit is set to a qubit whose current node is not an output node. If qubit $q'$ exists in the arguments gate of $g$, where the corresponding current node $g'$ is not equal to $g$, the current qubit is set to $g'$ and the translation continues. If this is not the case, translation of $g$ is added to the program and the current nodes of all qubit arguments are set to the corresponding successor nodes. The pseudo code for the algorithm is depicted in Alg.~\ref{alg:circuit_translation}.
+
+% Pseudo code for algorithm
+\SetKwComment{Comment}{\# }{}
+\begin{algorithm}
+    \caption{The algorithm used to translate a circuit graph to a program.}\label{alg:circuit_translation}
+    \label{alg:concept_optimizationAlgorithm}
+    \KwData{Circuit Graph $C = (V, E, Q, Q_E, Q_V)$, $V = I \cup O \cup G$}
+    \KwResult{$prog$ as the translation of the circuit graph $C$}
+    $prog \gets []$\;
+    $curr \gets [q_{init} \mapsto n \mid q_{init} \in Q, n \in G \cup O, \exists \ o \in O : (o, q_{init}) \in Q_V, (o, n) \in E]$\;
+    $q \gets$ first element in $Q$\; 
+    \While{$\exists \ q : curr[q] \not\in O$}{
+        $g \gets curr[q]$
+        \If{$g \in O$}{
+            $q \gets$ first element in $\{q \mid q \in Q, curr[q] \not\in O\}$\;
+            continue\;
+        }
+        \If{$\exists \ q' \in Q, q'$ argument to gate of $g, curr[q'] = g', g \neq g'$}{
+            $q \gets q'$\;
+            continue\;
+        }
+        add translation of $g$ to $prog$\;
+
+        \ForEach{$q_g$ argument of $g$}{
+            $curr \gets curr[q_g \mapsto g_{succ} \mid g_{succ} \in G \cup O, ((g, g_succ), q_g) \in Q_E]$\;
+        }
+    }
+\end{algorithm}
 
 \subsection{Optimization Rules}
 \begin{itemize}
