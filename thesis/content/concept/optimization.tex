@@ -1,4 +1,5 @@
 \section{Optimization}
+\label{sec:concept_optimization}
 Our compiler does not only translate the source language Luie to the target language OpenQASM but can also apply optimizations to the program. Since quantum programs must be deterministic and, therefore, most language constructs are translated at compile time, many classical optimizations are inherently applied. The following, inherent optimizations are discussed generally in Sec.~\ref{sec:background_codeOptimization}.
 
 The first kind of inherent optimizations are constant propagation and constant folding. 
@@ -9,6 +10,7 @@ Secondly, loop unrolling is always applied to all loop statements. OpenQASM does
 The last inherent optimization is function inlining. Our language provides the ability to define custom gates that consist of an arbitrary combination of gate applications and, possibly, control flow statements. While OpenQASM has a similar functionality, the composite gates OpenQASM provides are more restrictive; for example, they do not allow for registers as arguments to the gate. Furthermore, in contrast to classical computers, quantum computers do not natively support function calls or related concepts. Therefore, each time a composite gate is used, the compiler inlines the gate body at the location where the gate is applied.   
 
 \subsection{Optimization Rules}
+\label{sec:concept_optimizationRules}
 After the code is translated, the compiler can perform additional peephole optimizations; these are not inherent to the translation of the program and, therefore, are optional. 
 The peephole optimizations can be applied to the internal representation of the source language and most hardware-independent optimizations are usually applied to the intermediate representation instead of the target language. However, the peephole optimization rules only operate on sequences of gate applications such that control flow statements or composite gates may only hinder, not aid, the effectiveness of the optimization. The overall performance of the optimization may be increased by optimizing composite gates before inlining their code so that a gate that is called ten times only needs to be optimized once; nevertheless, inlining the gates before applying the rules may enable more optimizations and, thereby, increase the effectiveness at the cost of performance. Therefore, we apply the optimization rules after the code is translated.
 % \todo{Why do we need to apply to translated code and not intermediate? most optimizations typically on intermediate} 
@@ -91,7 +93,7 @@ The optimization algorithm, depicted in Alg.~\ref{alg:concept_optimizationAlgori
 % Pseudo code for algorithm
 \SetKwComment{Comment}{\# }{}
 \begin{algorithm}
-    \caption{The algorithm used to optimize a circuit graph.}\label{alg:circuit_optimization}
+    \caption{The algorithm used to optimize a circuit graph.}
     \label{alg:concept_optimizationAlgorithm}
     \KwData{Circuit Graph $C = (V, E, Q, Q_E, Q_V)$, List of optimization rules $R$, Maximal rule length $max$}
     $repeat \gets true$\;

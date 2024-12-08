@@ -2,9 +2,11 @@
 The implementation of the compiler does not only translate the custom language to OpenQASM 3 but
 %also implements inherit optimizations on the program
 also allows for optimizations on the translated circuit. 
-To apply the optimization to the translated circuit, the circuit description is used to build a circuit graph, as described in Sec.~\ref{sec:concept_circuitGraph}. Next, an algorithm iterates over the graph and checks whether a list of optimization rules is applicable to a part of the graph. If a rule is applicable, the rule is applied. The process of iterating over the entire graph is repeated for as long as rules where applied in the previous iteration over the graph. When the optimization of the circuit is completed, the graph is translated back to a programmatic description of the circuit and the result is returned.
+To apply the optimizations to the translated circuit, the circuit description is used to build a circuit graph, as described in Sec.~\ref{sec:concept_circuitGraph}. Next, the graph is iterated, as described in Alg.~\ref{alg:concept_optimizationAlgorithm}, and the subgraphs are checked for applicable optimization rules. If a rule is applicable, the rule is applied. The process of iterating over the entire graph is repeated for as long as rules where applied in the previous iteration over the graph. When the optimization of the circuit is completed, the graph is translated back to a programmatic description of the circuit and the result is returned.
 
-In the following, we will discuss the implementation of the different steps in the optimization process. This includes the circuit graph in general, the construction of the graph based on the program, and the translation of the graph back to a circuit. Further, we discuss the implementation of the optimization rules and the optimization algorithm in general.
+The optimization itself is handled by the optimization handler. It contains reference to the program, which is optimized, and a function to optimize to program with the optimization type as an argument. The optimization type is an enum where each the value are flags for the corresponding optimization. For example, no optimization has a value of $0$, null gate optimizations \texttt{NullGate} have a value of $1$, and Hadamard reduction optimization \texttt{HReduction} has a value of $4$. In turn, when the optimization function is given a value of $5$ or \texttt{NullGate | HReduction}, only the null gate and Hadamard reduction optimizations are applied. The optimization function retrieves the list of rules to apply and creates the circuit graph from the program. Next, a single optimization round is performed. If optimizations were applied, another round is performed; otherwise, the optimization process is complete. Then, any unused qubits, \ie qubit to which not gate are applied, are removed from the program. This is the case, if the successor of the input node of a qubit is the output node. Lastly, the circuit graph is translated back to a program and returned.
+
+In the following, we will discuss the implementation of the different steps in the optimization process. This includes the circuit graph in general, the construction of the graph based on the program, and the translation of the graph back to a circuit. Lastly, we discuss the implementation of the optimization rules.
 
 \subsection{Circuit Graph}
 The basis of the circuit graph implementation are interfaces for basic graph elements, \ie an edge, node, graph, and path interface. They stipulate the basic properties and function the elements require. For example, while the edge interface contains an start and end node, the graph interface contains a list of nodes and edges as well as function to add and remove nodes and edges. Based on these interfaces basic edge, graph, node, and path classes are implemented. They implement the different basic functionalities required by the interfaces. Lastly, these basic elements are extended intro circuit graph elements, circuit nodes, edges, a wire path, and, finally, the circuit graph. Additionally, the circuit node is extended further to input, output, and gate nodes.
@@ -18,17 +20,17 @@ First a dictionary $curr$ is created where, for each qubit, a current node is in
 % Pseudo code for algorithm
 \SetKwComment{Comment}{\# }{}
 \begin{algorithm}
-    \caption{The algorithm used to translate a circuit graph to a program.}\label{alg:circuit_translation}
-    \label{alg:concept_optimizationAlgorithm}
+    \caption{The algorithm used to translate a circuit graph to a program.}
+    \label{alg:circuit_translation}
     \KwData{Circuit Graph $C = (V, E, Q, Q_E, Q_V)$, $V = I \cup O \cup G$}
     \KwResult{$prog$ as the translation of the circuit graph $C$}
     $prog \gets []$\;
     $curr \gets [q_{init} \mapsto n \mid q_{init} \in Q, n \in G \cup O, \exists \ o \in O : (o, q_{init}) \in Q_V, (o, n) \in E]$\;
     $q \gets$ first element in $Q$\; 
     \While{$\exists \ q : curr[q] \not\in O$}{
-        $g \gets curr[q]$
+        $g \gets curr[q]$\;
         \If{$g \in O$}{
-            $q \gets$ first element in $\{q \mid q \in Q, curr[q] \not\in O\}$\;
+            $q \gets$ first element in $\{q_{rem} \mid q_{rem} \in Q, curr[q_{rem}] \not\in O\}$\;
             continue\;
         }
         \If{$\exists \ q' \in Q, q'$ argument to gate of $g, curr[q'] = g', g \neq g'$}{
@@ -38,20 +40,18 @@ First a dictionary $curr$ is created where, for each qubit, a current node is in
         add translation of $g$ to $prog$\;
 
         \ForEach{$q_g$ argument of $g$}{
-            $curr \gets curr[q_g \mapsto g_{succ} \mid g_{succ} \in G \cup O, ((g, g_succ), q_g) \in Q_E]$\;
+            $curr \gets curr[q_g \mapsto g_{succ} \mid g_{succ} \in G \cup O, ((g, g_{succ}), q_g) \in Q_E]$\;
         }
     }
 \end{algorithm}
 
 \subsection{Optimization Rules}
-\begin{itemize}
-    \item Rule interface
-    \item Abstract optimization rule
-    \item Describe the different optimization and the general implementation
-\end{itemize}
+When the circuit graph is checked for optimizations, as described in Sec.~\ref{sec:concept_circuitGraph} and Alg.~\ref{alg:concept_optimizationAlgorithm}, a list of rules is given and, for each subgraph, all rules are checked for applicability. These rules all implement the \texttt{IRule} interface. It describes that each rule contains a maximum rule depth property and function to check the applicability of the rule for a wire subpath as well as a function to apply the rule. The interface is implemented by an abstract optimization rule class from which all rules inherit and which contains some additional auxiliary function. In total, the compiler contains four different rule classes, corresponding to the optimizations discussed in Sec.~\ref{sec:concept_optimizationRules}, the \emph{control reversal}, \emph{Hadamard reduction}, \emph{gull gate}, and \emph{peeping control} rule. 
 
-\subsection{Optimization Algorithm}
-\begin{itemize}
-    \item How is the graph iterated\
-    \item How are sub-paths used and created
-\end{itemize}
+The control reversal optimization is applicable when a controlled-not gate is preceded and succeeded by a Hadamard gate on both wires. However, our optimization algorithm will only create subgraphs that belong to a single wire. Therefore, instead of checking a given path for a matching condition, the rule operates on a maximum length of one gate node and checks whether the given node is a controlled-not gate. If this is the case, the rule is applicable when all successors and predecessors are Hadamard gate nodes. Lastly, the rule is applied by removing all surrounding Hadamard gates and switching the control and target qubit of the gate.
+
+The Hadamard reduction rule is applicable when an $X$ or $Z$ gate has a Hadamard gate as a predecessor and successor node. In turn, the maximum length of the rule is three. Additionally, the rule saves a gate type property for the gate which is surrounded as well as a property for the gate type to which the rule reduces. For both cases, \ie $X$ or $Z$ gates, the class contains static instances with the corresponding properties. The rule is applicable when the both the start and end nodes of the path are Hadamard gates and the middle node is the sandwiched node. Additionally, we allow the rule to be applicable for controlled variants of the rule. As long as the guards of all gates are mutually inclusive, the arguments to all three gates are equivalent, and the sequence of gates is not interrupted on any wire, the rule is applicable. To apply the rule, the Hadamard gates are removed from the circuit and the middle nodes gate type is set to the reduction gate.
+
+The null gate rule removes gate combinations that are equivalent to the an identity operation. It contains an array of gate types, representing the null gate combination. In turn, the maximum rule length is the length of this array. Similar to the Hadamard reduction, the different possible null gate rule are created as static instances of the class with the corresponding combination. The rule is applicable if the gates in the path correspond to the null gate combination. Additionally, the rule is extended by allowing for controlled variants of the null combination with the same conditions imposed by the extension of the Hadamard reduction.
+
+Lastly, peeping control rule removes a controlled gate if on of the control qubits has a value of $\ket{0}$ or removes the control qubit if its value is know to be $\ket{1}$. Similar to the control reversal rule, the rule cannot operate on the wire paths alone. Instead, the rule searches for a controlled gate where the qubit, corresponding to the path, is a control qubit. In turn, the maximum length for the rule is one. If the path consists of a controlled gate and the path qubit is one of the controls, the rule tries to evaluate the current value of the control qubit. For this, it initiates the state to false and iterates over all predecessor gate nodes on the wire. For an $X$ or $Y$ gate, the state is flipped while a $Z$ gate does not affect the value. For any other gate or controlled versions of the gates, the state cannot be evaluated. The rule is applicable whenever the state can be evaluated. When applied and the state is false, the controlled gate is removed. In contrast, if the state is true, the current qubit will be removed as a guard from the controlled gate. 
