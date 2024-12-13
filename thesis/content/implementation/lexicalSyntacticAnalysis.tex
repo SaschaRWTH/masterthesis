@@ -8,7 +8,7 @@ The entry point for the grammar is a parsing rule called \texttt{parse}. It stat
 
 \begin{figure}[htp]
     \centering
-    \lstinputlisting[style=ANTLR]{../figures/code/grammar_structure.g4}
+    \lstinputlisting[style=ANTLR]{../figures/code/implementation/grammar_structure.g4}
     \caption{The basic structure parsing rules of Luie.}
     \label{fig:implementation_grammarStructure}
 \end{figure}
@@ -19,7 +19,7 @@ There are three kinds of declaration rules in the grammar. The first is the decl
 
 \begin{figure}[htp]
     \centering
-    \lstinputlisting[style=ANTLR]{../figures/code/grammar_declarations.g4}
+    \lstinputlisting[style=ANTLR]{../figures/code/implementation/grammar_declarations.g4}
     \caption{The parsing rules for declarations in Luie.}
     \label{fig:implementation_grammarDeclarations}
 \end{figure}
@@ -35,7 +35,7 @@ The grammar contains four different type of statements. The first is the gate ap
 
 \begin{figure}[]
     \centering
-    \lstinputlisting[style=ANTLR]{../figures/code/grammar_gateStatements.g4}
+    \lstinputlisting[style=ANTLR]{../figures/code/implementation/grammar_gateStatements.g4}
     \caption{The parsing rules for gate statements in Luie.}
     \label{fig:implementation_grammarGateStatements}
 \end{figure}
@@ -44,7 +44,7 @@ Next, the first control flow statement is the if-statement. It starts with the \
 
 \begin{figure}[b]
     \centering
-    \lstinputlisting[style=ANTLR]{../figures/code/grammar_controlflowStatements.g4}
+    \lstinputlisting[style=ANTLR]{../figures/code/implementation/grammar_controlflowStatements.g4}
     \caption{The parsing rules for the control flow statements in Luie.}
     \label{fig:implementation_controlFlowStatements}
 \end{figure}
@@ -58,7 +58,7 @@ Similar to the expression rule, the term represents two operations. In this case
 
 \begin{figure}[htp]
     \centering
-    \lstinputlisting[style=ANTLR]{../figures/code/grammar_expression.g4}
+    \lstinputlisting[style=ANTLR]{../figures/code/implementation/grammar_expression.g4}
     \caption{The parsing rules for an expression in Luie.}
     \label{fig:implementation_expression}
 \end{figure}

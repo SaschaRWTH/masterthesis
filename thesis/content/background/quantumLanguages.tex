@@ -47,13 +47,13 @@ An example of a classical program and the reversible equivalent can be seen in F
 \begin{figure}[htp]
     \centering     
     \begin{minipage}{.40\textwidth}
-        \lstinputlisting[style=QCM]{../figures/code/exp_non_reversible.qcm}
+        \lstinputlisting[style=QCM]{../figures/code/background/exp_non_reversible.qcm}
         \caption{A non-reversible exponentiation algorithm.}
         \label{fig:qcm_not_reverse}
     \end{minipage}
     \hfill
     \begin{minipage}{.50\textwidth}
-        \lstinputlisting[style=QCM]{../figures/code/exp_non_sync.qcm}
+        \lstinputlisting[style=QCM]{../figures/code/background/exp_non_sync.qcm}
         \caption{Reversible exponentiation algorithm.}    
         \label{fig:qcm_reverse}
     \end{minipage}
@@ -67,7 +67,7 @@ To prevent this issue, the program must include padding operations which are exe
 
 \begin{figure}[htp]
     \centering     
-    \lstinputlisting[style=QCM]{../figures/code/exp_sync.qcm}
+    \lstinputlisting[style=QCM]{../figures/code/background/exp_sync.qcm}
     \caption{A synchronized, reversible exponentiation algorithm.}
     \label{fig:qcm_sync}
 \end{figure}
@@ -89,7 +89,7 @@ The programmer can not only use the operations and modifiers provided by OpenQAS
 
 \begin{figure}[htp]
     \centering     
-    \lstinputlisting[style=QASM]{../figures/code/example_circuit.qasm}
+    \lstinputlisting[style=QASM]{../figures/code/background/example_circuit.qasm}
     \caption{Code for an OpenQASM 3 example circuit.}
     \label{fig:qasm_example}
 \end{figure}

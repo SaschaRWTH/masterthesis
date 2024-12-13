@@ -26,7 +26,7 @@ Lastly, in contrast to most other statements, the skip statement does not contai
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=.9\textwidth]{../figures/uml_translateables.pdf}
+    \includegraphics[width=.9\textwidth]{../figures/drawio/uml_translateables.pdf}
     \caption{UML diagram of the different translatables.}
     \label{fig:implementation_uml_translatables}
 \end{figure}
@@ -73,7 +73,7 @@ After the discussion of the different steps and parts of the code generation, we
 
 \begin{figure}
     \centering
-    \lstinputlisting[style=Luie]{../figures/code/codeGen_example.luie}
+    \lstinputlisting[style=Luie]{../figures/code/implementation/codeGen_example.luie}
     \caption{An example Luie code to show the code generation process.}
     \label{fig:codeGen_source_example}
 \end{figure}
@@ -81,13 +81,13 @@ After the discussion of the different steps and parts of the code generation, we
 \begin{figure}
     \centering     
     \begin{minipage}{.45\textwidth}
-        \includegraphics[width=\textwidth]{../figures/codeGen_sourceCode_example.pdf}
+        \includegraphics[width=\textwidth]{../figures/drawio/codeGen_sourceCode_example.pdf}
         \caption{The source code representation of the example program.}
         \label{fig:codeGen_sourceCodeRep_example}
     \end{minipage}
     \hfill
     \begin{minipage}{.45\textwidth}
-        \includegraphics[width=\textwidth]{../figures/codeGen_targetCode_example.pdf}
+        \includegraphics[width=\textwidth]{../figures/drawio/codeGen_targetCode_example.pdf}
         \caption{The target code representation of the example program.}    
         \label{fig:implementation_targetCodeRep_example}
     \end{minipage}
@@ -101,7 +101,7 @@ Lastly, the remaining step is the conversion from the target code representation
 
 \begin{figure}
     \centering
-    \lstinputlisting[style=QASM]{../figures/code/codeGen_example.qasm}
+    \lstinputlisting[style=QASM]{../figures/code/implementation/codeGen_example.qasm}
     \caption{The OpenQASM translation of the Luie code example.}
     \label{fig:codeGen_target_example}
 \end{figure}
