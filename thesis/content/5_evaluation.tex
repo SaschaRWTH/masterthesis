@@ -1,4 +1,9 @@
 \chapter{Evaluation}
+\label{ch:evaluation}
+
+
+\section{Optimization}
+\label{sec:eval_optimization}
 Evaluation with quantum ripple carry adder~\cite{CDKM04}
 \begin{itemize}
     \item What does to quantum ripple carry adder do?
@@ -12,14 +17,14 @@ Evaluation with quantum ripple carry adder~\cite{CDKM04}
 \begin{figure}[htp]
     \centering     
     \lstinputlisting[style=QASM]{../figures/code/evaluation/adder.qasm}
-    \caption{CAPTION HERE}
+    \caption{An OpenQASM 3 implementation of a quantum ripple-carry adder circuit.}
     \label{fig:eval_adder_qasm}
 \end{figure}
 
 \begin{figure}[htp]
     \centering     
     \lstinputlisting[style=Luie]{../figures/code/evaluation/adder.luie}
-    \caption{CAPTION HERE}
+    \caption{A Luie implementation of a quantum ripple-carry adder circuit.}
     \label{fig:eval_adder_luie}
 \end{figure}
 
@@ -31,7 +36,7 @@ Evaluation with quantum ripple carry adder~\cite{CDKM04}
 \begin{figure}[htp]
     \centering     
     \includegraphics[width=\textwidth]{../figures/images/adderCircuit.png}
-    \caption{CAPTION HERE}
+    \caption{An unoptimized circuit of a quantum ripple-carry adder.}
     \label{fig:eval_adder_circuit}
 \end{figure}
 
@@ -53,6 +58,8 @@ Evaluation with quantum ripple carry adder~\cite{CDKM04}
     \end{itemize}
 \end{itemize}
 
+\section{Execution Time}
+\label{sec:eval_executionTime}
 \begin{itemize}
     \item Time taken for compilation, depending on different sizes of registers
     \item Time take for the different optimizations (with different register sizes)
@@ -65,9 +72,10 @@ Evaluation with quantum ripple carry adder~\cite{CDKM04}
     \item compare to actual runtime
 \end{itemize}
 
-\begin{table}[]
+\begin{table}[htp]
+    \centering     
     \begin{tabular}{c|ccc}
-    \multirow{2}{*}{Register Size $n$} & \multicolumn{3}{c}{Runtime of Stages in ms}                                                  \\ \cline{2-4} 
+    \multirow{2}{*}{Register Size $n$} & \multicolumn{3}{c}{Execution Time of Stages in ms}                                                  \\ \cline{2-4} 
                                        & \multicolumn{1}{c|}{Semantic Analysis} & \multicolumn{1}{c|}{Code Generation} & Optimization \\ \hline
     32                                 & \multicolumn{1}{c|}{25}                & \multicolumn{1}{c|}{41}              & 206          \\
     64                                 & \multicolumn{1}{c|}{28}                & \multicolumn{1}{c|}{47}              & 720          \\
@@ -75,4 +83,6 @@ Evaluation with quantum ripple carry adder~\cite{CDKM04}
     256                                & \multicolumn{1}{c|}{26}                & \multicolumn{1}{c|}{63}              & 11395        \\
     1024                               & \multicolumn{1}{c|}{31}                & \multicolumn{1}{c|}{157}             & 415601      
     \end{tabular}
+    \caption{The execution times compiling a quantum ripple-carry adder with different register sizes.}
+    \label{tab:eval_executionTime}
 \end{table}

@@ -3,6 +3,7 @@
 In the following, we discuss a formal translation of the source code, given in the form of a Luie program $prg$, to the target code, in the form of a OpenQASM program $p$. 
 
 An important part of the translation is the symbol table. It is used to propagate symbol information throughout the translation. A symbol tables is a function that maps either an identifier to the information of the corresponding symbol or the \texttt{uid} keyword to a number, the unique identifier counter, that is used to create unique identifiers for the target code variables.
+\change{Implementation of \texttt{uid} faulty, as value not propagated backwards (block translations do not return symbol table, would mitigate scopes)}
 \begin{align*}
     SymbolTable := \ & \{st \mid st : Identifier \dashrightarrow & (\{\texttt{const}\} \times \mathbb{R})\\
     & \cup& (\{\texttt{qubit}\} \times \mathbb{N} \times Identifier)\\
