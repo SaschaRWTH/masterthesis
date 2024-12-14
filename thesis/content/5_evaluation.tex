@@ -38,16 +38,41 @@ Evaluation with quantum ripple carry adder~\cite{CDKM04}
 \begin{itemize}
     \item What optimizations can be applied
     \item Circuit after optimizations
-    \item Which are applied by default optimizations of quiskit of transpilation? -> none
-    \item Why? -> no default peeping control rule
-    \item What much is optimized
-    \item Depends on input
-    \item For only classical, all redundant operations are removed
-    \item For input in superposition, optimization effectiveness depends on ``how entangle data''
+    \begin{itemize}
+        \item How much is optimized?
+        \item Depends on input
+        \item For only classical, all redundant operations are removed
+        \item For input in superposition, optimization effectiveness depends on ``how entangle data''
+    \end{itemize}
+    \item Comparison to quiskit optimizations
+    \begin{itemize}
+        \item Which are applied by default optimizations of quiskit of transpilation? -> none
+        \item Why? -> no default peeping control rule
+        \item Focused on transpilation to a basis gate set and hardware specific optimizations 
+        \item In turn, cannot optimize circuit greatly
+    \end{itemize}
 \end{itemize}
 
 \begin{itemize}
     \item Time taken for compilation, depending on different sizes of registers
     \item Time take for the different optimizations (with different register sizes)
-    \item Estimate complexity of optimization, compare to actual runtime
+    \item Estimate complexity of optimization
+    \begin{itemize}
+        \item $n_g$ number of gates
+        \item $n_q$ number of qubits
+        \item $\mathcal{O}(n_q \cdot n_g^2)$
+    \end{itemize}
+    \item compare to actual runtime
 \end{itemize}
+
+\begin{table}[]
+    \begin{tabular}{c|ccc}
+    \multirow{2}{*}{Register Size $n$} & \multicolumn{3}{c}{Runtime of Stages in ms}                                                  \\ \cline{2-4} 
+                                       & \multicolumn{1}{c|}{Semantic Analysis} & \multicolumn{1}{c|}{Code Generation} & Optimization \\ \hline
+    32                                 & \multicolumn{1}{c|}{25}                & \multicolumn{1}{c|}{41}              & 206          \\
+    64                                 & \multicolumn{1}{c|}{28}                & \multicolumn{1}{c|}{47}              & 720          \\
+    128                                & \multicolumn{1}{c|}{29}                & \multicolumn{1}{c|}{55}              & 2412         \\
+    256                                & \multicolumn{1}{c|}{26}                & \multicolumn{1}{c|}{63}              & 11395        \\
+    1024                               & \multicolumn{1}{c|}{31}                & \multicolumn{1}{c|}{157}             & 415601      
+    \end{tabular}
+\end{table}
