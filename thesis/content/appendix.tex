@@ -24,4 +24,27 @@
 \chapter{Grammar Terminals}
 \label{appendix:grammar_terminals}
 \lstinputlisting[]{../figures/code/appendix/grammar_terminals.g4}
+
+\chapter{Majority and Unmajority Gates}
+\label{appendix:majGates}
+\begin{figure}[htp]
+    \centering     
+    \begin{minipage}{.45\textwidth}
+        \lstinputlisting[style=Luie]{../figures/code/evaluation/majority.luie}
+        \caption{The $\texttt{MAJ}$ gate used in the quantum ripple-carry adder.}
+        \label{fig:eval_majorityGate}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.45\textwidth}
+        \lstinputlisting[style=Luie]{../figures/code/evaluation/unmajority.luie}
+        \caption{The $\texttt{UMA}$ gate used in the quantum ripple-carry adder.}    
+        \label{fig:eval_unmajorityGate}
+    \end{minipage}
+\end{figure}
+
+
+
+
+
+
 \end{appendices}

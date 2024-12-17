@@ -2,12 +2,35 @@
 \label{ch:introduction}
 \begin{itemize}
     \item Introduction into Quantum Computing, Quantum Languages, (possibly compilation)
+    \begin{itemize}
+        \item Short history on quantum computer
+        \item Technology improving
+        \item Practical QC becoming more realistic, technology may be viable on small scales in near future
+        \item Possible impact of quantum computers
+        \begin{itemize}
+            \item Can solve certain problems fast than classical computer
+            \item Effect of cryptography, \dots
+        \end{itemize}
+    \end{itemize}
     \item What is the motivation for the thesis
     \begin{itemize}
-        \item \dots
+        \item With the emergence of quantum computing, many quantum languages were introduced. 
+        \item Most languages focus on a lower level representation of quantum circuits. (QASM)\cite{CBSG17}.
+        \begin{itemize}
+            \item QASM consists mainly of quantum and classical gates that can be manipulated by predefined and composite gates as well as limited classical if-statements. 
+            \item In contrast, there are also languages with a focus on high level interactions, e.g. Tower\cite{ChMi22} which contains data structures in superposition, and Silq~\cite{BBGV20} which allows for automatic uncomputing of registers.
+        \end{itemize}
+        \item  What all these languages have in common is the restriction to quantum data while using only classical control flow.
+        \item Quantum Control Flow Although quantum control flow was defined by Ying et al.~\cite{YYF12} over ten years ago, only very few languages have incorporated the principle.
+        \item recently: Quantum Control Machine (QCM)~\cite{YVC24} with quantum control flow at its core 
+        \begin{itemize}
+            \item contains multiple restrictions
+            \item hard to program in, \eg need to ensure synchronization
+        \end{itemize}
     \end{itemize}
     \item What is the thesis goal
     \begin{itemize}
-        \item \dots
+        \item take ideas of QCM and design high-level language with same capabilities
+        \item Implement compiler that translates language to OpenQASM
     \end{itemize}
 \end{itemize}

@@ -1,0 +1,9 @@
+gate unmaj(a, b, c) do
+    qif a do
+        qif b do
+            x c; end 
+    end
+    qif c do x a; end
+    
+    qif a do x b; end
+end

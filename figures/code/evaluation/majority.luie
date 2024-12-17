@@ -1,0 +1,9 @@
+gate majority(a, b, c) do
+    qif c do
+        x b;
+        x a; 
+    end
+    qif a do
+        qif b do
+            x c; end end
+end

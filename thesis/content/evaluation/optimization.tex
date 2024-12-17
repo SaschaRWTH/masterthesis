@@ -1,0 +1,52 @@
+\section{Optimization}
+\label{sec:eval_optimization}
+Evaluation with quantum ripple carry adder~\cite{CDKM04}
+\begin{itemize}
+    \item What does to quantum ripple carry adder do?
+    \item Adds quantum register $a$ to register $b$
+    \item usual result for classical values, $a = \ket{1}$ $b = \ket{2}$ result in $\ket{3}$
+    \item values in superposition result in results in superposition, $a = \ket{3} + \ket{3}$, $b = \ket{2}$ result in $\ket{3}$
+    \item How is it implemented in QASM and Luie
+    \item What are the differences?
+\end{itemize}
+
+
+
+\begin{figure}[htp]
+    \centering     
+    \lstinputlisting[style=QASM]{../figures/code/evaluation/adder.qasm}
+    \caption{An OpenQASM 3 implementation of a quantum ripple-carry adder circuit.}
+    \label{fig:eval_adder_qasm}
+\end{figure}
+
+
+
+\begin{itemize}
+    \item (Possibly compiled qasm in appendix)
+    \item Quantum Circuit of algorithm  
+\end{itemize}
+
+\begin{figure}[htp]
+    \centering     
+    \includegraphics[width=\textwidth]{../figures/images/adderCircuit.png}
+    \caption{An unoptimized circuit of a quantum ripple-carry adder.}
+    \label{fig:eval_adder_circuit}
+\end{figure}
+
+\begin{itemize}
+    \item What optimizations can be applied
+    \item Circuit after optimizations
+    \begin{itemize}
+        \item How much is optimized?
+        \item Depends on input
+        \item For only classical, all redundant operations are removed
+        \item For input in superposition, optimization effectiveness depends on ``how entangle data''
+    \end{itemize}
+    \item Comparison to quiskit optimizations
+    \begin{itemize}
+        \item Which are applied by default optimizations of quiskit of transpilation? -> none
+        \item Why? -> no default peeping control rule
+        \item Focused on transpilation to a basis gate set and hardware specific optimizations 
+        \item In turn, cannot optimize circuit greatly
+    \end{itemize}
+\end{itemize}
