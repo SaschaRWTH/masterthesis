@@ -17,17 +17,7 @@ In the second example, we input a value in superposition. Now, register $a$ cont
 Since the input is now no longer a classical value, the peeping control optimization can only be applied in a few cases. In turn, only four gate are removed and four Toffoli gate are optimized to controlled-not gates.
 The optimized quantum program is depicted in App.~\ref{appendix:superposInputs_optimized}. While the optimizations are not as effective for inputs in superpositions, they can optimize significant parts of the program. For example, when we repeat the same example but increase the size of both register to $64$ qubits, the optimized circuit contains the same amount of gates. In this case, all gate applications to qubit wires outside the influence of the data in superposition can be removed.\improvement{bad formulation}
 
-We also compared the optimizations applied by our compiler to the default optimizations that are applied by the Qiskit transpilation process. Qiskit\footnote{\url{https://github.com/Qiskit/qiskit/}}~\cite{JTK*24} is a software development kit for building, simulating, and transpiling quantum circuits. Additionally, the kit can interpret OpenQASM programs and build quantum circuits from them. When transpiling quantum circuits with Qiskit, \ie transforming to a specific domain, \eg another basis gate set, the kit can perform optimizations to the circuit based on a optimization level. However, \dots
-\begin{itemize}
-    \item What optimizations can be applied
-    \begin{itemize}
-        \item Which are applied by default optimizations of quiskit of transpilation? -> none
-        \item Why? -> no default peeping control rule
-        \item Focused on transpilation to a basis gate set and hardware specific optimizations 
-        \item In turn, cannot optimize circuit greatly
-    \end{itemize}
-\end{itemize}
-
+We also compared the optimizations applied by our compiler to the default optimizations that are applied by the Qiskit transpilation process. Qiskit\footnote{\url{https://github.com/Qiskit/qiskit/}}~\cite{JTK*24} is a software development kit for building, simulating, and transpiling quantum circuits. Additionally, the kit can interpret OpenQASM programs and build quantum circuits from them. When transpiling quantum circuits with Qiskit, \ie transforming to a specific domain, \eg another basis gate set, the kit can perform optimizations to the circuit based on a optimization level. For the comparison, we wrote a OpenQASM program which applied the quantum ripple-carry adder. The code for the program is depicted in Fig.~\ref*{fig:eval_adder_qasm}. The program can then be loaded with Qiskit and build into a quantum circuit. To apply the default optimizations of Qiskit, we transpile the circuit with the highest optimization level to the basis gate set our compiler translates to, \ie $\{X, Y, Z, CX, CCX, H\}$. While our compiler translates to arbitrary controlled gates, they are not used in this example. Furthermore even the $Y$, $Z$, and Hadamard gate are redundant as they are not used.
 
 \begin{figure}[htp]
     \centering     
@@ -36,14 +26,4 @@ We also compared the optimizations applied by our compiler to the default optimi
     \label{fig:eval_adder_qasm}
 \end{figure}
 
-
-
-\begin{itemize}
-    \item (Possibly compiled qasm in appendix)
-    \item Quantum Circuit of algorithm  
-\end{itemize}
-
-
-\begin{itemize}
-    \item Circuit after optimizations
-\end{itemize}
+However, while the Qiskit transpilation can apply many optimizations such as null gate optimizations, the default rule do not contain a rule similar to our peeping control optimization rule. In turn, no controlled gates can be optimized in the circuit. Furthermore, since the null gate optimizations can only be applied after peeping control rules were applied in our example, the transpilation process does not apply any optimizations to the circuit. Since Qiskit target lower level transpilation to specific hardware or quantum devises and not high level optimizations, its focus is on different optimizations. In contrast, our compiler has no transpilation capabilities and cannot target any specific hardware. In turn, the optimizations and overall capabilities of Qiskit and our compiler are complementary and can be used in tandem.
