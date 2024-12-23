@@ -17,11 +17,13 @@
     \begin{tabular}{c|ccc}
     \multirow{2}{*}{Register Size $n$} & \multicolumn{3}{c}{Execution Time of Stages in ms}                                                  \\ \cline{2-4} 
                                        & \multicolumn{1}{c|}{Semantic Analysis} & \multicolumn{1}{c|}{Code Generation} & Optimization \\ \hline
-    32                                 & \multicolumn{1}{c|}{25}                & \multicolumn{1}{c|}{41}              & 206          \\
-    64                                 & \multicolumn{1}{c|}{28}                & \multicolumn{1}{c|}{47}              & 720          \\
-    128                                & \multicolumn{1}{c|}{29}                & \multicolumn{1}{c|}{55}              & 2412         \\
-    256                                & \multicolumn{1}{c|}{26}                & \multicolumn{1}{c|}{63}              & 11395        \\
-    1024                               & \multicolumn{1}{c|}{31}                & \multicolumn{1}{c|}{157}             & 415601      
+    16                                 & \multicolumn{1}{c|}{28.3}                & \multicolumn{1}{c|}{45.4}              & 117          \\
+    32                                 & \multicolumn{1}{c|}{27.5}                & \multicolumn{1}{c|}{43.8}              & 215.4          \\
+    64                                 & \multicolumn{1}{c|}{27.3}                & \multicolumn{1}{c|}{47.8}              & 711.6          \\
+    128                                & \multicolumn{1}{c|}{26.3}                & \multicolumn{1}{c|}{50.4}              & 2292.4         \\
+    256                                & \multicolumn{1}{c|}{26.2}                & \multicolumn{1}{c|}{59.7}              & 10755.7        \\
+    512                                & \multicolumn{1}{c|}{25.8}                & \multicolumn{1}{c|}{74.9}              & 60204.7        \\
+    1024                               & \multicolumn{1}{c|}{26.1}                & \multicolumn{1}{c|}{109.1}             & 405376.6      
     \end{tabular}
     \caption{The execution times compiling a quantum ripple-carry adder with different register sizes.}
     \label{tab:eval_executionTime}
