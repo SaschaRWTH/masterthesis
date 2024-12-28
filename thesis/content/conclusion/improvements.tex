@@ -1,0 +1,42 @@
+\section{Improvements and Future Work}
+\begin{itemize}
+    \item Evaluation showed some parts that can be improved
+    \item Optimization improvements
+    \begin{itemize}
+        \item Currently focused more on high level optimizations, works great in tandem with Qiskit
+        \item However compiler does not provide important functionalities such as transpilation 
+        \item Does not translate to concrete hardware or devices
+        \item In turn, has no hardware specific optimization rules
+    \end{itemize} 
+    \item Besides the optimizations applied, also showed that optimization stage inefficient for large number of gates and qubits
+    \begin{itemize}
+        \item In turn, need to optimize optimization algorithm
+        \item Can, for example, parallelize the iteration over all qubit
+        \item However, algorithm will become more complex, as race condition need to be accounted for
+        \item Meaning, circuit needs to be lock when being changed
+        \item Requires, eg atomic circuit operations or locks
+    \end{itemize}
+    \item additional improvement that were not considered in the evaluation
+    \item were not focus of project but can improve useability of compiler 
+    \begin{itemize}
+        \item Language
+        \begin{itemize}
+            \item What are possible improvements to language?
+            \item More robust type system
+            \item More functions and features
+            \item Explicit measurements?
+        \end{itemize}
+        \item Optimization
+        \begin{itemize}
+            \item What are possible improvements to optimization?
+            \item Parallelize optimizations on qubit wires (however increases complexity, as race conditions need to be considered)
+        \end{itemize}
+        \item General compiler improvements
+        \begin{itemize}
+            \item Add ability to transpile to basis gate set
+            \item Allows for more targeted optimizations
+            \item Can be use full to compile to specific languages
+        \end{itemize}
+    \end{itemize}
+
+\end{itemize}

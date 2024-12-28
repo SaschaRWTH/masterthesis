@@ -1,46 +1,6 @@
 \chapter{Conclusion and Future Work}
 In the following chapter, we conclude our thesis. First, we give a short summary of research, concept, final implementation, and evaluation of this project. Then, we discuss possible improvements to the project and future work. 
 
-\section{Summary}
-For this thesis, we designed a quantum programming language with control flow primitives in superposition and implemented a corresponding compiler. This compiler cover all the typical step, including the lexical, syntactic, and semantic analysis of the code as well as the code generation and optimization. The result is the translated OpenQASM.
+\input{content/conclusion/summary.tex}
 
-In the beginning, the discussed some related work and background and the topic of quantum control flow and quantum computing in general; we presented the concept of quantum control flow and its limitations. Next, we introduced the Quantum Control Machine, an instruction set architecture focused on quantum control flow with instructions similar to classical assembly language. Additionally, we discussed other low and high-level quantum programming languages, such as the Open Quantum Assembly (OpenQASM) language. Lastly, we gave a short introduction into the compilation of programs, including the different steps and some tools to build compilers or compiler steps.
-
-On the basis of the background knowledge, we discussed the concept for our quantum language with quantum control flow primitives. First, we gave a language overview with the different data types, operations, control flow statements, and other language concepts. Next, we defined a formal grammar for our language. Based on the grammar, we defined formal translation functions which translate our custom programming language to OpenQASM. Lastly, we introduced different optimization rules that we intend to apply in the code optimization stage of the compiler. Furthermore, we defined a circuit graph, which is a graphical representation of a quantum circuit or program, and discussed an algorithm to apply the optimization rules to the graph.
-
-Next, the concept for the programming language and its translation was used to implement a compiler for the language. First, we discussed functionalities of the compiler, such as the command line interface, as well as general concepts. Next, we explained how the grammar is used to implement the lexical and syntactic analysis with the ANTLR tool. Then, we discussed the semantic analysis, including declaration analysis and type checked as well as general error handling in the compiler. This is followed by a discussion of the code generation stage and an example translation. Lastly, we explained the optimization implementation based on the circuit graph and discussed some additional algorithms for constructing and translating the graph. 
-
-In the evaluation\dots
-\begin{itemize}
-    \item Evaluation
-    \begin{itemize}
-        \item \dots
-    \end{itemize} 
-\end{itemize}
-
-\section{Improvements and Future Work}
-\begin{itemize}
-    \item Conclusion to thesis
-    \item Future work
-    \begin{itemize}
-        \item Language
-        \begin{itemize}
-            \item What are possible improvements to language?
-            \item More robust type system
-            \item More functions and features
-            \item Explicit measurements?
-        \end{itemize}
-        \item Optimization
-        \begin{itemize}
-            \item What are possible improvements to optimization?
-            \item Parallelize optimizations on qubit wires (however increases complexity, as race conditions need to be considered)
-        \end{itemize}
-        \item General compiler improvements
-        \begin{itemize}
-            \item Add ability to transpile to basis gate set
-            \item Allows for more targeted optimizations
-            \item Can be use full to compile to specific languages
-        \end{itemize}
-    \end{itemize}
-
-\end{itemize}
+\input{content/conclusion/improvements.tex}
