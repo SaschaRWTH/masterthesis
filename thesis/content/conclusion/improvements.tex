@@ -1,42 +1,13 @@
 \section{Improvements and Future Work}
-\begin{itemize}
-    \item Evaluation showed some parts that can be improved
-    \item Optimization improvements
-    \begin{itemize}
-        \item Currently focused more on high level optimizations, works great in tandem with Qiskit
-        \item However compiler does not provide important functionalities such as transpilation 
-        \item Does not translate to concrete hardware or devices
-        \item In turn, has no hardware specific optimization rules
-    \end{itemize} 
-    \item Besides the optimizations applied, also showed that optimization stage inefficient for large number of gates and qubits
-    \begin{itemize}
-        \item In turn, need to optimize optimization algorithm
-        \item Can, for example, parallelize the iteration over all qubit
-        \item However, algorithm will become more complex, as race condition need to be accounted for
-        \item Meaning, circuit needs to be lock when being changed
-        \item Requires, eg atomic circuit operations or locks
-    \end{itemize}
-    \item additional improvement that were not considered in the evaluation
-    \item were not focus of project but can improve useability of compiler 
-    \begin{itemize}
-        \item Language
-        \begin{itemize}
-            \item What are possible improvements to language?
-            \item More robust type system
-            \item More functions and features
-            \item Explicit measurements?
-        \end{itemize}
-        \item Optimization
-        \begin{itemize}
-            \item What are possible improvements to optimization?
-            \item Parallelize optimizations on qubit wires (however increases complexity, as race conditions need to be considered)
-        \end{itemize}
-        \item General compiler improvements
-        \begin{itemize}
-            \item Add ability to transpile to basis gate set
-            \item Allows for more targeted optimizations
-            \item Can be use full to compile to specific languages
-        \end{itemize}
-    \end{itemize}
+In our project we designed a quantum programming language and implemented a corresponding compiler with all basic elements, lexical, syntactic and semantic analysis as well as code generation and optimization. However, the evaluation revealed aspects that can be improved. Furthermore, there is also room for further improvements to aspects of the language and compiler, which were not considered in the evaluation.
 
-\end{itemize}
+The first aspect that was evaluated was the optimizations performed on the generated code. Our current implementation focuses on high-level optimizations to the quantum circuit. Therefore, the compiler can work in tandem with the Qiskit kit but, in turn, is less useful as a stand alone tool and is best utilized in a toolchain. A possible improvement is the addition of more hardware focused features such as transpilation and translation to concrete devices. Furthermore, with a more hardware specific focus, the optimization rules can be extended with more hardware specific rules.   
+Additionally, the optimizations can be expanded to include more high-level optimizations. For example, the compiler could automatically reused qubits or registers that are out of scope or no longer used, as suggested in Sec.~\ref{sec:concept_controlFlow}, and, thereby, reduce the qubit count of the circuit.  
+
+Secondly, besides the optimization rules, we evaluation the performance of the different compilation stages. While the semantic analysis and code generation stages showed, at worst, linear time complexity, the optimizations stage grew approximately quadratically with the input size. Therefore, the optimization stage is inefficient for a large number of gates or qubits. To improve the performance of the compiler, the first focus show be to optimize the optimization stage. One suggestion to improve the performance would be to parallelize the iteration over the qubit wires, with each wire being scanned for optimizations by a separate thread. However, while this approach should reduce the execution time of the optimization, the resulting algorithm would be more complex; new aspects such as race conditions need to be considered and, in turn, the quantum circuit graph needs to be protected from being modified by multiple threads at the same time. This could be achieved by, \eg, a mutex.
+
+Besides the evaluated aspects, there are also other parts that can be improve. Currently, a weak aspect of the language is the typ casting. All elements of an expression are of the same type and, if they are not, they are cast implicitly to the target type. For example, when an identifier that is a constant double with a value of $9.9$ is sued in an expression for the size of a register, by definition an integer expression, the value is cast to be an integer with a value of $9$. While the behavior is consistent, it differs from most other strongly typed languages were floating point values need to be explicitly cast to an integer type. In turn, the language could be expended to include not only implicit but also explicit casting.     
+
+Furthermore, the range of predefined functions, provided by the language, is currently limited to only a handful of function. These could be expanded by additional function such as sine and cosine or even mathematical constants such as $\pi$ and Euler's number $e$. Moreover, the language could be extended to provided functionalities for users to define their own functions with macros or lambda function. With such a functionality, often used and more complex expressions could be expressed as custom functions and reused.
+
+Lastly, while our language can be used to express any quantum circuit or algorithm, most quantum languages offer functionalities that provided more control over the quantum circuit. One example are explicit measurements. Our language only provides implicit measurements, \ie all qubits and registers are automatically measured at the end of the circuit and their results are written to corresponding qubits. However, most quantum language provide the user with the ability to declare classical bits and registers, explicitly measure qubits and quantum registers, and write the measurement results to the corresponding classical data type. With explicit measurements, the user has more control over when measurement take place and what qubits need to be measured. For example, many algorithms use auxiliary qubits which do not need to be measured. Furthermore, with explicit measurements the user can measure and reuse qubits for other purposes and, in turn, reduce the overall qubit count. Lastly, with explicit measurement, the measurement results can be used to conditionally execute parts of a circuit; this is required for, \eg, quantum teleportation.
