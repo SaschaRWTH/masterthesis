@@ -1,30 +1,24 @@
 \section{Translation}
 \label{sec:concept_translation}
-In the following, we discuss a formal translation of the source code, given in the form of a Luie program $prg$, to the target code, in the form of a OpenQASM program $p$. 
+In the following, we discuss a formal translation of the source code, given in the form of a Luie program $prg_{Luie}$, to the target code, in the form of a OpenQASM program $prg_{QASM}$. 
 
-An important part of the translation is the symbol table. It is used to propagate symbol information throughout the translation. A symbol tables is a function that maps either an identifier to the information of the corresponding symbol or the \texttt{uid} keyword to a number, the unique identifier counter, that is used to create unique identifiers for the target code variables.
-\change{Implementation of \texttt{uid} faulty, as value not propagated backwards (block translations do not return symbol table, would mitigate scopes)}
+An important part of the translation is the symbol table. It is used to propagate symbol information throughout the translation. A symbol tables is a function that maps an identifier to the information of the corresponding symbol
 \begin{align*}
-    SymbolTable := \ & \{st \mid st : Identifier \dashrightarrow & (\{\texttt{const}\} \times \mathbb{R})\\
-    & \cup& (\{\texttt{qubit}\} \times \mathbb{N} \times Identifier)\\
-    & \cup& (\{\texttt{arg}\} \times QubitArgument)\\
-    & \cup& (\{\texttt{gate}\} \times Block \times Identifier^+)
-    \} \\
-   \cup \ & \{st \mid st : \{\texttt{uid}\} \dashrightarrow & (\mathbb{N})\}
+    SymbolTable := \ \{st \mid st : Identifier \dashrightarrow & (\{\texttt{const}\} \times \mathbb{R})\\
+     \cup& (\{\texttt{qubit}\} \times \mathbb{N} \times Identifier)\\
+     \cup& (\{\texttt{arg}\} \times QubitArgument)\\
+     \cup& (\{\texttt{gate}\} \times Block \times Identifier^+)
+    \}
 \end{align*}
-The symbol information, contained in the symbol tables, varies depending on the four different kinds of symbols. The fist is the constant symbol which is identified by the \texttt{const} keyword, together with the value of the constant symbol given by a real number. Next, the \texttt{qubit} keyword identifies the symbol information of a register; it contains the size of the register as a natural number, where a size of one indicates a qubit, and the unique identifier for the register. Next, the argument symbol information saves the qubit argument to which a composite gate argument maps; it is identified by the \texttt{arg} keyword. Lastly, identified by the \texttt{gate} keyword, the gate symbol information saves the code block of a composite gates as well as list of argument identifiers with at least one element. 
+The symbol information, contained in the symbol tables, varies depending on the four different kinds of symbols. The first is the constant symbol which is identified by the \texttt{const} keyword, together with the value of the constant symbol given by a real number. Next, the \texttt{qubit} keyword identifies the symbol information of a register; it contains the size of the register as a natural number, where a size of one indicates a qubit, and the unique identifier for the register. Next, the argument symbol information saves the qubit argument to which a composite gate argument maps; it is identified by the \texttt{arg} keyword. Lastly, identified by the \texttt{gate} keyword, the gate symbol information saves the code block of a composite gate as well as a list of argument identifiers with at least one element. 
 
-At the root of the translation is the translation function $trans$. It maps a source code program $prg$ to the corresponding OpenQASM program $p$. Firstly, the header information for the program is added. Next, the initial symbol tables $st_\epsilon$ is updated with the gate declaration information. Lastly, the code block is translated. 
+At the root of the translation is the translation function $trans$. It maps a source code program $prg_{Luie}$ to the corresponding OpenQASM program $prg_{QASM}$. Firstly, the header information for the program is added. Next, the initial symbol table $st_\epsilon$, with no mappings, is updated with the gate declaration information. Lastly, the code block is translated. 
 \begin{align*}
     trans : \ & Program \dashrightarrow QASMProgam\\
     trans(gDcl_1 \dots gDcl_n \ blk) = \ & \texttt{OPENQASM 3.0;}\\
                 & \texttt{include "stdgates.inc";}\\
                 & bt(blk, update(update(update(st_\epsilon, gDcl_1), ...), gDcl_n))
 \end{align*}  
-In this case, the initial symbol table $st_\epsilon$ is an empty symbol tables with only an initialization of the unique identifier counter. 
-\begin{equation*}
-    st_\epsilon = [ \texttt{uid} \mapsto 0 ]
-\end{equation*}
 
 To translate code blocks, the block translation function $bt$ is used. It maps a block $blk$ and a symbol table $st$ to the OpenQASM translation of the code block. Since a block consists of a list of statements and declarations, they are translated individually. However, the translation of a declaration may adjust the symbol table. Therefore, the translation of a translatable, \ie either a statement of declaration, returns not just the translation but also a, potentially updated, symbol table. This symbol table is used for the next translation. Additionally, if the block is empty, the function simply returns an empty result. 
 \begin{align*}
@@ -37,7 +31,7 @@ To translate code blocks, the block translation function $bt$ is used. It maps a
     bt(\epsilon, st) = \ &  \epsilon 
 \end{align*}
 
-The translatable translation function $tt$ can translate both declarations and statements. Since declarations may adjust the symbol table, it return not just the translation but also a symbol table. To translate the statements and declarations, it calls the corresponding translation functions $ct$ and $dt$ respectively.
+The translatable translation function $tt$ can translate both declarations and statements. Since declarations may adjust the symbol table, it returns not just the translation but also a symbol table. To translate the statements and declarations, it calls the corresponding translation functions, $ct$ and $dt$ respectively.
 \begin{align*}
     tt : \ & Translatable \times SymbolTable \dashrightarrow QASM \times SymbolTable\\
     tt(t, st) = \ & \begin{cases}
@@ -46,7 +40,7 @@ The translatable translation function $tt$ can translate both declarations and s
     \end{cases}  
 \end{align*}
 
-The declaration translation $dt$ returns a possible translation of the given declaration and an updated symbol table. In the case of constant declarations, the symbols are only used at compile time and, therefore, only the symbol table is updated and any empty result is returned. In contrast, qubit and register declarations need to be specified in the target program. In turn, they are translated. While the syntax is quite similar in both languages, the translation needs to ensure the uniqueness of identifiers and evaluated the expression that gives the size of the register. A unique identifier is generated by the symbol table when it is updated with a qubit or register identifier.
+The declaration translation $dt$ returns a possible translation of the given declaration and an updated symbol table. In the case of constant declarations, the symbols are only used at compile time and, therefore, only the symbol table is updated and any empty result is returned. In contrast, qubit and register declarations need to be specified in the target program. In turn, they are translated. While the syntax is quite similar in both languages, the translation needs to ensure the uniqueness of identifiers and evaluate the expression that gives the size of the register. A unique identifier is generated when updating the symbol table with a qubit or register identifier.
 \begin{align*}
     dt : \ & Declaration \times SymbolTable \dashrightarrow QASM \times SymbolTable\\
     dt(\underbrace{\texttt{qubit } id \text{;}}_{decl}, st) = \ & (\texttt{qubit } uid\texttt{;}, st')\\
@@ -60,20 +54,20 @@ The update function $update$ is used to update the symbol table with symbol info
 \begin{equation*}
     update :  Declaration \times SymbolTable \dashrightarrow SymbolTable
 \end{equation*}
-In the case of a constant declaration, its identifier maps to the \texttt{const} keyword and the evaluation of expression given in the declaration. For the gate declaration, the symbol table maps the identifier to the \texttt{gate} keyword, the block of the gate declaration, and a list of identifiers that represent the arguments to the gate.  
+In the case of a constant declaration, its identifier maps to the \texttt{const} keyword and the evaluation of the expression given in the declaration. For the gate declaration, the symbol table maps the identifier to the \texttt{gate} keyword, the block of the gate declaration, and a list of identifiers that represent the arguments to the gate.  
 \begin{align*}
     update(\texttt{const } id \texttt{ = } exp \texttt{;}, st) = \ & st[id \mapsto (\texttt{const}, at(exp, st))]\\
     update(\texttt{gate } id \texttt{(}id_1, \dots, id_n\texttt{)} \texttt{ do } blk \texttt{ end}, st) = \ & st[id \mapsto (\texttt{gate}, blk, id_1, \dots, id_n)]
 \end{align*}
-In the case of the qubit and register declaration, the update function is more complex. Since our language allows variables in independent scopes to have the same identifiers, we need to ensure the uniqueness of identifiers in the target code. For this, the symbol table contains a unique identifier counter which is used to create an unique identifier and incremented. The rest of the update is similar to the previous cases and symbol information, such as the size and unique identifier of a qubit of register, is saved to the symbol table.   
+In the case of the qubit and register declaration, the update function is more complex. Since our language allows variables in independent scopes to have the same identifiers, we need to ensure the uniqueness of identifiers in the target code. For this, a unique identifier $uid$ is generated. The rest of the update is similar to the previous cases and symbol information, such as the size and unique identifier of a qubit of register, is saved to the symbol table.   
 \begin{align*}
-    update(\texttt{qubit } id\texttt{;}, st) = \ & st[id \mapsto (\texttt{qubit}, 1, \texttt{id\_}uid), \texttt{uid} \mapsto uid + 1]\\
-                                                 & \text{where } uid = st[\texttt{uid}]\\
-    update(\texttt{qubit[} exp \texttt{] } id{;}, st) = \ & st[id \mapsto (\texttt{qubit}, at(exp, st), \texttt{id\_}uid), \texttt{uid} \mapsto uid + 1]\\
-                                                 & \text{where } uid = st[\texttt{uid}]
+    update(\texttt{qubit } id\texttt{;}, st) = \ & st[id \mapsto (\texttt{qubit}, 1, \texttt{id\_}uid)]\\
+                                                 & \text{where } uid \text{ is unique identifier}\\
+    update(\texttt{qubit[} exp \texttt{] } id\texttt{;}, st) = \ & st[id \mapsto (\texttt{qubit}, at(exp, st), \texttt{id\_}uid)]\\
+                                                 & \text{where } uid \text{ is unique identifier}
 \end{align*}
 
-The arithmetic translation $at$ is used to evaluated expressions in the source code to constant real values. While a constant value just evaluates to itself and an identifier to its constant value, the operations evaluate to the operation applied to the evaluation of the subexpressions. 
+The arithmetic translation $at$ is used to evaluate expressions in the source code to constant real values. While a constant value just evaluates to itself and an identifier to its constant value, the operations evaluate to the operation applied to the evaluation of the subexpressions. 
 \begin{align*}
     at : \ & Expression \times SymbolTable \dashrightarrow \mathbb{R}\\
     at(n, st) = \ & n\\
@@ -93,20 +87,19 @@ The statements are translated with the statement translation function $ct$. It m
     ct : \ & Statement \times SymbolTable \dashrightarrow QASM\\
     ct(\texttt{skip;}, st) = \ & \epsilon
 \end{align*}
-
 Next, the translation of a gate application is divided into the application of a constant and composite gate. In the case of a constant gate application, the same gate can be used in the translation and only the qubit arguments need to be translated to their translated counterparts. For this, the qubit translation function $qt$ is used. 
 \begin{align*}
     ct(gate \ qArg_1, \dots, qArg_n\texttt{;}, st) = \ & gate \ qt(qArg_1, st), \dots, qt(qArg_2, st); \\
-                                                       & \text{if } gate \in ConstGates\\
+                                                       & \text{if } gate \in ConstGates
 \end{align*}
-To translate the application of a composite gate, the corresponding code block is translated. Additionally, the symbol table, used in the translation, maps the argument identifiers of the gate symbol to the qubit translation of the given qubit arguments.
+To translate the application of a composite gate, the corresponding code block is translated. Additionally, an empty symbol table is used in the translation and initialized with mappings from the argument identifiers of the gate symbol to the qubit translation of the given qubit arguments.
 \begin{align*}
-    ct(gate \ qArg_1, \dots, qArg_n\texttt{;}, st) = \ & bt(blk, st[id_1 \mapsto (\texttt{arg}, q_1), \dots, id_n \mapsto q(\texttt{arg}, q_n)]) \\
+    ct(gate \ qArg_1, \dots, qArg_n\texttt{;}, st) = \ & bt(blk, st_\epsilon[id_1 \mapsto (\texttt{arg}, q_1), \dots, id_n \mapsto q(\texttt{arg}, q_n)]) \\
         &\text{if } gate \not\in ConstGates\\
         &\text{where } q_i = qt(qArg_i, st), i \in [1, ...\, n]\\
         &\text{and } st[gate] = (\texttt{gate}, blk, id_1, \dots, id_n)
 \end{align*}
-The qubit translation function $qt$ is used to translate the identifier of a gate argument or control qubit, in the case of if-statements, to the corresponding unique identifier regardless of wether the qubit argument is a qubit, register access, or argument identifier of a composite gate. 
+The qubit translation function $qt$ is used to translate the identifier of a gate argument or control qubit, in the case of if-statements, to the corresponding unique identifier regardless of whether the qubit argument is a qubit, register access, or argument identifier of a composite gate. 
 \begin{align*}
     qt :\ & \displaystyle QubitArgument \times SymbolTable \dashrightarrow QubitArgument\\
     qt(id, st) = \ & uid \quad\quad\quad\quad\quad\quad \text{if } st[id] = (\texttt{qubit}, 1, uid)\\
@@ -115,7 +108,7 @@ The qubit translation function $qt$ is used to translate the identifier of a gat
     qt(id[exp], st) = \ & qArg\texttt{[}at(exp, st)\texttt{]} \quad \text{if } st[id] = (\texttt{arg}, qArg)
 \end{align*}
 
-The next statement translation case if the loop statement. It is translated by evaluating the given range expression with the range expression evaluation function $rt$ to get the range $(start, end)$. Next, the loop body is translated $end - start$ times and each time the symbol table is updated such that the loop iterator identifier maps the the current iteration value.
+The next statement translation case is the loop statement. It is translated by evaluating the given range expression with the range expression evaluation function $rt$ to get the range $(start, end)$. Next, the loop body is translated $end - start$ times and each time the symbol table is updated such that the loop iterator identifier maps to the current iteration value.
 \begin{align*}
     ct(\texttt{for } id \texttt{ in } rExp \texttt{ do } blk \texttt{ end}, st) = \ 
         & bt(blk, st[id \mapsto (\texttt{const}, start)])\\
@@ -125,7 +118,7 @@ The next statement translation case if the loop statement. It is translated by e
         & bt(blk, st[id \mapsto (\texttt{const}, end)])\\
         & \text{where } (start, end) = rt(rExp, st)
 \end{align*}
-The range expression evaluation function simply differentiates between the three different possibilities of defining a range and returns the range as a tuple. 
+The range expression evaluation function simply differentiates between the three different possibilities of defining a range and returns the range as a tuple of whole numbers. 
 \begin{align*}
     rt : \ & rExp \times SymbolTable \to \mathbb{Z} \times \mathbb{Z}\\
     rt(z_1 .. z_2, st)  = \ & (z_1, z_2)\\
@@ -141,7 +134,7 @@ The last translation is the translation of if-statements. The if-statement is tr
             &  control(qt(qArg, st), kt(blk_1, st)) \\
             &  nControl(qt(qArg, st), kt(blk_2, st))
 \end{align*}
-The $control$ function maps a qubit argument $qArg$ together with QASM code to a controlled version given code where $qArg$ if a control qubit for all gate applications in the program. In the case of a list of quantum statements, the function is applied to each statement separably. If the statement is a qubit declaration, the declaration is simply returned without changes.
+The $control$ function maps a qubit argument $qArg$ together with QASM code to a controlled version given code where $qArg$ is a control qubit for all gate applications in the program. In the case of a list of quantum statements, the function is applied to each statement separately. If the statement is a qubit declaration, the declaration is simply returned without changes.
 \begin{align*}
     control : \ & QubitArgument \times QASM \to QASM\\
     control(qArg, qStm_1 \dots qStm_n) = \ & control(qArg, qStm_1)\\
@@ -149,7 +142,7 @@ The $control$ function maps a qubit argument $qArg$ together with QASM code to a
         & control(qArg, qStm_n)\\
     control(qArg, qubitDcl) = \ & qubitDcl
 \end{align*}
-If a gate application is given, the qubit argument is prepended to the gate arguments and a control modifier is either added of adjusted to the new number of control qubits.
+If a gate application is given, the qubit argument is prepended to the gate arguments and a control modifier is either added or adjusted to the new number of control qubits.
 \begin{align*}
     &control(qArg, cGate \ qArg_1, \dots, qArg_n ) =  \texttt{ctrl(1) @ } cGate \ qArg, qArg_1, \dots, qArg_n\texttt{;}\\
     &control(qArg, cGate \ \texttt{negctrl(}n\texttt{) @ } qArg_1, \dots, qArg_n ) = \\
@@ -159,4 +152,4 @@ If a gate application is given, the qubit argument is prepended to the gate argu
     &control(qArg, \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n\texttt{) @ } cGate \ qArg_1, \dots, qArg_n ) = \\
     & \quad \quad \quad \quad \texttt{ctrl(}i+1 \texttt{) @ } \texttt{negctrl(}n\texttt{) @ } cGate \ qArg, qArg_1, \dots, qArg_n\texttt{;}
 \end{align*}
-Correspondingly, the $nControl$ function exhibits the same behavior but the qubit argument $gArg$ represent an negated control qubit; its definition can be found in Appendix~\ref{appendix:translation}. Since place the negative control as the second modifier, the $nControl$ function cannot simply prepend the qubit argument $qArg$. However, it is inserted after the first $i$ arguments where $i$ is the number of positive control qubits given by the \texttt{ctrl} modifier.
+Correspondingly, the $nControl$ function exhibits the same behavior but the qubit argument $gArg$ represents a negated control qubit; its definition can be found in Appendix~\ref{appendix:translation}. Since we place the negative control as the second modifier, the $nControl$ function cannot simply prepend the qubit argument $qArg$. However, it is inserted after the first $i$ arguments where $i$ is the number of positive control qubits given by the \texttt{ctrl} modifier.
