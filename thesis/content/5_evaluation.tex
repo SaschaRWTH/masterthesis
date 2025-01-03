@@ -1,20 +1,21 @@
 \chapter{Evaluation}
 \label{ch:evaluation}
-In the evaluation chapter, we evaluate our implementation of the proposed compiler. The evaluation consists of two aspects. Firstly, we evaluate the optimizations performed by the compiler. In the second part, we evaluate the execution time and performance of the different compiler stages. 
+In the evaluation chapter, we evaluate our implementation of the proposed compiler. The evaluation consists of two aspects. Firstly, we evaluate the optimizations performed by the compiler. In the second part, we evaluate the execution time and performance of the different compilation stages. 
 
-To evaluate the compiler, a program, which is compiler, is required. For this, we use the quantum ripple-carry adder proposed by Cuccaro et al.~\cite{CDKM04}. The quantum adder works similar to its classical equivalent. For the arguments, it takes both a carry input qubit $cin$ and an output qubit $cout$ as well as two quantum registers $a$ and $b$. When applied, the adder adds the first register $a$ to the second $b$ while taking the carry input qubit $cin$ into account. If the result for the addition is larger then the register $b$, the carry output qubit $cout$ is used.  
+To evaluate the compiler, a program to compile is required. For this, we use the quantum ripple-carry adder proposed by Cuccaro et al.~\cite{CDKM04}. The quantum adder works similar to its classical equivalent. For the arguments, it takes both a carry input qubit $cin$ and an output qubit $cout$ as well as two quantum registers $a$ and $b$. When applied, the adder adds the first register $a$ to the second $b$ while taking the carry input qubit $cin$ into account. If the result for the addition is larger than the register $b$, the carry output qubit $cout$ is used.  
+More specifically, the algorithm adds $a = a_{n-1} \dots a_{0}$ and $b = b_{n-1} \dots b_{0}$ together in place. After the computation, the resulting bit string $s = s_n \dots s_0$ is mostly contained in the $b$ register, where $b$ is now equal to $s_{n-1} \dots s_{0}$, and $s_n$ is saved in the $cout$. 
 
-The algorithms adds $a = a_{n-1} \dots a_{0}$ and $b = b_{n-1} \dots b_{0}$ together in place. After the computation, the resulting bit string $s = s_n \dots s_0$ is mostly contained in the $b$ register, where $b$ is now equal to $s_{n-1} \dots s_{0}$, and $s_n$ is saved in the $cout$. To implement the ripple-carry adder, two auxiliary gate are the, the majority gate $\texttt{MAJ}$ and ``unmajority and add'' gate $\texttt{UMA}$. 
-The \texttt{MAJ} gate computes the majority of three bits $c_i, b_i,$ and $a_i$. Together with the \texttt{UMA} gate, the result is the result bit $s_i$ in the $b_i$ register entry while the carry qubit and $a$ register are unchanged. The combined semantic and the intermediate values of the \texttt{MAJ} and \texttt{UMA} gates are depicted in Fig.~\ref{fig:eval_MAJandUMAGates}.
-Their concrete implementations are depicted in Appendix~\ref{appendix:majGates}.
+To implement the ripple-carry adder, two auxiliary gates are used; these are the majority gate $\texttt{MAJ}$ and ``unmajority and add'' gate $\texttt{UMA}$. 
+The \texttt{MAJ} gate computes the majority of three bits $c_i, b_i,$ and $a_i$. Together with the \texttt{UMA} gate, the result is the string bit $s_i$ in the $b_i$ register entry while the carry qubit and $a$ register are unchanged. The combined semantic and the intermediate values of the \texttt{MAJ} and \texttt{UMA} gates are depicted in Fig.~\ref{fig:eval_MAJandUMAGates}.
+Their concrete implementations are given in Appendix~\ref{appendix:majGates}.
 % in Fig.~\ref{fig:eval_majorityGate} and Fig.~\ref{fig:eval_unmajorityGate} respectively.  
 \begin{figure}[htp!]
     %\centering
     \[
         \Qcircuit @C=1em @R=1.5em {
-            & \lstick{c_i} & \multigate{2}{\text{MAJ}} & \qw & \push{c_i \oplus a_i } & \qw & \multigate{2}{\text{UMA}} & \rstick{c_i} \qw \\
-            & \lstick{b_i} & \ghost{\text{MAJ}} & \qw & \push{b_i \oplus a_i } & \qw & \ghost{\text{UMA}} & \rstick{s_i} \qw \\
-            & \lstick{a_i} & \ghost{\text{MAJ}} & \qw  & \push{c_{i+1}} & \qw & \ghost{\text{UMA}} & \rstick{a_i} \qw 
+            & \lstick{c_i} & \multigate{2}{\text{MAJ}} & \qw & \push{ c_i \oplus a_i \hspace{1em}} & \qw & \multigate{2}{\text{UMA}} & \rstick{c_i} \qw \\
+            & \lstick{b_i} & \ghost{\text{MAJ}} & \qw & \push{b_i \oplus a_i \hspace{1em}} & \qw & \ghost{\text{UMA}} & \rstick{s_i} \qw \\
+            & \lstick{a_i} & \ghost{\text{MAJ}} & \qw  & \push{\hspace{.5em} c_{i+1} \hspace{1.5em}} & \qw & \ghost{\text{UMA}} & \rstick{a_i} \qw 
         }
     \]
     \caption{Null gates of self-inverse gates.}
