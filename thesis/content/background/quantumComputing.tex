@@ -1,24 +1,14 @@
 \section{Quantum Computing}
 \label{sec:background_quantumComputing}
-% \begin{itemize}
-%     \item Introduction into quantum computing
-%     \item From bits to qubits
-%     \item Entanglement
-% \end{itemize}
 While computers are prevalent and important in today's society, there are many relevant problems which classical computers cannot currently and perhaps will never realistically be able to solve. Quantum Computing (QC) is gaining more momentum as the technology that could solve at least some of these problems. For example, Quantum algorithms like Shor's algorithm~\cite{Shor97} could provide a significant improvement for prime factorization given sufficient technology. Therefore, it is estimated to be a valuable market with many of the largest technology companies as well as governments investing billions in the research and development of quantum technology~\cite{RDB*22, Pres18}. 
-%While there already exist detailed theoretical foundations~\cite{van20, Ying11,YYF12} and advanced algorithms for QC~\cite{ACR*10,BGB*18,LoCh19,Shor97}, the technology of quantum computers is said to be on the level of classical computers in the 1950s~\cite{CFM17}. 
 In the following section, we take a look at the basic concepts of a quantum computer and the core principles it relies on.
 
 Classical Computers are based on simple operations executed on bits, like \texttt{and}, \texttt{or}, and \texttt{not}. These bits can either have a value of $0$ or $1$. Similarly, at their core, quantum computers apply simple operations, like \texttt{controlled not}, and \texttt{Hadamard}, on quantum bits (qubits). 
 On a higher level, a classical computer executes operations on a register, consisting of multiple bits while a quantum computer operates on quantum registers, consisting of multiple qubits.
 In contrast to classical bits, quantum computers use the unique properties of quantum mechanics to enable qubits to have not just one value of either $0$ or $1$ but a combination of both. The phenomenon, where a particle or qubit exists in a combination of both states, is called \emph{superposition}. Additionally, quantum computers also use the idea of \emph{entanglement} to their advantage. Two qubits are entangled when the value of one is dependent on the value of the other. The combination of superposition and entanglement enables quantum computers to solve specific problems more efficiently than classical computers~\cite{RDB*22}.
-% , \eg prime factorization~\cite{Shor97}\unsure{Repeating info from paragraph above?}.
 
-Models for Quantum Computers can be divided into three main categories, the \emph{analog model}, the \emph{measurement-based model}, and the \emph{gate-based model}. The analog model uses smooth operations to evolve a quantum system over time such that the resulting system encodes the desired result with high probability. It is not clear whether this model allows for universal quantum computation or quantum speedup~\cite{DiCh20b}. Instead of smoothly evolving a system, the measurement-based model starts with a fixed quantum state, the cluster-state. The computation is accomplished by measuring qubits of the system, possibly depending on the results of previous measurements. While there are different measurement-based models, one technique to apply gates is to leverage quantum teleportation, so called gate teleportation~\cite{Jozs05}. The result is a bit-string of the measurement results~\cite{DiCh20b, Niel06}. Lastly, the gate-based model uses a digitized, discrete set of qubits that are manipulated by a sequence of operations represented by quantum gates. The result is obtained by measuring the qubits at the end of the computation.
-\change{Intermediate measurements are also supported sometimes.}
+Models for Quantum Computers can be divided into three main categories, the \emph{analog model}, the \emph{measurement-based model}, and the \emph{gate-based model}. The analog model uses smooth operations to evolve a quantum system over time such that the resulting system encodes the desired result with high probability. It is not clear whether this model allows for universal quantum computation or quantum speedup~\cite{DiCh20b}. Instead of smoothly evolving a system, the measurement-based model starts with a fixed quantum state, the cluster-state. The computation is accomplished by measuring qubits of the system, possibly depending on the results of previous measurements. While there are different measurement-based models, one technique to apply gates is to leverage quantum teleportation, so called gate teleportation~\cite{Jozs05}. The result is a bit-string of the measurement results~\cite{DiCh20b, Niel06}. Lastly, the gate-based model uses a digitized, discrete set of qubits that are manipulated by a sequence of operations represented by quantum gates. The result is obtained by measuring the qubits at the end of the computation. Often, intermediate measurements are also supported.
 Although digital quantum computation is more sensitive to noise than analog computations, the digitization can also be used for quantum error correction~\cite{DMN13} and to mitigate the increased noise~\cite{DiCh20b}. Furthermore, because qubits are actively manipulated and not passively evolved, digital quantum computers are more flexible than analog ones~\cite{RDB*22}. Therefore, the gate-based model is the most common model and this thesis will mainly focus on it. 
-\unsure{Possible section on: no cloning/deleting~\cite{WoZu82, KuBr00}}
-% In contrast to the analog mode, both the other models were shown to be universal quantum computation models. (not specifically stated for gate in DiCh20b)!
 
 \subsection{Superposition}
 \label{sec:background_superposition}
@@ -74,13 +64,12 @@ When a quantum state cannot be expressed as a tensor product of two states, the 
 
 The entanglement of states is used by leveraging the effect of the qubits on each other to collaborate to calculate the result. Although this can be simulated on classical computers, it cannot be achieved ``natively'' because all classical bits are independent of each other. Moreover, quantum algorithms not using entangled states can often be simulated efficiently on classical computers~\cite{MHH19}. Therefore, entanglement is at the core of quantum computing but it can also have unintended consequences one needs to be aware of when designing quantum algorithms.
 
-To calculate specific functions or intermediate values, quantum algorithms may need to use additional qubits or registers whose state can, in turn, be entangled with the main data of the algorithm. If this entanglement is not resolved in time by, \eg, uncomputing\change{Uncomputing as a concept was not introduced before} the changes to the qubit or register, it can interfere with future calculations or measurements and cause the results to be invalid. This effect is called \emph{disruptive entanglement}~\cite{YVC24}.
-\unsure{Cannot find literature besides \cite{YVC24} which calls this effect disruptive entanglement, use anyway?}  
+To calculate specific functions or intermediate values, quantum algorithms may need to use additional qubits or registers whose state can, in turn, be entangled with the main data of the algorithm. If this entanglement is not resolved in time the changes to the qubit or register, it can interfere with future calculations or measurements and cause the results to be invalid. This effect is called \emph{disruptive entanglement}~\cite{YVC24}.
+To prevent disruptive entanglement, the concept of \emph{uncomputation}, formalized by Bennett~\cite{Benn73}, can be used. The idea is to apply computations such that the entanglement of the main data and auxiliary qubits is undone. One way to do this is to apply the inverse of applied computations in reverse order~\cite{DiCh20}.
 
 \subsection{Quantum Gates}
 \label{sec:background_quantumGates}
-In gate-based quantum computers, the transformations applied to the quantum data are represented by \emph{quantum gates}. Similar to quantum states, which can be represented by linear combinations of basis states, or vectors, quantum gates can be formulated as linear transformations of these combinations, or a matrix. Because the result of such a transformation also needs to be a valid quantum state, the transformation needs to be norm-preserving, or \emph{unitary}~\cite{DiCh20a}. The most relevant and often used unitary gates are depicted in Tab.~\ref{tab:gates}
-%\unsure{Add depications for gates in circuits?}
+In gate-based quantum computers, the transformations applied to the quantum data are represented by \emph{quantum gates}. Similar to quantum states, which can be represented by linear combinations of basis states, or vectors, quantum gates can be formulated as linear transformations of these combinations, or a matrix. Because the result of such a transformation also needs to be a valid quantum state, the transformation needs to be norm-preserving, or \emph{unitary}~\cite{DiCh20a}. The most relevant and often used unitary gates are depicted in Tab.~\ref{tab:gates}.
 
 \begin{table}[htp]
     \centering
@@ -119,8 +108,6 @@ A matrix $U$ is unitary if it has an inverse matrix which is equal to its conjug
 Therefore, all transformations applied to quantum states in a gate-based quantum computer must be reversible by definition. This limitation does not apply to classical computers where non-reversible transformations, \eg mapping an arbitrary bit to a specific value, are easily implementable. 
 
 To design a useful quantum computer or language, the set of gates should be \emph{universal}. A set of gates is universal if any gate can be simulated by a combination of the gates from the set with arbitrary accuracy~\cite{BrBr02}. An example for a universal set of gates is the combination of the Toffoli gate together with the Hadamard gate~\cite{DiCh20a}.
-%\unsure{very short section, expand on universality?}
-\todo{Add paragraph on implicit measurement}
 
 \subsection{Measurement}
 \label{sec:background_measurement}
@@ -136,6 +123,8 @@ The probability that outcome $i$ is obtained when measuring a state $\ket{\psi}$
 \begin{equation*}
     \ket{\psi'} = \frac{M_i \ket{\psi}}{|M_i \ket{\psi}|} = \frac{M_i \ket{\psi}}{\sqrt{\Probability{[\text{observe }i]}}}.
 \end{equation*} 
+
+Additionally, measurements in quantum programming languages can be differentiated between implicit and explicit measurements. Implicit measurements rely on two concepts. Any discarded qubit is implicitly measured and any measurement can be delayed until the end of a circuit. In turn, instead of explicitly measuring a qubit in a quantum circuit or program, all qubits can be implicitly measured. However, some quantum communication protocols may rely on the explicit measurements of qubits. Therefore, implicit measurements are not always the best solutions and many quantum languages include explicit measurements~\cite{Inou24}.
 
 \subsection{Relevant Algorithms}
 \label{sec:background_algorithms}

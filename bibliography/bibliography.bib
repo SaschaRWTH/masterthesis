@@ -152,6 +152,19 @@
 }
 
 
+@article{Benn73,
+ author = {Bennett, C. H.},
+ year = {1973},
+ title = {Logical Reversibility of Computation},
+ pages = {525--532},
+ volume = {17},
+ number = {6},
+ issn = {0018-8646},
+ journal = {IBM Journal of Research and Development},
+ doi = {10.1147/rd.176.0525}
+}
+
+
 @inproceedings{BeVa93,
  author = {Bernstein, Ethan and Vazirani, Umesh},
  title = {Quantum complexity theory},
@@ -733,6 +746,16 @@ List},
 }
 
 
+@misc{Inou24,
+ abstract = {We propose a quantum programming paradigm where all data are familiar classical data, and the only non-classical element is a random number generator that can return results with negative probability. Currently, the vast majority of quantum programming languages instead work with quantum data types made up of qubits. The description of their behavior relies on heavy linear algebra and many interdependent concepts and intuitions from quantum physics, which takes dedicated study to understand. We demonstrate that the proposed view of quantum programming explains its central concepts and constraints in more accessible, computationally relevant terms. This is achieved by systematically reducing everything to the existence of that negative-probability random generator, avoiding mention of advanced physics as much as possible. This makes quantum programming more accessible to programmers without a deep background in physics or linear algebra. The bulk of this paper is written with such an audience in mind. As a working vehicle, we lay out a simple quantum programming language under this paradigm, showing that not only can it express all quantum programs, it also naturally captures the semantics of measurement without ever mentioning qubits or collapse. The language is proved to be implementable and universal.},
+ author = {Inoue, Jun},
+ date = {29.08.2024},
+ title = {Quantum Programming Without the Quantum Physics},
+ url = {http://arxiv.org/pdf/2408.16234v1},
+ year = {29.08.2024}
+}
+
+
 @misc{Jozs05,
  abstract = {In the formalism of measurement based quantum computation we start with a given fixed entangled state of many qubits and perform computation by applying a sequence of measurements to designated qubits in designated bases. The choice of basis for later measurements may depend on earlier measurement outcomes and the final result of the computation is determined from the classical data of all the measurement outcomes. This is in contrast to the more familiar gate array model in which computational steps are unitary operations, developing a large entangled state prior to some final measurements for the output. Two principal schemes of measurement based computation are teleportation quantum computation (TQC) and the so-called cluster model or one-way quantum computer (1WQC). We will describe these schemes and show how they are able to perform universal quantum computation. We will outline various possible relationships between the models which serve to clarify their workings. We will also discuss possible novel computational benefits of the measurement based models compared to the gate array model, especially issues of parallelisability of algorithms.
 
@@ -743,6 +766,17 @@ List},
  publisher = {arXiv},
  doi = {10.48550/arXiv.quant-ph/0508124},
  year = {2005}
+}
+
+
+@misc{JTK*24,
+ abstract = {We describe Qiskit, a software development kit for quantum information science. We discuss the key design decisions that have shaped its development, and examine the software architecture and its core components. We demonstrate an end-to-end workflow for solving a problem in condensed matter physics on a quantum computer that serves to highlight some of Qiskit's capabilities, for example the representation and optimization of circuits at various abstraction levels, its scalability and retargetability to new gates, and the use of quantum-classical computations via dynamic circuits. Lastly, we discuss some of the ecosystem of tools and plugins that extend Qiskit for various tasks, and the future ahead.},
+ author = {Javadi-Abhari, Ali and Treinish, Matthew and Krsulich, Kevin and Wood, Christopher J. and Lishman, Jake and Gacon, Julien and Martiel, Simon and Nation, Paul D. and Bishop, Lev S. and Cross, Andrew W. and Johnson, Blake R. and Gambetta, Jay M.},
+ date = {2024},
+ title = {Quantum computing with Qiskit},
+ publisher = {arXiv},
+ doi = {10.48550/arXiv.2405.08810},
+ year = {2024}
 }
 
 
@@ -1439,12 +1473,4 @@ To build the simulator outside of the image, first install OCaml version 5.0.0 w
  doi = {10.1038/ncomms1392}
 }
 
-@misc{JTK*24,
-      title={Quantum computing with {Q}iskit},
-      author={Javadi-Abhari, Ali and Treinish, Matthew and Krsulich, Kevin and Wood, Christopher J. and Lishman, Jake and Gacon, Julien and Martiel, Simon and Nation, Paul D. and Bishop, Lev S. and Cross, Andrew W. and Johnson, Blake R. and Gambetta, Jay M.},
-      year={2024},
-      doi={10.48550/arXiv.2405.08810},
-      eprint={2405.08810},
-      archivePrefix={arXiv},
-      primaryClass={quant-ph}
-}
+
