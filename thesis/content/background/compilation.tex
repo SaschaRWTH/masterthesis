@@ -29,7 +29,7 @@ The integer can either be an arbitrary sequence of characters between zero and n
 The lexical analysis of the compiler yields a sequence of tokens with a known meaning; the structure of the program, however, is not apparent in the token sequence. For example, an operator-token does not indicate what the operands are. To gain knowledge of the structure of the program, the parser step analyzes the syntactic structure of the source program and creates a parse tree from it. The compiler can then use the tree by, \eg, walking over it to generate the target code. This step should also detect and report any syntactical errors, like a missing closing parentheses~\cite{VSSD07}.
 
 While the lexical analysis can be achieved with regular expressions, the syntactic structure of a program must be represented by, at least, a context-free grammar. Since regular languages are a subset of context-free languages, 
-\unsure{citation needed? (Chomsky, "Three models for the description of language")}
+%\unsure{citation needed? (Chomsky, "Three models for the description of language")}
 the parsing step can also perform the lexical analysis. However, there are multiple reasons why the lexical and syntax analysis are separated. Firstly, the separation of both analysis makes the compiler more modular and extensible. Furthermore, using regular expression for the lexical analysis prevents it from being more complex than necessary with a context-free grammar. Lastly, the lexer can be more efficient when generated from regular expressions instead of a context-free grammar~\cite{VSSD07}. 
 
 There exists two main kinds of parsing a grammar, either top-down or bottom-up.

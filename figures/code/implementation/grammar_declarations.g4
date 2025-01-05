@@ -9,7 +9,7 @@ constDeclaration    : CONSTANTKEYWORD id=IDENTIFIER
                       exp=expression';';
 
 gateDeclaration     : GATEKEYWORD id=IDENTIFIER 
-                      '(' param=gateParameter? ')' 
+                      '(' param=gateParameter ')' 
                       DO block END;
 
 gateParameter       : IDENTIFIER (',' IDENTIFIER)*;
