@@ -22,7 +22,7 @@ Three grammar rules that are used in the context of gate applications are the ga
     QubitArgument: \ & qArg ::= id \mid id[exp]
 \end{align*}
 
-Next, the declaration rules $dcl$ and $gDcl$ are used to declare qubits, register, or constant variables and gate declaration respectively. Each requires an identifier given by the $id$ rule. In the case of the constant and register declaration, the value and size are given by an expression. Additionally, the gate declaration requires a list of identifiers for the arguments and the code block of the composite gate.
+Next, the declaration rules $dcl$ and $gDcl$ are used to declare qubits, register, or named constants and gate declaration respectively. Each requires an identifier given by the $id$ rule. In the case of the constant and register declaration, the value and size are given by an expression. Additionally, the gate declaration requires a list of identifiers for the arguments and the code block of the composite gate.
 \begin{align*}
     Declaration: \ & dcl ::= \texttt{const } id \texttt{ = } exp \texttt{;} \mid \\
                  & \quad \quad \quad \quad \texttt{qubit } id \texttt{;} \mid \\
