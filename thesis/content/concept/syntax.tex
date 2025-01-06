@@ -1,6 +1,6 @@
 \section{Syntax}
 \label{sec:concept_abstractGrammar}
-The syntax of our programming language $Luie$ is defined by the context-free grammar $CFG_{Luie}$. It consists of a set of non-terminals $V_{Luie}$, terminals $\Sigma_{Luie}$, and grammar rules $R_{Luie}$ as well as the start symbol $prg_{Luie}$. The rule $n$ represents a natural number, while $id$ represents an identifier. The grammar rules $R_{Luie}$ are discussed in the following.
+The syntax of our programming language $Luie$ is defined by the context-free grammar $CFG_{Luie}$. It consists of a set of non-terminals $V_{Luie}$, terminals $\Sigma_{Luie}$, and grammar rules $R_{Luie}$, as well as the start symbol $prg_{Luie}$. The rule $n$ represents a natural number, while $id$ represents an identifier. The grammar rules $R_{Luie}$ are discussed in the following.
 \begin{align*}
     CFG_{Luie} = \ & \{V_{Luie}, \Sigma_{Luie}, R_{Luie}, prg_{Luie} \}\\ 
     V_{Luie} = \ & \{ exp, rExp, gate, cGate, qArg, stm,\\ 
@@ -22,7 +22,7 @@ Three grammar rules that are used in the context of gate applications are the ga
     QubitArgument: \ & qArg ::= id \mid id[exp]
 \end{align*}
 
-Next, the declaration rules $dcl$ and $gDcl$ are used to declare qubits, register, or named constants and gate declaration, respectively. Each requires an identifier given by the $id$ rule. In the case of the constant and register declaration, the value and size are given by an expression. Additionally, the gate declaration requires a list of identifiers for the arguments and the code block of the composite gate.
+Next, the declaration rules $dcl$ and $gDcl$ are used to declare qubits, registers, or named constants and gate declarations, respectively. Each requires an identifier given by the $id$ rule. In the case of the constant and register declaration, the value and size are given by an expression. Additionally, the gate declaration requires a list of identifiers for the arguments and the code block of the composite gate.
 \begin{align*}
     Declaration: \ & dcl ::= \texttt{const } id \texttt{ = } exp \texttt{;} \mid \\
                  & \quad \quad \quad \quad \texttt{qubit } id \texttt{;} \mid \\
@@ -30,7 +30,7 @@ Next, the declaration rules $dcl$ and $gDcl$ are used to declare qubits, registe
     GateDeclaration: \ & gDcl::= \texttt{gate } id \texttt{ (}id_1, \dots, id_n\texttt{) do } blk \texttt{ end}
 \end{align*}
 
-The statement rule $stm$ can either be an if-statement, with an optional else-block, a loop statement, a gate application statement, or a skip statement. The qubit argument rule is used for both the if-statement, to specify the control qubit, and the gate application statement, to specify the arguments. Additionally, the range expression is used to specify the range of the loop-statement. The block rule is used for the body of the if-statement, the optional else-block, and the loop statement.
+The statement rule $stm$ can either be an if-statement, with an optional else-block, a loop statement, a gate application statement, or a skip statement. The qubit argument rule is used for both the if-statement, to specify the control qubit, and the gate application statement, to specify the arguments. Additionally, the range expression is used to specify the range of the loop statement. The block rule is used for the body of the if-statement, the optional else-block, and the loop statement.
 \begin{align*}
     Statement: \ & stm ::= \texttt{qif } qArg \texttt{ do }  blk \texttt{ end} \mid\\
                  & \quad \quad \quad \quad \texttt{qif } qArg \texttt{ do }  blk_1 \texttt{ else } blk_2 \texttt{ end} \mid\\
@@ -39,14 +39,14 @@ The statement rule $stm$ can either be an if-statement, with an optional else-bl
                  & \quad \quad \quad \quad \texttt{skip;}
 \end{align*}
 
-The last grammar rules are the block rule $blk$, which specifies a possibly empty list of translatables, the translatable rule $t$, which can either be a statement or declaration, and the program rule $prg$, which consists of an optional list of gate declarations and a code block. 
+The last grammar rules are the block rule $blk$, which specifies a possibly empty list of translatables; the translatable rule $t$, which can either be a statement or declaration; and the program rule $prg$, which consists of an optional list of gate declarations and a code block.
 \begin{align*}
     Block: \ & blk::= t_1 \dots t_n \mid \epsilon\\
     Translatable : \ & t::= stm \mid dcl\\
     Program: \ & prg ::= gDcl_1 \dots gDcl_n \ blk \mid blk 
 \end{align*}
 
-Since we define some auxiliary functions that operate on OpenQASM code, a reduced grammar for the OpenQASM programming language is given by $CFG_{QASM}$. It consists of a set of non-terminals $V_{QASM}$, terminals $\Sigma_{QASM}$, and grammar rules $R_{QASM}$ as well as the start symbol $prg_{QASM}$. Some of the terminals and non-terminals in the grammar are the same as in the source code grammar $CFG_{Luie}$. In these cases, the definitions of the grammar rules are also the same; all other grammar rules are discussed in the following.
+Since we define some auxiliary functions that operate on OpenQASM code, a reduced grammar for the OpenQASM programming language is given by $CFG_{QASM}$. It consists of a set of non-terminals $V_{QASM}$, terminals $\Sigma_{QASM}$, and grammar rules $R_{QASM}$, as well as the start symbol $prg_{QASM}$. Some of the terminals and non-terminals in the grammar are the same as in the source code grammar $CFG_{Luie}$. In these cases, the definitions of the grammar rules are also the same; all other grammar rules are discussed in the following.
 \begin{align*}
     CFG_{QASM} = \ & \{V_{QASM}, \Sigma_{QASM}, R_{QASM}, prg_{QASM} \}\\ 
     V_{QASM} = \ & \{ cGate, qArg, gateApp, qubitDcl, qStm,\\ 
@@ -55,13 +55,13 @@ Since we define some auxiliary functions that operate on OpenQASM code, a reduce
                & \ \ \texttt{x}, \texttt{y}, \texttt{z}, \texttt{cx}, \texttt{ccx}, \texttt{[}, \texttt{]}, \dots \}
 \end{align*}
 
-A qubit or register is declared by the qubit declaration rule $qubitDcl$ . It requires an identifier for the symbol and, in the case of a register, a size in the form of a constant natural number. 
+A qubit or register is declared by the qubit declaration rule $qubitDcl$. It requires an identifier for the symbol and, in the case of a register, a size in the form of a constant natural number. 
 \begin{align*}
     QubitDeclaration: \ & qubitDcl::= \texttt{qubit } id \texttt{;} \mid\\
     & \hspace{6em} \texttt{qubit[}n\texttt{] } id \texttt{;}
 \end{align*}
 
-A gate is applied with the gate application rule $gateApp$. There are four different kinds of gate applications, one with no control, two with either arbitrarily many positive or negative control qubits, and one with both arbitrarily positive and negative control qubits. The number of control qubits is given as a natural number. 
+A gate is applied with the gate application rule $gateApp$. There are four different kinds of gate applications: one with no control, two with either arbitrarily many positive or negative control qubits, and one with both arbitrarily positive and negative control qubits. The number of control qubits is given as a natural number. 
 \begin{align*}
 GateApplication: \ & gateApp::= cGate \ qArg_1, ..., qArg_n \texttt{;} \mid\\
 & \quad \quad \quad \texttt{ctrl(}n\texttt{)} \texttt{ @ } qGate \ qArg_1, ..., qArg_n \texttt{;} \mid\\
