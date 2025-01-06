@@ -81,7 +81,7 @@ A compiler is a complex program that can not only require a lot of coding but al
 
 Two tool for compiler generation, often used in tandem, are the Fast Lexical Analyzer (\emph{Flex})\footnote{\url{https://github.com/westes/flex}} and GNU \emph{Bison}\footnote{\url{https://github.com/akimd/bison}}~\cite{DoSt99}. 
 The Flex is a lexer generator while Bison is a general-purpose parser generator. Both generators target C and C++ code with Bison having the experimental feature to support Java. 
-Both tools are an extension and improvement of previous tools, \emph{Lex} and \emph{Yacc} respectively. 
+Both tools are an extension and improvement of previous tools, \emph{Lex} and \emph{Yacc}, respectively. 
 Bison implements a bottom-up parser and can parse most grammars. However, the tool is optimized for $LR(1)$ grammars, \ie bottom-up parsing with a lookahead of a single token~\cite{ZLY17,Aaby03,DoSt99}. 
 
 While Flex and Bison are separate tools for the lexing and parsing of program code, \emph{ANTLR}\footnote{\url{https://github.com/antlr/antlr4}}~\cite{PaQu95} ``ANother Tool for Language Recognition'' combines both purposes into a single tool. In contrast to Bison, it implements top-down parsing and can recognize any $LL(k)$ grammar with $k > 1$. Additionally, while Flex and Bison are mainly targeting C and C++, ANTLR can generate lexers and scanners in a variety of languages, including C++, Java, Python, and C\#.

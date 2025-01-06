@@ -15,14 +15,14 @@ The grammar contains two different kinds of expression rules, the arithmetic exp
     RangeExpression: \ & rExp ::= n_1 .. n_2 \mid \texttt{range(} exp \texttt{)} \mid \texttt{range(} exp_1, exp_2 \texttt{)}\\
 \end{align*}
 
-Three grammar rules that are used in the context of gate applications are the gate, constant gate, and qubit argument rules, $gate$, $cGate$, and $qArg$ respectively. The gate rule allows for the application of either a composite gate, given by an identifier, or a constant gate, given explicitly. Similarly, the qubit argument rule allows for either a qubit, specified by an identifier, or a register access, specified by an identifier and expression. Lastly, the constant gate rule simply allows for all predefined gates. 
+Three grammar rules that are used in the context of gate applications are the gate, constant gate, and qubit argument rules, $gate$, $cGate$, and $qArg$, respectively. The gate rule allows for the application of either a composite gate, given by an identifier, or a constant gate, given explicitly. Similarly, the qubit argument rule allows for either a qubit, specified by an identifier, or a register access, specified by an identifier and expression. Lastly, the constant gate rule simply allows for all predefined gates. 
 \begin{align*}
     Gate: \ & gate ::= id \mid cGate\\
     ConstGate: \ & cGate ::= \texttt{x} \mid \texttt{y} \mid \texttt{z} \mid \texttt{cx} \mid \texttt{ccx}\\
     QubitArgument: \ & qArg ::= id \mid id[exp]
 \end{align*}
 
-Next, the declaration rules $dcl$ and $gDcl$ are used to declare qubits, register, or named constants and gate declaration respectively. Each requires an identifier given by the $id$ rule. In the case of the constant and register declaration, the value and size are given by an expression. Additionally, the gate declaration requires a list of identifiers for the arguments and the code block of the composite gate.
+Next, the declaration rules $dcl$ and $gDcl$ are used to declare qubits, register, or named constants and gate declaration, respectively. Each requires an identifier given by the $id$ rule. In the case of the constant and register declaration, the value and size are given by an expression. Additionally, the gate declaration requires a list of identifiers for the arguments and the code block of the composite gate.
 \begin{align*}
     Declaration: \ & dcl ::= \texttt{const } id \texttt{ = } exp \texttt{;} \mid \\
                  & \quad \quad \quad \quad \texttt{qubit } id \texttt{;} \mid \\

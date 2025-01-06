@@ -11,7 +11,7 @@ When quantum computers are based on unitary gates, all their operations need to 
 
 Although such a program counter addresses the issue of reversibility, it can become entangled with data registers when in superposition. This can lead to disruptive entanglement where the output of the program becomes invalid~\cite{YVC24}. To prevent any disruptive entanglement of the data and control registers, the QCM adheres to the principle of synchronization. 
 It requires that the control flow is separated from the data at the end of execution. 
-Examples where synchronization comes into play are given in Fig.~\ref{fig:qcm_not_sync} and Fig.~\ref{fig:qcm_sync} where $x^y$ and $x^{\texttt{min}\{y, max\}}$ are calculated respectively. 
+Examples where synchronization comes into play are given in Fig.~\ref{fig:qcm_not_sync} and Fig.~\ref{fig:qcm_sync} where $x^y$ and $x^{\texttt{min}\{y, max\}}$ are calculated, respectively. 
 While the first example is completely reversible, it does not adhere to the principle of synchronization. Given two different inputs, the loop will be executed a different number of times. This means that after the faster of the two programs completed the loop, the program counter of the slower one cannot catch up. To prevent this issue, the second program uses padding which is executed instead of the main loop. \thiswillnotshow{Should this be explained in more detail? It is a very superficial explanation}
 
 \begin{figure}[htp]
