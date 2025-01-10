@@ -72,6 +72,7 @@ While the gate application and qubit declaration code, as well as the related cl
 To represent the measurements in the target code, there exist both a bit declaration and measurement code class. Similar to the qubit declaration, bit declarations contain a size property and, depending on that size, either a single bit or classical register is declared. In contrast, the measurement class contains two unique identifiers for the measurement target and the storage variable. While the semantic equivalence compares both identifiers, the code conversion returns the OpenQASM statement based on the two identifiers.
 
 \subsection{Example Process}
+\label{sec:implementation_codeGen_example}
 After the discussion of the different steps and parts of the code generation, we want to take a look at an example. Our example program is depicted in Fig.~\ref{fig:codeGen_source_example}. First, a composite gate \texttt{c\_h\_reg} is declared. It takes two arguments, a control qubit and a register \texttt{reg}. In the composite gate, a quantum if-statement is used to apply the following statements based on the value of the control qubit. Next, a loop statement iterates over the size of the register argument \texttt{reg}. To each qubit in the register, the Hadamard gate $H$ is applied. After the composite gate is declared, a qubit \texttt{c} and a register \texttt{a} are declared. The register is given a size of three qubit. Lastly, the composite gate is called with the \texttt{c} as the control bit and \texttt{a} as the \texttt{reg} argument. 
 
 \begin{figure}
