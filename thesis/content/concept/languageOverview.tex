@@ -5,8 +5,6 @@ The idea for our proposed language is to provide a high-level language with the 
 
 Firstly, we discuss code blocks and their corresponding variable contexts, or scopes. Then, we introduce the data types that are available in the language. Next, the basic operations as well as the more complex control flow statements are listed and explained. This is followed by an overview of the possible expressions and the available operations and built-in functions. Lastly, we discuss the composite gates of the language. 
 
-%The following description is a high level overview of the concepts and functionalities of the language. While we discuss a high-level overview in the following, the concrete syntax and implementation of these features is discussed in Ch.~\ref{ch:implementation}.
-
 \subsection{Blocks and Scopes}
 \label{sec:concept_blocksAndScope}
 Similar to many other languages, Luie uses code blocks and corresponding scopes. Both the code blocks and scopes are used to structure the code and enable the reuse of identifiers in different contexts. Code blocks and scopes are hierarchically structured; the parent of a code block is the block that directly contains this scope, while ancestor blocks are all blocks that contain the block.
@@ -18,7 +16,6 @@ Similar to the main code block, all other code blocks also consist of declaratio
 
 Scopes represent the variable context of a code block. In a given scope, the program can access all variables previously defined in this scope and all its ancestors; however, it cannot access the variables of any descendants.
 In contrast, two independent scopes do not have access to the variables defined in the other scope. Therefore, two independent if-statements can define a variable with the same name in their scope. 
-% Additionally, a scope can also overwrite the definition of a variable of an ancestor with its own definition while the ancestor's definition is not affected.
 
 \subsection{Data Types}
 \label{sec:concept_dataTypes}
