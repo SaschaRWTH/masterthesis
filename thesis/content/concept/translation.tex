@@ -20,7 +20,7 @@ At the root of the translation is the translation function $trans$. It maps a so
                 & bt(blk, update(update(update(st_\epsilon, gDcl_1), ...), gDcl_n))
 \end{align*}  
 
-To translate code blocks, the block translation function $bt$ is used. It maps a block $blk$ and a symbol table $st$ to the OpenQASM translation of the code block. Since a block consists of a list of statements and declarations, they are translated individually. However, the translation of a declaration may adjust the symbol table. Therefore, the translation of a translatable, \ie either a statement of declaration, returns not just the translation but also a, potentially updated, symbol table. This symbol table is used for the next translation. Additionally, if the block is empty, the function simply returns an empty result.
+To translate code blocks, the block translation function $bt$ is used. It maps a block $blk$ and a symbol table $st$ to the OpenQASM translation of the code block. Since a block consists of a list of statements and declarations, they are translated individually. However, the translation of a declaration may adjust the symbol table. Therefore, the translation of a translatable, \ie, either a statement of declaration, returns not just the translation but also a, potentially updated, symbol table. This symbol table is used for the next translation. Additionally, if the block is empty, the function simply returns an empty result.
 \begin{align*}
     bt : \ & Block \times SymbolTable \dashrightarrow QASM\\
     bt(t_1 \dots t_n, st_1) = \ &  tr_1 \quad \text{where } (tr_1, st_2) = tt(t_1, st_1)\\

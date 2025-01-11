@@ -19,7 +19,7 @@ The second aspect we want to evaluate is the execution time of different compila
 \label{tab:eval_executionTime}
 \end{table}
 
-The first stage is the semantic analysis. In this stage, the source code is analyzed for semantic errors, \eg undeclared variables or type errors. Since the analysis is performed on the source code, the execution time does not change significantly with a change in register size, as the source code size remains unchanged. The execution times range from $25.8$ ms to $28.3$ ms with an average of $26.79$ ms. 
+The first stage is the semantic analysis. In this stage, the source code is analyzed for semantic errors, \eg, undeclared variables or type errors. Since the analysis is performed on the source code, the execution time does not change significantly with a change in register size, as the source code size remains unchanged. The execution times range from $25.8$ ms to $28.3$ ms with an average of $26.79$ ms. 
 
 Next, the code generation stage generates the target code from the source code. In our example program, the source code size stays constant. Both the \texttt{MAJ} and \texttt{UMA} gates are not dependent on the register size. However, the adder gate iterates over the size of the registers with a loop statement twice. Since the loop statements are unrolled at compile time, the generated code size increases linearly with an increase in register size, and, in turn, the execution time should increase likewise. This trend is not clear for small register sizes between $16$ and $64$. However, for larger register sizes, a linear trend is detectable.
 
