@@ -90,53 +90,53 @@
 % # TODO: Possibly use minted (https://github.com/gpoore/minted) for better code blocks and syntax highlighting
 
 \lstloadlanguages{C,C++,csh,Java}
-\lstset{
-	language=csh,
-	basicstyle=\footnotesize\ttfamily,
-	numbers=left,
-	numberstyle=\tiny,
-	numbersep=5pt,
-	tabsize=2,
-	extendedchars=true,
-	breaklines=true,
-	frame=tlrb,
-	stringstyle=\color{blue}\ttfamily,
-	showspaces=false,
-	showtabs=false,
-	framexleftmargin=17pt,
-	framexrightmargin=5pt,
-	framexbottommargin=4pt,
-	xleftmargin=.05\textwidth,
-	xrightmargin=.05\textwidth,
-	commentstyle=\color{green},
-	morecomment=[l]{//}, %use comment-line-style!
-	morecomment=[s]{/*}{*/}, %for multiline comments
-	showstringspaces=false,
-	morekeywords={ abstract, event, new, struct,
-		async, await, set, get,
-		as, explicit, null, switch,
-		base, extern, object, this,
-		bool, false, operator, throw,
-		break, finally, out, true,
-		byte, fixed, override, try,
-		case, float, params, typeof,
-		catch, for, private, uint,
-		char, foreach, protected, ulong,
-		checked, goto, public, unchecked,
-		class, if, readonly, unsafe,
-		const, implicit, ref, ushort,
-		continue, in, return, using,
-		decimal, int, sbyte, virtual, string, public
-		default, interface, sealed, volatile,
-		delegate, internal, short, void,
-		do, is, sizeof, while,
-		double, lock, stackalloc,
-		else, long, static,
-		enum, namespace, string},
-	keywordstyle=\color{cyan},
-}
+% \lstset{
+% 	language=csh,
+% 	basicstyle=\footnotesize\ttfamily,
+% 	numbers=left,
+% 	numberstyle=\tiny,
+% 	numbersep=5pt,
+% 	tabsize=2,
+% 	extendedchars=true,
+% 	breaklines=true,
+% 	frame=tlrb,
+% 	stringstyle=\color{blue}\ttfamily,
+% 	showspaces=false,
+% 	showtabs=false,
+% 	framexleftmargin=17pt,
+% 	framexrightmargin=5pt,
+% 	framexbottommargin=4pt,
+% 	xleftmargin=.05\textwidth,
+% 	xrightmargin=.05\textwidth,
+% 	commentstyle=\color{green},
+% 	morecomment=[l]{//}, %use comment-line-style!
+% 	morecomment=[s]{/*}{*/}, %for multiline comments
+% 	showstringspaces=false,
+% 	morekeywords={ abstract, event, new, struct,
+% 		async, await, set, get,
+% 		as, explicit, null, switch,
+% 		base, extern, object, this,
+% 		bool, false, operator, throw,
+% 		break, finally, out, true,
+% 		byte, fixed, override, try,
+% 		case, float, params, typeof,
+% 		catch, for, private, uint,
+% 		char, foreach, protected, ulong,
+% 		checked, goto, public, unchecked,
+% 		class, if, readonly, unsafe,
+% 		const, implicit, ref, ushort,
+% 		continue, in, return, using,
+% 		decimal, int, sbyte, virtual, string, public
+% 		default, interface, sealed, volatile,
+% 		delegate, internal, short, void,
+% 		do, is, sizeof, while,
+% 		double, lock, stackalloc,
+% 		else, long, static,
+% 		enum, namespace, string},
+% 	keywordstyle=\color{cyan},
+% }
 
-\lstdefinestyle{ANTLR}{
+\lstdefinestyle{ANTLRold}{
     % basicstyle=\small\ttfamily\color{magenta},%
     breaklines=true,%                                      allow line breaks
     moredelim=[s][\color{green!50!black}\ttfamily]{'}{'},% single quotes in green
@@ -156,19 +156,51 @@
 	xrightmargin=.05\textwidth,               % Right margin
 }
 
+\lstdefinestyle{ANTLR}{                 
+    basicstyle=\footnotesize\ttfamily,       % Basic font style
+    numbers=left,                            % Line numbers on the left
+    numberstyle=\tiny,                       % Style of line numbers
+    numbersep=5pt,                           % Distance of line numbers from code
+    tabsize=2,                               % Tab size
+    extendedchars=true,                      % Allow extended characters
+    breaklines=true,                         % Break long lines
+    frame=tlrb,                              % Frame around the listing
+    stringstyle=\color{blue}\ttfamily,       % Style for strings
+    showspaces=false,                        % Do not show spaces
+    showtabs=false,                          % Do not show tabs
+    framexleftmargin=17pt,                   % Extra margin on the left
+    framexrightmargin=5pt,                   % Extra margin on the right
+    framexbottommargin=4pt,                  % Extra margin at the bottom
+    xleftmargin=.05\textwidth,               % Left margin
+    xrightmargin=.05\textwidth,              % Right margin
+    commentstyle=\color{commentgreen},       % Style for comments
+    morecomment=[l]{//},                     % Line comment style
+    morecomment=[s]{/*}{*/},                 % Multiline comment style
+    showstringspaces=false,                  % Do not mark string spaces
+    morekeywords={
+        grammar, parser, lexer, options, tokens, import, fragment, mode, 
+        returns, throws, locals, catch, finally, rulecatch, super, 
+        exception, context, extends, override, EOF
+    },                                       % ANTLR 4 keywords
+    moredelim=[s][\color{blue}]{'}{'},     % Highlight single-quoted literals (e.g., 'a')
+    keywordstyle=\color{cyan},               % Style for ANTLR keywords
+    % rulecolor=\color{brown}\bfseries         % Highlight grammar rules in bold brown
+}
+
+
 \lstdefinestyle{QCM}{
     breaklines=true,%                                      allow line breaks
     moredelim=[s][\color{green!50!black}\ttfamily]{'}{'},% single quotes in green
     moredelim=*[s][\color{black}\ttfamily]{options}{\}},%  options in black (until trailing })
-    commentstyle={\color{gray}\itshape},%                  gray italics for comments
+    commentstyle={\color{commentgreen}},%                  gray italics for comments
     morecomment=[l]{;},%                                  define // comment
     emph={%
 		l1, l2, l3, l4, l5, l6, l7, l8, 
 		rl1, rl2, rl3, rl4, rl5, rl6, rl7, rl8%                                         literal strings listed here
-        },emphstyle={\color{red}\ttfamily},%              and formatted in blue
+        },emphstyle={\color{blue}\ttfamily},%              and formatted in blue
     alsoletter={|,;},%
     morekeywords={add, rjne, jz, jg, mul, jmp, rjmp, nop, rjle, radd},%                                 define the special characters
-    keywordstyle={\color{blue}},%                         and format them in black
+    keywordstyle={\color{cyan}},%                         and format them in black
 }
 
 \lstdefinestyle{QASM}{                 
@@ -256,6 +288,41 @@
 	morekeywords= {
 		input, output, verbose, optimization
 	}
+}
+
+\lstdefinestyle{CSharp}{                 
+    basicstyle=\footnotesize\ttfamily,       % Basic font style
+    numbers=left,                            % Line numbers on the left
+    numberstyle=\tiny,                       % Style of line numbers
+    numbersep=5pt,                           % Distance of line numbers from code
+    tabsize=4,                               % Tab size for C#
+    extendedchars=true,                      % Allow extended characters
+    breaklines=true,                         % Break long lines
+    frame=tlrb,                              % Frame around the listing
+    stringstyle=\color{blue}\ttfamily,       % Style for strings
+    showspaces=false,                        % Do not show spaces
+    showtabs=false,                          % Do not show tabs
+    framexleftmargin=17pt,                   % Extra margin on the left
+    framexrightmargin=5pt,                   % Extra margin on the right
+    framexbottommargin=4pt,                  % Extra margin at the bottom
+    xleftmargin=.05\textwidth,               % Left margin
+    xrightmargin=.05\textwidth,              % Right margin
+    commentstyle=\color{commentgreen},       % Style for comments
+    morecomment=[l]{//},                     % Line comment style
+    morecomment=[s]{/*}{*/},                 % Multiline comment style
+    showstringspaces=false,                  % Do not mark string spaces
+    morekeywords={abstract, as, base, bool, break, byte, case, catch, char, 
+                  checked, class, const, continue, decimal, default, delegate, 
+                  do, double, else, enum, event, explicit, extern, false, finally, 
+                  fixed, float, for, foreach, goto, if, implicit, in, int, interface, 
+                  internal, is, lock, long, namespace, new, null, object, operator, 
+                  out, override, params, private, protected, public, readonly, 
+                  ref, return, sbyte, sealed, short, sizeof, stackalloc, static, 
+                  string, struct, switch, this, throw, true, try, typeof, uint, 
+                  ulong, unchecked, unsafe, ushort, using, virtual, void, volatile, 
+                  while, get, set},                     % C# keywords
+    keywordstyle=\color{cyan},               % Style for C# keywords
+    moredelim=[s][\color{orange}]{'}{'},     % Style for character literals (e.g., 'a')
 }
 
 
