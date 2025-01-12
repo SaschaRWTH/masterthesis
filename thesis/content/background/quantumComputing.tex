@@ -97,7 +97,7 @@ In gate-based quantum computers, the transformations applied to the quantum data
                                     & $\begin{pmatrix} 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \end{pmatrix}$       
                                     & $\begin{matrix} \ket{000} \mapsto \ket{000} \\ \ket{001} \mapsto \ket{001} \\ \ket{010} \mapsto \ket{010} \\ \ket{011} \mapsto \ket{011} \\  \ket{100} \mapsto \ket{100} \\ \ket{101} \mapsto \ket{101} \\ \ket{110} \mapsto \ket{111} \\ \ket{111} \mapsto \ket{110} \end{matrix}$            
     \end{tabular}
-    \caption{List of relevant quantum gates in matrix representation as as functions in ket-notation.}
+    \caption{A list of relevant quantum gates in matrix representation as well as functions in ket-notation.}
     \label{tab:gates}
 \end{table}
 
@@ -162,11 +162,11 @@ The second kind of null gates are gates that do not have an effect under specifi
             \lstick{\ket{\psi}} & \gate{U} & \qw &&&&& \lstick{\ket{+}} & \targ & \qw
             }
     \]
-    \caption{Null gates for gate in specific conditions.}
+    \caption{Null gates for gates in specific conditions.}
     \label{fig:nullgates_control}
 \end{figure}
 
-Another class of optimizations is called \emph{control reversal}. Control reversal describes gate combination equalities based on the symmetry of the controlled $Z$ gate. For the controlled $Z$ gate, it is semantically equivalent to apply the $Z$ gate to the second wire with a control on the first and to apply the $Z$ gate on the first wire with a control on the second one. Based on this and together with the equalities $HZH = X$ and $HXH = Z$, a controlled $X$ gate surrounded by $H$ gates on both wires can be represented as the reversed $X$ gate. Both equalities are depicted in Fig.~\ref{fig:control_reversal_cz} and Fig.~\ref{fig:control_reversal_hcx}. 
+Another class of optimizations is called \emph{control reversal}. Control reversal describes gate combination equalities based on the symmetry of the controlled-$Z$ gate. For the controlled-$Z$ gate, it is semantically equivalent to apply the $Z$ gate to the second wire with a control on the first and to apply the $Z$ gate on the first wire with a control on the second one. Based on this and together with the equalities $HZH = X$ and $HXH = Z$, a controlled-not gate, surrounded by $H$ gates on both wires, can be represented as the reversed controlled-not gate. Both equalities are depicted in Fig.~\ref{fig:control_reversal_cz} and Fig.~\ref{fig:control_reversal_hcx}. 
 
 \begin{figure}[htp!]
     \centering
@@ -177,7 +177,7 @@ Another class of optimizations is called \emph{control reversal}. Control revers
                 & \gate{Z} & \qw &           & & \ctrl{-1} & \qw
                 }
         \]
-        \caption{Control reversal of the controlled Z gate.}
+        \caption{Control reversal of the controlled-$Z$ gate.}
         \label{fig:control_reversal_cz}
     \end{minipage}
     \hfill
@@ -188,7 +188,7 @@ Another class of optimizations is called \emph{control reversal}. Control revers
                & \gate{H} & \targ & \gate{H} & \qw &           & & \ctrl{-1} & \qw
                 }
         \]
-        \caption{Control reversal of CX.}
+        \caption{Control reversal of the controlled-not gate.}
         \label{fig:control_reversal_hcx}
     \end{minipage}
 \end{figure}

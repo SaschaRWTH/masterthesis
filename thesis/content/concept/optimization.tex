@@ -94,7 +94,7 @@ The optimization algorithm, depicted in Alg.~\ref{alg:concept_optimizationAlgori
 % Pseudo code for algorithm
 \SetKwComment{Comment}{\# }{}
 \begin{algorithm}
-    \caption{The algorithm used to optimize a circuit graph.}
+    \caption{The pseudocode for the algorithm used to optimize a circuit graph.}
     \label{alg:concept_optimizationAlgorithm}
     \KwData{Circuit Graph $C = (V, E, Q, Q_E, Q_V)$, List of optimization rules $R$, Maximal rule length $max$}
     $repeat \gets true$\;
@@ -135,14 +135,14 @@ Let us consider an example optimization process of the circuit graph depicted in
     \begin{minipage}{.6\textwidth}
         \centering     
         \includegraphics[width=\textwidth]{../figures/drawio/circuit_graph_optimized_firststep.pdf}
-        \caption{Circuit graph after the first optimization.}
+        \caption{The circuit graph after the first optimization step.}
         \label{fig:circuit_graph_first_optimized}
     \end{minipage}
     \hfill
     \begin{minipage}{.35\textwidth}
         \centering     
         \includegraphics[width=\textwidth]{../figures/drawio/circuit_graph_optimized_complete.pdf}
-        \caption{Completely optimized graph.}
+        \caption{The completely optimized graph.}
         \label{fig:circuit_graph_optimized_complete}
     \end{minipage}
 \end{figure}

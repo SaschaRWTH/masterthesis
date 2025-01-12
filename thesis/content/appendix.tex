@@ -12,13 +12,13 @@
     nControl(qArg, qubitDcl) = \ & qubitDcl\\
 \end{align*}
 \begin{align*}
-    &nControl(qArg, cGate \ qArg_1, \dots, qArg_n ) =  \texttt{negctrl(1) @ } cGate \ qArg, qArg_1, \dots, qArg_n\texttt{;}\\
-    &nControl(qArg, cGate \ \texttt{negctrl(}n\texttt{) @ } qArg_1, \dots, qArg_n ) = \\
-    & \quad \quad \quad \quad \texttt{negctrl(}n + 1\texttt{) }cGate \ qArg, qArg_1, \dots, qArg_n\texttt{;}\\
-    &nControl(qArg, \texttt{ctrl(}i \texttt{) @ } cGate \ qArg_1, \dots, qArg_n ) = \\
-    & \quad \quad \quad \quad \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}1\texttt{) } cGate \ qArg_1, ..., qArg_i, qArg, qArg_{i+1} \dots, qArg_n\texttt{;}\\
-    &nControl(qArg, \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n\texttt{) @ } cGate \ qArg_1, \dots, qArg_n ) = \\
-    & \quad \quad \quad \quad \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n + 1\texttt{) @ } cGate \ qArg_1, ..., qArg_i, qArg, qArg_{i+1} \dots, a_n\texttt{;}
+    &nControl(qArg, id \ qArg_1, \dots, qArg_n ) =  \texttt{negctrl(1) @ } id \ qArg, qArg_1, \dots, qArg_n\texttt{;}\\
+    &nControl(qArg, id \ \texttt{negctrl(}n\texttt{) @ } qArg_1, \dots, qArg_n ) = \\
+    & \quad \quad \quad \quad \texttt{negctrl(}n + 1\texttt{) }id \ qArg, qArg_1, \dots, qArg_n\texttt{;}\\
+    &nControl(qArg, \texttt{ctrl(}i \texttt{) @ } id \ qArg_1, \dots, qArg_n ) = \\
+    & \quad \quad \quad \quad \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}1\texttt{) } id \ qArg_1, ..., qArg_i, qArg, qArg_{i+1} \dots, qArg_n\texttt{;}\\
+    &nControl(qArg, \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n\texttt{) @ } id \ qArg_1, \dots, qArg_n ) = \\
+    & \quad \quad \quad \quad \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n + 1\texttt{) @ } id \ qArg_1, ..., qArg_i, qArg, qArg_{i+1} \dots, a_n\texttt{;}
 \end{align*}
 
 \chapter{Grammar Terminals}
@@ -32,13 +32,13 @@
     \centering     
     \begin{minipage}{.45\textwidth}
         \lstinputlisting[style=Luie]{../figures/code/evaluation/majority.luie}
-        \caption{The $\texttt{MAJ}$ gate used in the quantum ripple-carry adder.}
+        \caption{The $\texttt{MAJ}$ gate that used in the quantum ripple-carry adder.}
         \label{fig:eval_majorityGate}
     \end{minipage}
     \hfill
     \begin{minipage}{.45\textwidth}
         \lstinputlisting[style=Luie]{../figures/code/evaluation/unmajority.luie}
-        \caption{The $\texttt{UMA}$ gate used in the quantum ripple-carry adder.}    
+        \caption{The $\texttt{UMA}$ gate that used in the quantum ripple-carry adder.}    
         \label{fig:eval_unmajorityGate}
     \end{minipage}
 \end{figure}
