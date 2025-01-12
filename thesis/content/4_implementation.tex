@@ -1,16 +1,6 @@
 \chapter{Implementation}
 \label{ch:implementation}
-After the high-level discussion of the programming language and compiler in the last chapter, the following chapter discusses the concrete implementation of the different stages of the compiler. Firstly, we present the implementation of some general classes and concepts in the compiler as well as the compiler class, which calls and connects all other stages. Next, we discuss the lexical and syntactic analysis of the program code; more specifically, we present the grammar of the language and explain its structure. After the lexical and syntactic analysis, the different parts of the semantic analysis are discussed. Then, the implementation of the code generation and its parts are presented. This is followed by a discussion of the implementation of the optimization. 
-% Lastly, we give some basic information on the testing and continuous integration of the project. 
-%\todo{General info on implementation with C\# and .NET}
-
-% \item Implementation using C\# and .Net
-% \begin{itemize}
-%     \item Why use C\# as language to implement compiler in?
-%     \item High-level, easier, faster (coding not execution) and saver implementation than C, C++
-%     \item More performant than Python or Javascript
-%     \item More familiar with C\# in general
-% \end{itemize}
+After the high-level discussion of the programming language and compiler, as well as the formal definitions for both the syntax and translations, in the following chapter, we discuss the concrete implementations of the different stages of the compiler. Firstly, we present the implementation of some general classes and concepts in the compiler as well as the compiler class, which calls and connects all other stages. Next, we discuss the lexical and syntactic analysis of the program code; more specifically, we present the grammar implementation of the language and explain its structure. After the lexical and syntactic analysis, the different parts of the semantic analysis are discussed. Then, the implementation of the code generation and its parts are presented. This is followed by a discussion of the implementation of the optimization. 
 
 \input{content/implementation/compiler.tex}
 
@@ -21,6 +11,3 @@ After the high-level discussion of the programming language and compiler in the 
 \input{content/implementation/codeGeneration.tex}
 
 \input{content/implementation/optimization.tex}
-
-% Necessary? Already comprehensive description of compiler
-% \input{content/implementation/testingContinuousIntegration.tex}
