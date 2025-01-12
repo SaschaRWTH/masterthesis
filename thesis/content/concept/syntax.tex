@@ -1,14 +1,15 @@
 \section{Syntax}
 \label{sec:concept_abstractGrammar}
-The syntax of our programming language $Luie$ is defined by the context-free grammar $CFG_{Luie}$. It consists of a set of non-terminals $V_{Luie}$, terminals $\Sigma_{Luie}$, and grammar rules $R_{Luie}$, as well as the start symbol $prg_{Luie}$. The rule $n$ represents a natural number, while $id$ represents an identifier. The grammar rules $R_{Luie}$ are discussed in the following.
+The syntax of our programming language $Luie$ is defined by the context-free grammar $CFG_{Luie}$. It consists of a set of non-terminals $V_{Luie}$, terminals $\Sigma_{Luie}$, and grammar rules $R_{Luie}$, as well as the start symbol $prg_{Luie}$. The rule $n$ represents a natural number, while $id$ represents an identifier. The grammar rules $R_{Luie}$ are discussed in the following. 
 \begin{align*}
     CFG_{Luie} = \ & (V_{Luie}, \Sigma_{Luie}, R_{Luie}, prg_{Luie} )\\ 
     V_{Luie} = \ & \{ exp, rExp, gate,  qArg, stm,\\ 
-            & \ \  dcl, gDcl, blk, t, prg_{Luie} \}\\ 
+    & \ \  dcl, gDcl, blk, t, prg_{Luie} \}\\ 
     \Sigma_{Luie} = \ & \{\texttt{..}, \texttt{range}, \texttt{(}, \texttt{)}, \texttt{+}, \texttt{-}, \\
-               & \ \  n, id, \texttt{[}, \texttt{]}, \dots \} 
-               \quad \quad \texttt{where } n \in \mathbb{N}, id \in Identifier
+    & \ \  n, id, \texttt{[}, \texttt{]}, \dots \} 
+    \quad \quad \texttt{where } n \in \mathbb{N}, id \in Identifier
 \end{align*}
+However, the following definitions, including the translation functions in Sec.~\ref{sec:concept_translation}, exclude some minor language features for simplicity; these are the application of parameterized gates and the different types of named constants, such as unsigned integers and doubles.
 
 The grammar contains two different kinds of expression rules, the arithmetic expression rule $exp$ and the range expression rule $rExp$.
 \begin{align*}
