@@ -240,7 +240,7 @@
 
 
 @incollection{BrBr02,
- author = {Brylinski, Jean-Luc and Brylinski, Ranee},
+ author = {Brylinski, Jean-Luc and Brylinski, Ranee and Brylinski, Ranee K. and Chen, Goong},
  title = {Universal quantum gates},
  volume = {20022356},
  publisher = {{Chapman and Hall/CRC}},
@@ -249,7 +249,7 @@
  editor = {Chen, Goong and Brylinski, Ranee},
  booktitle = {Mathematics of Quantum Computation},
  year = {2002},
- doi = {10.1201/9781420035377.pt2}
+ doi = {10.1201/9781420035377}
 }
 
 
@@ -299,158 +299,6 @@
  number = {7671},
  journal = {Nature},
  doi = {10.1038/nature23459}
-}
-
-
-@misc{ChMi22,
- abstract = {OOPSLA 2022 Artifact: Tower
-
-This artifact is being submitted to support the OOPSLA'22 paper {\textquotedbl}Tower: Data Structures in Quantum Superposition{\textquotedbl} by Charles Yuan and Michael Carbin. The artifact contains:
-
-README.md, this document
-
-tower.tgz, a Docker image containing source code, pre-built binaries, and tests
-
-tower.dockerfile, a Dockerfile that generates the above image from scratch
-
-The directory~oopsla22-artifact, a copy of the contents of the Docker image, containing the source code of the Tower language interpreter (src/) and the tests (tests/)
-
-This document describes:
-
-The claims of the paper this artifact supports
-
-The kick-the-tires instructions for reviewers
-
-How to review the artifact for functionality
-
-How to review the artifact for reusability
-
-Detailed instructions for building the artifact
-
-The contents of this artifact, and the sources of the Tower programming language, are available on~{\textless}a href={\textquotedbl}https://github.com/psg-mit/tower-oopsla22{\textquotedbl}{\textgreater}GitHub.
-
-Claims Supported by Artifact
-
-This artifact supports the following claims of the paper:
-
-(Section 7) We implemented an interpreter for Tower in OCaml that classically executes the operational semantics of the language.
-
-This claim is evaluated by Step 2 of the section {\textquotedbl}Validating the Paper's Claims{\textquotedbl} below. The artifact provides the source code of the Tower interpreter and a suite of test cases (from Table 1 of the paper) that the interpreter can execute.
-
-(Section 8) We implemented Ground, a library of abstract data structures in Tower, and tested its operations with the interpreter.
-
-This claim is evaluated by Steps 2 and 3 of the section {\textquotedbl}Validating the Paper's Claims{\textquotedbl} below. The artifact provides the source code of the Ground library, including all operations described in Table 1 of the paper, and a suite of tests for the correctness of the implementation that can be executed with the provided interpreter. The artifact also includes a script that validates the complexities of the data structure operations indicated by the {\textquotedbl}Complexity{\textquotedbl} column in Table 1 of the paper.
-
-Kick-the-Tires: Getting Started with the Artifact
-
-First, import~tower.tgz~into Docker. In our testing, we used Docker Engine 20.10.17 on macOS Monterey. The image may be loaded using the following commands:
-
-{\$} docker load {\textless} tower.tgz
-
-Loaded image: oopsla22-artifact:latest
-
-{\$} docker run -it --rm oopsla22-artifact bash
-
-opam@502e0da78017:{\~{}}/oopsla22-artifact{\$}
-
-The artifact is in the~oopsla22-artifact/~directory inside the user home directory, inside which the interpreter for Tower is already installed as~./tower.
-
-{\$} cd {\~{}}/oopsla22-artifact/
-
-{\$} ./tower -help
-
-The interpreter for the Tower quantum programming language.
-
-Usage: ./tower  [program]
-
-Options are:
-
--v Run in verbose mode.
-
--i Run the classical interpreter.
-
---interp{\_}lir Run the LIR interpreter.
-
---interp{\_}circuit Run the circuit interpreter.
-
---interp{\_}prim Run the primitive circuit interpreter.
-
---inline Run the inlining pass before the interpreter.
-
--c Compile the program to a circuit.
-
--p Print the compiler and interpreter outputs.
-
--b Set the bound for a given function.
-
---no-prim Do not instantiate primitive circuits.
-
---word{\_}size Set the word size.
-
--help  Display this list of options
-
---help  Display this list of options
-
-To quickly check that the artifact is functional, execute the interpreter on the~length~example:
-
-{\$} ./tower -i tests/list.twr tests/length.twr tests/stack.twr tests/stack{\_}len{\_}tests.twr
-
-Exited normally.
-
-Functionality: Validating the Paper's Claims
-
-The easiest way to validate the paper's claims is to do the following in the~oopsla22-artifact/~directory:
-
-1. Ensure the interpreter~./tower~is present.
-
-If it is not, rebuild it from source by invoking~make~(for more instructions, see the {\textquotedbl}Detailed Build Instructions{\textquotedbl} section).
-
-2. Execute the interpreter on the data structure correctness tests by invoking~make check.
-
-This operation should take about one minute to complete.
-
-To evaluate the claim, verify that the output of each line is~Exited normally., indicating that the test passes.
-
-The~tests/~directory contains a set of~.twr~programs corresponding to the benchmarks in the paper. Specifically, the programs whose name ends in~{\_}tests~contain tests for the correctness of the data structure implementations.
-
-3. Execute the data structure performance tests using~./bench.sh.
-
-This operation should take about three minutes to complete. A saved reference copy of the output of~./bench.shis stored in the file~bench.out.
-
-The~./bench.sh~script lists each data structure operation from Table 1 of the paper, followed by its expected qubit and gate counts as a function of the structure size. It then computes and prints the expected and actual qubit and gate counts for the operation, instantiated at different sizes.
-
-To evaluate the claim, verify that each line of output that compares the actual and expected qubit and gate counts states~PASS, indicating that the actual complexity matches Table 1 of the paper.
-
-The qubit and gate counts output by~./bench.sh~will be consistent with the asymptotic complexities reported in the {\textquotedbl}Complexity{\textquotedbl} column in Table 1 of the paper, which subsume both qubit and gate complexities. For convenience, this column from the paper is reproduced below, alongside the qubit and gate counts that are output by~./bench.sh.
-
-
-
-
-
-Paper Benchmark
-
-Filename
-
-Complexity (Tab. 1)
-
-Qubits
-
-Gates
-
-
-
-
-
-
-
-
-
-List},
- author = {{Charles Yuan} and {Michael Carbin}},
- year = {2022},
- title = {Tower: Data Structures in Quantum Superposition},
- publisher = {Zenodo},
- doi = {10.5281/ZENODO.6819031}
 }
 
 
@@ -747,6 +595,19 @@ List},
 
 
 @misc{Inou24,
+ abstract = {We propose a quantum programming paradigm where all data are familiar classical data, and the only non-classical element is a random number generator that can return results with negative probability. Currently, the vast majority of quantum programming languages instead work with quantum data types made up of qubits. The description of their behavior relies on heavy linear algebra and many interdependent concepts and intuitions from quantum physics, which takes dedicated study to understand. We demonstrate that the proposed view of quantum programming explains its central concepts and constraints in more accessible, computationally relevant terms. This is achieved by systematically reducing everything to the existence of that negative-probability random generator, avoiding mention of advanced physics as much as possible. This makes quantum programming more accessible to programmers without a deep background in physics or linear algebra. The bulk of this paper is written with such an audience in mind. As a working vehicle, we lay out a simple quantum programming language under this paradigm, showing that not only can it express all quantum programs, it also naturally captures the semantics of measurement without ever mentioning qubits or collapse. The language is proved to be implementable and universal.
+
+20 pages, 5 figures. Version submitted to APLAS 2024},
+ author = {Inoue, Jun},
+ date = {2024},
+ title = {Quantum Programming Without the Quantum Physics},
+ publisher = {arXiv},
+ doi = {10.48550/arXiv.2408.16234},
+ year = {2024}
+}
+
+
+@misc{Inou24b,
  abstract = {We propose a quantum programming paradigm where all data are familiar classical data, and the only non-classical element is a random number generator that can return results with negative probability. Currently, the vast majority of quantum programming languages instead work with quantum data types made up of qubits. The description of their behavior relies on heavy linear algebra and many interdependent concepts and intuitions from quantum physics, which takes dedicated study to understand. We demonstrate that the proposed view of quantum programming explains its central concepts and constraints in more accessible, computationally relevant terms. This is achieved by systematically reducing everything to the existence of that negative-probability random generator, avoiding mention of advanced physics as much as possible. This makes quantum programming more accessible to programmers without a deep background in physics or linear algebra. The bulk of this paper is written with such an audience in mind. As a working vehicle, we lay out a simple quantum programming language under this paradigm, showing that not only can it express all quantum programs, it also naturally captures the semantics of measurement without ever mentioning qubits or collapse. The language is proved to be implementable and universal.},
  author = {Inoue, Jun},
  date = {29.08.2024},
@@ -916,6 +777,18 @@ List},
  title = {Quantum boolean functions},
  url = {http://arxiv.org/pdf/0810.2435},
  journal = {Chicago Journal of Theoretical Computer Science vol}
+}
+
+
+@article{MVDJ18,
+ author = {Mavroeidis, Vasileios and Vishi, Kamer and D., Mateusz and J{\o}sang, Audun},
+ year = {2018},
+ title = {The Impact of Quantum Computing on Present Cryptography},
+ volume = {9},
+ number = {3},
+ issn = {2158107X},
+ journal = {International Journal of Advanced Computer Science and Applications},
+ doi = {10.14569/IJACSA.2018.090354}
 }
 
 
@@ -1307,6 +1180,158 @@ ANTLR is widely used, with over 1000 registered industrial and academic users in
  number = {OOPSLA2},
  journal = {Proceedings of the ACM on Programming Languages},
  doi = {10.1145/3563297}
+}
+
+
+@misc{YuCa22b,
+ abstract = {OOPSLA 2022 Artifact: Tower
+
+This artifact is being submitted to support the OOPSLA'22 paper {\textquotedbl}Tower: Data Structures in Quantum Superposition{\textquotedbl} by Charles Yuan and Michael Carbin. The artifact contains:
+
+README.md, this document
+
+tower.tgz, a Docker image containing source code, pre-built binaries, and tests
+
+tower.dockerfile, a Dockerfile that generates the above image from scratch
+
+The directory~oopsla22-artifact, a copy of the contents of the Docker image, containing the source code of the Tower language interpreter (src/) and the tests (tests/)
+
+This document describes:
+
+The claims of the paper this artifact supports
+
+The kick-the-tires instructions for reviewers
+
+How to review the artifact for functionality
+
+How to review the artifact for reusability
+
+Detailed instructions for building the artifact
+
+The contents of this artifact, and the sources of the Tower programming language, are available on~{\textless}a href={\textquotedbl}https://github.com/psg-mit/tower-oopsla22{\textquotedbl}{\textgreater}GitHub.
+
+Claims Supported by Artifact
+
+This artifact supports the following claims of the paper:
+
+(Section 7) We implemented an interpreter for Tower in OCaml that classically executes the operational semantics of the language.
+
+This claim is evaluated by Step 2 of the section {\textquotedbl}Validating the Paper's Claims{\textquotedbl} below. The artifact provides the source code of the Tower interpreter and a suite of test cases (from Table 1 of the paper) that the interpreter can execute.
+
+(Section 8) We implemented Ground, a library of abstract data structures in Tower, and tested its operations with the interpreter.
+
+This claim is evaluated by Steps 2 and 3 of the section {\textquotedbl}Validating the Paper's Claims{\textquotedbl} below. The artifact provides the source code of the Ground library, including all operations described in Table 1 of the paper, and a suite of tests for the correctness of the implementation that can be executed with the provided interpreter. The artifact also includes a script that validates the complexities of the data structure operations indicated by the {\textquotedbl}Complexity{\textquotedbl} column in Table 1 of the paper.
+
+Kick-the-Tires: Getting Started with the Artifact
+
+First, import~tower.tgz~into Docker. In our testing, we used Docker Engine 20.10.17 on macOS Monterey. The image may be loaded using the following commands:
+
+{\$} docker load {\textless} tower.tgz
+
+Loaded image: oopsla22-artifact:latest
+
+{\$} docker run -it --rm oopsla22-artifact bash
+
+opam@502e0da78017:{\~{}}/oopsla22-artifact{\$}
+
+The artifact is in the~oopsla22-artifact/~directory inside the user home directory, inside which the interpreter for Tower is already installed as~./tower.
+
+{\$} cd {\~{}}/oopsla22-artifact/
+
+{\$} ./tower -help
+
+The interpreter for the Tower quantum programming language.
+
+Usage: ./tower  [program]
+
+Options are:
+
+-v Run in verbose mode.
+
+-i Run the classical interpreter.
+
+--interp{\_}lir Run the LIR interpreter.
+
+--interp{\_}circuit Run the circuit interpreter.
+
+--interp{\_}prim Run the primitive circuit interpreter.
+
+--inline Run the inlining pass before the interpreter.
+
+-c Compile the program to a circuit.
+
+-p Print the compiler and interpreter outputs.
+
+-b Set the bound for a given function.
+
+--no-prim Do not instantiate primitive circuits.
+
+--word{\_}size Set the word size.
+
+-help  Display this list of options
+
+--help  Display this list of options
+
+To quickly check that the artifact is functional, execute the interpreter on the~length~example:
+
+{\$} ./tower -i tests/list.twr tests/length.twr tests/stack.twr tests/stack{\_}len{\_}tests.twr
+
+Exited normally.
+
+Functionality: Validating the Paper's Claims
+
+The easiest way to validate the paper's claims is to do the following in the~oopsla22-artifact/~directory:
+
+1. Ensure the interpreter~./tower~is present.
+
+If it is not, rebuild it from source by invoking~make~(for more instructions, see the {\textquotedbl}Detailed Build Instructions{\textquotedbl} section).
+
+2. Execute the interpreter on the data structure correctness tests by invoking~make check.
+
+This operation should take about one minute to complete.
+
+To evaluate the claim, verify that the output of each line is~Exited normally., indicating that the test passes.
+
+The~tests/~directory contains a set of~.twr~programs corresponding to the benchmarks in the paper. Specifically, the programs whose name ends in~{\_}tests~contain tests for the correctness of the data structure implementations.
+
+3. Execute the data structure performance tests using~./bench.sh.
+
+This operation should take about three minutes to complete. A saved reference copy of the output of~./bench.shis stored in the file~bench.out.
+
+The~./bench.sh~script lists each data structure operation from Table 1 of the paper, followed by its expected qubit and gate counts as a function of the structure size. It then computes and prints the expected and actual qubit and gate counts for the operation, instantiated at different sizes.
+
+To evaluate the claim, verify that each line of output that compares the actual and expected qubit and gate counts states~PASS, indicating that the actual complexity matches Table 1 of the paper.
+
+The qubit and gate counts output by~./bench.sh~will be consistent with the asymptotic complexities reported in the {\textquotedbl}Complexity{\textquotedbl} column in Table 1 of the paper, which subsume both qubit and gate complexities. For convenience, this column from the paper is reproduced below, alongside the qubit and gate counts that are output by~./bench.sh.
+
+
+
+
+
+Paper Benchmark
+
+Filename
+
+Complexity (Tab. 1)
+
+Qubits
+
+Gates
+
+
+
+
+
+
+
+
+
+List},
+ author = {Yuan, Charles and Carbin, Michael},
+ year = {2022},
+ title = {Tower: Data Structures in Quantum Superposition},
+ publisher = {Zenodo},
+ doi = {10.5281/ZENODO.6819031}
 }
 
 
