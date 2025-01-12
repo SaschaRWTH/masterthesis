@@ -90,15 +90,15 @@ The statements are translated with the statement translation function $ct$. It m
 \end{align*}
 Next, the translation of a gate application is divided into the application of a constant and composite gate. In the case of a constant gate application, the same gate can be used in the translation, and only the qubit arguments need to be translated to their translated counterparts. For this, the qubit translation function $qt$ is used.
 \begin{align*}
-    ct(gate \ qArg_1, \dots, qArg_n\texttt{;}, st) = \ & gate \ qt(qArg_1, st), \dots, qt(qArg_2, st); \\
-                                                       & \text{if } gate \in ConstGates
+    ct(id \ qArg_1, \dots, qArg_n\texttt{;}, st) = \ & id \ qt(qArg_1, st), \dots, qt(qArg_2, st); \\
+                                                       & \text{if } id \in ConstGates
 \end{align*}
 To translate the application of a composite gate, the corresponding code block is translated. Additionally, an empty symbol table is used in the translation and initialized with mappings from the argument identifiers of the gate symbol to the qubit translation of the given qubit arguments.
 \begin{align*}
-    ct(gate \ qArg_1, \dots, qArg_n\texttt{;}, st) = \ & bt(blk, st_\epsilon[id_1 \mapsto (\texttt{arg}, q_1), \dots, id_n \mapsto q(\texttt{arg}, q_n)]) \\
-        &\text{if } gate \not\in ConstGates\\
+    ct(id \ qArg_1, \dots, qArg_n\texttt{;}, st) = \ & bt(blk, st_\epsilon[id_1 \mapsto (\texttt{arg}, q_1), \dots, id_n \mapsto q(\texttt{arg}, q_n)]) \\
+        &\text{if } id \not\in ConstGates\\
         &\text{where } q_i = qt(qArg_i, st), i \in [1, ...\, n]\\
-        &\text{and } st[gate] = (\texttt{gate}, blk, id_1, \dots, id_n)
+        &\text{and } st[id] = (\texttt{gate}, blk, id_1, \dots, id_n)
 \end{align*}
 The qubit translation function $qt$ is used to translate the identifier of a gate argument or control qubit, in the case of if-statements, to the corresponding unique identifier regardless of whether the qubit argument is a qubit, register access, or argument identifier of a composite gate.
 \begin{align*}

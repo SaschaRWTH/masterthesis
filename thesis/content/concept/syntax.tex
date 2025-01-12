@@ -17,9 +17,8 @@ The grammar contains two different kinds of expression rules, the arithmetic exp
     RangeExpression: \ & rExp ::= n_1 .. n_2 \mid \texttt{range(} exp \texttt{)} \mid \texttt{range(} exp_1, exp_2 \texttt{)}\\
 \end{align*}
 
-Two grammar rules that are used in the context of gate applications are the gate and qubit argument rules: $gate$ and $qArg$, respectively. The gate rule allows for the application of either a composite gate, given by an identifier. Similarly, the qubit argument rule allows for either a qubit, specified by an identifier, or a register access, specified by an identifier and expression. Furthermore, we define a set of predefined gates, $ConstGates$, that contains all gate identifiers with predefined semantics.
+One grammar rule that is used in the context of gate applications is the qubit argument rule, $qArg$. It is used for the arguments in gate applications and allows for either a qubit, specified by an identifier, or a register access, specified by an identifier and expression. Additionally, we define a set of predefined gates, $ConstGates$, that contains all gate identifiers with predefined semantics; it is used in the translation functions to differentiate between predefined and composite gates.
 \begin{align*}
-    Gate: \ & gate ::= id\\
     QubitArgument: \ & qArg ::= id \mid id[exp]\\
     ConstGates &= \{\texttt{h}, \texttt{x}, \texttt{y}, \texttt{z}, \texttt{cx}, \texttt{ccx}\}
 \end{align*}
@@ -37,7 +36,7 @@ The statement rule $stm$ can either be an if-statement, with an optional else-bl
     Statement: \ & stm ::= \texttt{qif } qArg \texttt{ do }  blk \texttt{ end} \mid\\
                  & \quad \quad \quad \quad \texttt{qif } qArg \texttt{ do }  blk_1 \texttt{ else } blk_2 \texttt{ end} \mid\\
                  & \quad \quad \quad \quad \texttt{for } id \texttt{ in } rExp \texttt{ do } blk \texttt{ end} \mid \\
-                 & \quad \quad \quad \quad gate \ qArg_1, \dots, qArg_n \texttt{;} \mid \\
+                 & \quad \quad \quad \quad id \ qArg_1, \dots, qArg_n \texttt{;} \mid \\
                  & \quad \quad \quad \quad \texttt{skip;}
 \end{align*}
 
