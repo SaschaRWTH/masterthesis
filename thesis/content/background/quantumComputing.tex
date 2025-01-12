@@ -134,7 +134,7 @@ An algorithm with more potential for practical use is Shor's algorithm~\cite{Sho
 
 Another relevant algorithm or transformation is the quantum Fourier transform (QFT)~\cite{Copp02}. Besides being used as a subroutine in Shor's algorithm, it is also relevant for other algorithms, \eg, an addition algorithm for quantum registers~\cite{Drap00}. Similar to the discrete Fourier transform~\cite{Wino78}, which operates on vectors, the QFT$_{2^n}$ operates on the quantum equivalent of vectors, quantum registers, of size $n$. Registers of size $n$ consist of $n$ qubits. From the register, the QFT extracts the present periodic features. Then, other algorithms can use these features for their calculations.
 
-\subsection{Circuit optimization}
+\subsection{Circuit Optimization}
 \label{sec:background_circuitOptimization}
 Despite the expansive theoretical foundations for QC, the current state of the art for its technology is limited. However, the technology is nearing its first milestone towards usable quantum computers with the advent of prototypes with noisy intermediate-scale quantum (NISQ) technology~\cite{BFA22}. Nevertheless, the technology is still far away from fault-tolerant quantum computers and, by definition, limited in the number of available qubits. Furthermore, the gate count of NISQ-era quantum computers is limited by the inherent noise, which is increased with each additional transformation~\cite{Pres18}. Therefore, attributes such as the gate count of a quantum algorithm are an important metric for its utility. To improve the utility of an algorithm, its quantum circuit can be optimized with different techniques and rules.
 
