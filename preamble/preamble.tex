@@ -121,11 +121,14 @@
     frame=tlrb,                              % Frame around the listing
     showspaces=false,                        % Do not show spaces
     showtabs=false,                          % Do not show tabs
+    commentstyle=\color{commentgreen},       % Style for comments
+    keywordstyle=\color{cyan},               % Style for ANTLR keywords
+	stringstyle=\color{blue}\ttfamily,       % Style for strings
+    moredelim=[s][\color{blue}]{"}{"},     % Highlight single-quoted literals (e.g., 'a')
+    moredelim=[s][\color{orange}]{'}{'},     % Highlight single-quoted literals (e.g., 'a')
 }
 
 \lstdefinestyle{ANTLR}{                 
-    stringstyle=\color{blue}\ttfamily,       % Style for strings
-    commentstyle=\color{commentgreen},       % Style for comments
     morecomment=[l]{//},                     % Line comment style
     morecomment=[s]{/*}{*/},                 % Multiline comment style
     showstringspaces=false,                  % Do not mark string spaces
@@ -134,15 +137,11 @@
         returns, throws, locals, catch, finally, rulecatch, super, 
         exception, context, extends, override, EOF
     },                                       % ANTLR 4 keywords
-    moredelim=[s][\color{blue}]{'}{'},     % Highlight single-quoted literals (e.g., 'a')
-    keywordstyle=\color{cyan},               % Style for ANTLR keywords
 }
 
 
 \lstdefinestyle{QCM}{
-    moredelim=[s][\color{green!50!black}\ttfamily]{'}{'},% single quotes in green
     moredelim=*[s][\color{black}\ttfamily]{options}{\}},%  options in black (until trailing })
-    commentstyle={\color{commentgreen}},%                  gray italics for comments
     morecomment=[l]{;},%                                  define // comment
     emph={%
 		l1, l2, l3, l4, l5, l6, l7, l8, 
@@ -150,12 +149,9 @@
         },emphstyle={\color{blue}\ttfamily},%              and formatted in blue
     alsoletter={|,;},%
     morekeywords={add, rjne, jz, jg, mul, jmp, rjmp, nop, rjle, radd}, %define the special characters
-    keywordstyle={\color{cyan}},%                         and format them in black
 }
 
 \lstdefinestyle{QASM}{                 
-	stringstyle=\color{blue}\ttfamily,       % Style for strings
-	commentstyle=\color{commentgreen},              % Style for comments
 	morecomment=[l]{//},                     % Line comment style
 	morecomment=[s]{/*}{*/},                 % Multiline comment style
 	showstringspaces=false,                  % Do not mark string spaces
@@ -165,12 +161,9 @@
 				qubit, array, int, stretch, qubit, uint, box, ctrl, negctrl, 
 				return, for, while, end, break, continue, do, def, kernel, 
 				const, stretch, delay, gate, qubit, measure, measure_all},  % OpenQASM 3 new keywords
-	keywordstyle=\color{cyan},               % Style for quantum keywords
 }
 
 \lstdefinestyle{Luie}{                 
-	stringstyle=\color{blue}\ttfamily,       % Style for strings
-	commentstyle=\color{commentgreen},              % Style for comments
 	morecomment=[l]{//},                     % Line comment style
 	morecomment=[s]{/*}{*/},                 % Multiline comment style
 	showstringspaces=false,                  % Do not mark string spaces
@@ -183,15 +176,11 @@
 		for, while, end, do, def, kernel, 
 		measure
 	},  % OpenQASM 3 new keywords
-	keywordstyle=\color{cyan},               % Style for quantum keywords
 }
 
 \lstdefinestyle{bashstyle}{
     language=bash,
     basicstyle=\ttfamily\small,        % Font style and size
-    keywordstyle=\color{blue},         % Keywords like 'if', 'else'
-    stringstyle=\color{green!60!black}, % Strings in commands
-    commentstyle=\color{gray},         % Comments
     showstringspaces=false,            % Don't show spaces in strings
     frame=single,                      % Frame around the code
     framerule=0.5pt,                   % Thickness of frame
@@ -206,8 +195,6 @@
 }
 
 \lstdefinestyle{CSharp}{                 
-    stringstyle=\color{blue}\ttfamily,       % Style for strings
-    commentstyle=\color{commentgreen},       % Style for comments
     morecomment=[l]{//},                     % Line comment style
     morecomment=[s]{/*}{*/},                 % Multiline comment style
     showstringspaces=false,                  % Do not mark string spaces
@@ -222,7 +209,6 @@
                   ulong, unchecked, unsafe, ushort, using, virtual, void, volatile, 
                   while, get, set},                     % C# keywords
     keywordstyle=\color{cyan},               % Style for C# keywords
-    moredelim=[s][\color{orange}]{'}{'},     % Style for character literals (e.g., 'a')
 }
 
 
