@@ -1,0 +1,40 @@
+% \documentclass[t, handout]{beamer}
+\documentclass[t, aspectratio=169]{beamer}
+\input{../preamble/slides-preamble}
+
+
+
+\begin{document}
+\setbeamercovered{transparent}
+
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}
+\section{Outline}
+\begin{frame}{}
+  \tableofcontents[]
+\end{frame}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{3}}
+
+
+
+\input{content/introduction.tex}
+
+\input{content/background.tex}
+
+\input{content/conclusion.tex}
+
+
+
+\section*{References}
+\begin{frame}[allowframebreaks]
+    \bibliographystyle{apalike}
+    \bibliography{../bibliography/bibliography}
+\end{frame}
+
+
+
+\end{document}
