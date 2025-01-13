@@ -1,4 +1,4 @@
-"OpenQASM 3.0";    /* Indicate language in circuit header. */
+OPENQASM 3.0;    /* Indicate language in circuit header. */
 
 gate x a { U(pi,0,pi) a; }              /* Define x  gate. */
 gate cx a, b { ctrl @ x a, b; }         /* Define cx gate. */
