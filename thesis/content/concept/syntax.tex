@@ -27,8 +27,8 @@ One grammar rule that is used in the context of gate applications is the qubit a
 Next, the declaration rules $dcl$ and $gDcl$ are used to declare qubits, registers, or named constants and gate declarations, respectively. Each requires an identifier given by the $id$ rule. In the case of the constant and register declaration, the value and size are given by an expression. Additionally, the gate declaration requires a list of identifiers for the arguments and the code block of the composite gate.
 \begin{align*}
     Declaration: \ & dcl ::= \texttt{const } id \texttt{ = } exp \texttt{;} \mid \\
-                 & \quad \quad \quad \quad \texttt{qubit } id \texttt{;} \mid \\
-                 & \quad \quad \quad \quad \texttt{qubit[} exp \texttt{] } id \texttt{;}\\
+                 & \quad \quad \quad \texttt{qubit } id \texttt{;} \mid \\
+                 & \quad \quad \quad \texttt{qubit[} exp \texttt{] } id \texttt{;}\\
     GateDeclaration: \ & gDcl::= \texttt{gate } id \texttt{ (}id_1, \dots, id_n\texttt{) do } blk \texttt{ end}
 \end{align*}
 
@@ -67,9 +67,9 @@ A qubit or register is declared by the qubit declaration rule $qubitDcl$. It req
 A gate is applied with the gate application rule $gateApp$. There are four different kinds of gate applications: one with no control, two with either arbitrarily many positive or negative control qubits, and one with both arbitrarily positive and negative control qubits. The number of control qubits is given as a natural number. 
 \begin{align*}
 GateApplication: \ & gateApp::= id \ qArg_1, ..., qArg_n \texttt{;}\mid\\
-& \quad \quad \quad \texttt{ctrl(}n\texttt{)} \texttt{ @ } id \ qArg_1, ..., qArg_n \texttt{;} \mid\\
-& \quad \quad \quad \texttt{negctrl(}n\texttt{)} \texttt{ @ } id \ qArg_1, ..., qArg_n \texttt{;} \mid\\
-    & \quad \quad \quad \texttt{ctrl(}n_1\texttt{)} \texttt{ @ } \texttt{negctrl(}n_2\texttt{)} \texttt{ @ } id \ qArg_1, ..., qArg_n \texttt{;}
+& \quad \quad \quad \texttt{ctrl(}n\texttt{)} \texttt{ @ } id \ qArg_1, ..., qArg_{n'} \texttt{;} \mid\\
+& \quad \quad \quad \texttt{negctrl(}n\texttt{)} \texttt{ @ } id \ qArg_1, ..., qArg_{n'} \texttt{;} \mid\\
+    & \quad \quad \quad \texttt{ctrl(}n_1\texttt{)} \texttt{ @ } \texttt{negctrl(}n_2\texttt{)} \texttt{ @ } id \ qArg_1, ..., qArg_{n'} \texttt{;}
 \end{align*}
 
 Lastly, in our reduced grammar, an OpenQASM program consists of a header and a list of statements that can be either a gate application or gate declaration.
