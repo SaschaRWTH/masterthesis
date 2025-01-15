@@ -7,20 +7,21 @@ The syntax of our programming language $Luie$ is defined by the context-free gra
     & \ \  dcl, gDcl, blk, t, prg_{Luie} \}\\ 
     \Sigma_{Luie} = \ & \{\texttt{..}, \texttt{range}, \texttt{(}, \texttt{)}, \texttt{+}, \texttt{-}, \\
     & \ \  n, id, \texttt{[}, \texttt{]}, \dots \} 
-    \quad \quad \texttt{where } n \in \mathbb{N}, id \in Identifier
+    \quad \quad \texttt{where } n \in \mathbb{N}_0, id \in Identifier
 \end{align*}
 However, the following definitions, including the translation functions in Sec.~\ref{sec:concept_translation}, exclude some minor language features for simplicity; these are the application of parameterized gates and the different types of named constants, such as unsigned integers and doubles.
 
 The grammar contains two different kinds of expression rules, the arithmetic expression rule $exp$ and the range expression rule $rExp$.
 \begin{align*}
     Expression: \ & exp ::= n \mid id \mid exp_1 \texttt{ + } exp_2 \mid exp_1 \texttt{ - } exp_2 \mid exp_1 \texttt{ * } exp_2 \mid \dots\\
-    RangeExpression: \ & rExp ::= n_1 .. n_2 \mid \texttt{range(} exp \texttt{)} \mid \texttt{range(} exp_1, exp_2 \texttt{)}\\
+    RangeExpression: \ & rExp ::= n_1 .. n_2 \mid \texttt{range(} exp \texttt{)} \mid \texttt{range(} exp_1, exp_2 \texttt{)}
 \end{align*}
+Here, the first range expression variant with two dots only allows for natural numbers, including zero. Since we want to avoid overly complex range expressions for this variant, we do not allow for expressions and use the number symbol instead, which does not allow for negative integers. However, if ranges with negative start or end indices are required, the last expression variant can be used. 
 
 One grammar rule that is used in the context of gate applications is the qubit argument rule, $qArg$. It is used for the arguments in gate applications and allows for either a qubit, specified by an identifier, or a register access, specified by an identifier and expression. Additionally, we define a set of predefined gates, $ConstGates$, that contains all gate identifiers with predefined semantics; it is used in the translation functions to differentiate between predefined and composite gates.
 \begin{align*}
     QubitArgument: \ & qArg ::= id \mid id[exp]\\
-    ConstGates &= \{\texttt{h}, \texttt{x}, \texttt{y}, \texttt{z}, \texttt{cx}, \texttt{ccx}\}
+    ConstGates =& \{\texttt{h}, \texttt{x}, \texttt{y}, \texttt{z}, \texttt{cx}, \texttt{ccx}\}
 \end{align*}
 
 Next, the declaration rules $dcl$ and $gDcl$ are used to declare qubits, registers, or named constants and gate declarations, respectively. Each requires an identifier given by the $id$ rule. In the case of the constant and register declaration, the value and size are given by an expression. Additionally, the gate declaration requires a list of identifiers for the arguments and the code block of the composite gate.
@@ -54,7 +55,7 @@ Since we define some auxiliary functions that operate on OpenQASM code, a reduce
             & \ \  qasm, prg_{QASM}\}\\ 
     \Sigma_{QASM} = \ & \{\texttt{ctrl}, \texttt{negctrl}, \texttt{(}, \texttt{)}, n, id,  \\
                & \ \ \texttt{x}, \texttt{y}, \texttt{z}, \texttt{cx}, \texttt{ccx}, \texttt{[}, \texttt{]}, \dots \}  
-               \quad \quad \texttt{where } n \in \mathbb{N}, id \in Identifier
+               \quad \quad \texttt{where } n \in \mathbb{N}_0, id \in Identifier
 \end{align*}
 
 A qubit or register is declared by the qubit declaration rule $qubitDcl$. It requires an identifier for the symbol and, in the case of a register, a size in the form of a constant natural number. 
