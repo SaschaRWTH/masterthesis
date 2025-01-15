@@ -7,7 +7,12 @@ The following, we discuss both the inherent optimizations as well as the optimiz
 The first kind of inherent optimizations are constant propagation and constant folding. 
 While the target language does allow for expressions, they need to be constant. Furthermore, some language features that depend on expressions have no equivalent in the target language. In turn, they, and their corresponding expressions, need to be evaluated at compile time. This is the case for, \eg, the control flow statements. Therefore, any variable is always constant, and its value is propagated to be used in the evaluation of expressions. Further, each expression is evaluated at compile time such that constant propagation and constant folding are inherently applied.
 
-Secondly, loop unrolling is always applied to all loop statements. OpenQASM does not allow for loop statements or any other method for the iteration of statements, besides the restrictive implicit iteration. Furthermore, quantum computers in general cannot provide the ability to iterate over gates since they operate on static circuits. Therefore, to allow for loop statements in our language, the loop is unrolled entirely at compile time. Additionally, for each iteration, the current value of the loop iterator is propagated as a constant through the loop body.
+Secondly, loop unrolling is always applied to all loop statements. 
+Quantum computers in general cannot provide the ability to iterate over gates since they operate on static circuits. 
+While newer versions of OpenQASM provide loop statements, we decided against their use to allow for more flexible circuit optimizations. Additionally, a reduced set of instructions, namely register declarations and gate applications, allows for easier extension of the compiler to support other target languages.
+Therefore, to allow for loop statements in our language, the loop is unrolled entirely at compile time. 
+
+% OpenQASM does not allow for loop statements or any other method for the iteration of statements, besides the restrictive implicit iteration. 
 
 The last inherent optimization is function inlining. Our language provides the ability to define custom gates that consist of an arbitrary combination of gate applications and, possibly, control flow statements. While OpenQASM has a similar functionality, the composite gates OpenQASM provides are more restrictive; for example, they do not allow for registers as arguments to the gate. Furthermore, in contrast to classical computers, quantum computers do not natively support function calls or related concepts. Therefore, each time a composite gate is used, the compiler inlines the gate body at the location where the gate is applied.
 
