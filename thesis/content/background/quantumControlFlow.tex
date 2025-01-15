@@ -1,6 +1,6 @@
 \section{Quantum Control Flow}
 \label{sec:background_quantumControlFlow}
-The idea of quantum control flow was first used by Altenkirch et al.~\cite{AlGr05} when defining a functional programming language with quantum control flow elements. The language uses an if-statement in superposition, $\texttt{if}^\circ$, which is used to, \eg, define the Hadamard gate as a function $had$ instead of a matrix. The $had$ function takes a qubit as an input. If the qubit is true, \ie, the value is one, the function returns a uniform superposition of true and false, where true has a negative sign. Correspondingly, for a false input, a uniform superposition with both signs positive is returned.
+The idea of quantum control flow was first used by Altenkirch et al.~\cite{AlGr05} when defining a functional programming language with quantum control flow elements. The language uses an if-statement in superposition, $\texttt{if}^\circ$, which is used to, \eg, define the Hadamard gate as a function $had$ instead of a matrix. The $had$ function takes a qubit as an input. If the qubit is true, \ie, it has a value of $\ket{1}$, the function returns a uniform superposition of true and false, where true has a negative sign. Correspondingly, for a false input, a uniform superposition with both signs positive is returned.
 \begin{align*}
     had : Q& \to Q\\
     had : x \mapsto& \texttt{ if}^\circ x\\

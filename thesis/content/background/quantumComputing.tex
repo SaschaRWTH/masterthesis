@@ -75,25 +75,25 @@ In gate-based quantum computers, the transformations applied to the quantum data
     \centering
     \begin{tabular}{c|c|cc}
                                  & Gates    & Matrix & Ket-notation \\ \hline
-    \multirow{5}{*}{Pauli gates} & X        
+    \multirow{5}{*}{Pauli gates} & $X$        
                                     & $\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$       
                                     & $\begin{matrix} \ket{0} \mapsto \ket{1} \\ \ket{1} \mapsto \ket{0} \end{matrix}$            \\ \cline{2-4} 
-                                 & Y        
+                                 & $Y$        
                                     & $\begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}$       
                                     & $\begin{matrix} \ket{0} \mapsto \ket{i} \\ \ket{1} \mapsto -\ket{i} \end{matrix}$             \\ \cline{2-4} 
-                                 & Z        
+                                 & $Z$        
                                     & $\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$       
                                     & $\begin{matrix} \ket{0} \mapsto \ket{0} \\ \ket{1} \mapsto -\ket{1} \end{matrix}$             \\ \hline
-    Hadamard gate                & H 
+    Hadamard gate                & $H$ 
                                     & $\frac{1}{\sqrt{2}}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}$       
                                     & $\begin{matrix} \ket{0} \mapsto \ket{+} \\ \ket{1} \mapsto \ket{-} \end{matrix}$             \\ \hline
     Phase gate                   & $P(\lambda)$ 
                                     & $\begin{pmatrix} 1 & 0 \\ 0 & e^{i\lambda} \end{pmatrix}$       
                                     & $\begin{matrix} \ket{0} \mapsto \ket{0} \\ \ket{1} \mapsto e^{i\lambda} \cdot \ket{1} \end{matrix}$             \\ \hline
-    Controlled-NOT gate          & CX     
+    Controlled-not gate          & $CX$     
                                     & $\begin{pmatrix} 1 & 0 & 0 & 0\\ 0 & 1 & 0 & 0\\ 0 & 0 & 0 & 1\\ 0 & 0 & 1 & 0 \end{pmatrix}$       
                                     & $\begin{matrix} \ket{00} \mapsto \ket{00} \\ \ket{01} \mapsto \ket{01} \\ \ket{10} \mapsto \ket{11} \\ \ket{11} \mapsto \ket{10} \end{matrix}$\\ \hline
-    Toffoli  gate                & CCX     
+    Toffoli  gate                & $CCX$     
                                     & $\begin{pmatrix} 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \end{pmatrix}$       
                                     & $\begin{matrix} \ket{000} \mapsto \ket{000} \\ \ket{001} \mapsto \ket{001} \\ \ket{010} \mapsto \ket{010} \\ \ket{011} \mapsto \ket{011} \\  \ket{100} \mapsto \ket{100} \\ \ket{101} \mapsto \ket{101} \\ \ket{110} \mapsto \ket{111} \\ \ket{111} \mapsto \ket{110} \end{matrix}$            
     \end{tabular}
@@ -141,7 +141,7 @@ Despite the expansive theoretical foundations for QC, the current state of the a
 There exist many kinds of optimization techniques for quantum circuits. They are mostly concerned with optimizing the gate count of quantum circuits with the use of peephole optimizations, as described in Sec.~\ref{sec:background_codeOptimization}. These techniques can range from general rules~\cite{GaCh11, LBZ21}, which can be applied to all quantum circuits, to hardware-specific optimizations~\cite{KMO*23}. Furthermore, machine learning-based optimization frameworks for quantum circuits are also gaining popularity~\cite{FNML21,LPM*24, RLB*24}.
 
 The simplest general optimizations are so-called \emph{null gates}~\cite{GaCh11}. They are gate combinations or gates under specific conditions that are equivalent to the identity gate $I$. Therefore, any occurrence of such a null gate can be removed from the circuit. The most basic example of null gates is the double application of a self-inverse gate, \ie, a gate that is its own inverse. These include the $H, X, Y,$ and $Z$ gates. The identities are also depicted in Fig.~\ref{fig:nullgates_selfInverse}.
-Furthermore, the same holds for any controlled version of a self-inverse gate such that the rule can also be applied to $CNOT$ and similar gates. 
+Furthermore, the same holds for any controlled version of a self-inverse gate such that the rule can also be applied to the controlled-not gate and similar ones. 
 
 \begin{figure}[htp!]
     %\centering
