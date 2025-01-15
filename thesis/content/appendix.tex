@@ -11,15 +11,18 @@
         & nControl(qArg, qStm_n)\\
     nControl(qArg, qubitDcl) = \ & qubitDcl\\
 \end{align*}
-\begin{align*}
-    &nControl(qArg, id \ qArg_1, \dots, qArg_n ) =  \texttt{negctrl(1) @ } id \ qArg, qArg_1, \dots, qArg_n\texttt{;}\\
-    &nControl(qArg, id \ \texttt{negctrl(}n\texttt{) @ } qArg_1, \dots, qArg_n ) = \\
-    & \quad \quad \quad \quad \texttt{negctrl(}n + 1\texttt{) }id \ qArg, qArg_1, \dots, qArg_n\texttt{;}\\
-    &nControl(qArg, \texttt{ctrl(}i \texttt{) @ } id \ qArg_1, \dots, qArg_n ) = \\
-    & \quad \quad \quad \quad \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}1\texttt{) } id \ qArg_1, ..., qArg_i, qArg, qArg_{i+1} \dots, qArg_n\texttt{;}\\
-    &nControl(qArg, \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n\texttt{) @ } id \ qArg_1, \dots, qArg_n ) = \\
-    & \quad \quad \quad \quad \texttt{ctrl(}i \texttt{) @ } \texttt{negctrl(}n + 1\texttt{) @ } id \ qArg_1, ..., qArg_i, qArg, qArg_{i+1} \dots, a_n\texttt{;}
-\end{align*}
+{\small
+    \begin{align*}
+        &nControl(qArg,  &&  id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\  
+        & \ \texttt{negctrl(1) } &\texttt{@ }& id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
+        &nControl(qArg,  \ \rlap{$\texttt{negctrl(}n \texttt{) }$} &\texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
+        & \ \texttt{negctrl(}n+1 \texttt{) } &\texttt{@ }& id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
+        &nControl(qArg,  \ \rlap{$\texttt{ctrl(}n\texttt{) }$} &\texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
+        & \ \texttt{ctrl(n) } &\texttt{@ } \texttt{negctrl(}1\texttt{) } \texttt{@ }&id \ qArg_1, \dots, qArg_n, qArg, \dots, qArg_{n'}\texttt{;}\\
+        &nControl(qArg,  \ \texttt{ctrl(}n_1 \texttt{)} & \texttt{@ } \texttt{negctrl(}n_2\texttt{) } \texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
+        & \ \texttt{ctrl(}n_1 \texttt{) } &\texttt{@ } \texttt{negctrl(}n_2+1\texttt{) } \texttt{@ }& id \  qArg_1, \dots, qArg_{n_1}, qArg, \dots, qArg_{n'}\texttt{;}
+    \end{align*}
+}%
 
 \chapter{Grammar Terminals}
 \label{appendix:grammar_terminals}

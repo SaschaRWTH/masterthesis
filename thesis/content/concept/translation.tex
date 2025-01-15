@@ -145,13 +145,13 @@ The $control$ function maps a qubit argument $qArg$ together with QASM code to a
 \end{align*}
 If a gate application is given, the qubit argument is prepended to the gate arguments, and a control modifier is either added or adjusted to the new number of control qubits.
 \begin{align*}
-    control(qArg, & && \quad id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\  
-    & \ \texttt{ctrl(1) } &&\texttt{@ } id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
-    control(qArg, & \ \texttt{negctrl(}n\texttt{) } &&\texttt{@ } id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
-    & \ \texttt{ctrl(1) @ } \texttt{negctrl(}n\texttt{) } &&\texttt{@ }id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
-    control(qArg, & \ \texttt{ctrl(}n \texttt{) } &&\texttt{@ } id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
-    & \ \texttt{ctrl(}n+1 \texttt{) } &&\texttt{@ } id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
-    control(qArg, & \ \texttt{ctrl(}n_1 \texttt{) @ } \texttt{negctrl(}n_2\texttt{) } &&\texttt{@ } id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
-    & \ \texttt{ctrl(}n_1+1 \texttt{) @ } \texttt{negctrl(}n_2\texttt{) } &&\texttt{@ } id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}
+    control(qArg, & &&  id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\  
+    & \ \texttt{ctrl(1) } &\texttt{@ }& id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
+    control(qArg, & \ \texttt{negctrl(}n\texttt{) } &\texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
+    & \ \texttt{ctrl(1) } &\texttt{@ } \texttt{negctrl(}n\texttt{) } \texttt{@ }&id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
+    control(qArg, & \ \texttt{ctrl(}n \texttt{) } &\texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
+    & \ \texttt{ctrl(}n+1 \texttt{) } &\texttt{@ }& id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
+    control(qArg, & \ \texttt{ctrl(}n_1 \texttt{) } & \texttt{@ } \texttt{negctrl(}n_2\texttt{) } \texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
+    & \ \texttt{ctrl(}n_1+1 \texttt{) } &\texttt{@ } \texttt{negctrl(}n_2\texttt{) } \texttt{@ }& id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}
 \end{align*}
 Correspondingly, the $nControl$ function exhibits the same behavior, but the qubit argument $gArg$ represents a negated control qubit; its definition can be found in Appendix~\ref{appendix:translation}. Since we place the negative control as the second modifier, the $nControl$ function cannot simply prepend the qubit argument $qArg$. However, it is inserted after the first $i$ arguments, where $i$ is the number of positive control qubits given by the \texttt{ctrl} modifier.
