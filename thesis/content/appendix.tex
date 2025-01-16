@@ -14,13 +14,13 @@
 {\small
     \begin{align*}
         &nControl(qArg,  &&  id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\  
-        & \ \texttt{negctrl(1) } &\texttt{@ }& id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
-        &nControl(qArg,  \ \rlap{$\texttt{negctrl(}n \texttt{) }$} &\texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
-        & \ \texttt{negctrl(}n+1 \texttt{) } &\texttt{@ }& id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
+        & & \quad \texttt{negctrl(1) } \texttt{@ }& id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
+        &nControl(qArg,  & \quad \texttt{negctrl(}n \texttt{) } \texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
+        & & \quad \texttt{negctrl(}n+1 \texttt{) } \texttt{@ }& id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
         &nControl(qArg,  \ \rlap{$\texttt{ctrl(}n\texttt{) }$} &\texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
-        & \ \texttt{ctrl(n) } &\texttt{@ } \texttt{negctrl(}1\texttt{) } \texttt{@ }&id \ qArg_1, \dots, qArg_n, qArg, \dots, qArg_{n'}\texttt{;}\\
+        & \ \texttt{ctrl($n$) } &\texttt{@ } \texttt{negctrl(}1\texttt{) } \texttt{@ }&id \ qArg_1, \dots, qArg_n, qArg, \dots, qArg_{n'}\texttt{;}\\
         &nControl(qArg,  \ \texttt{ctrl(}n_1 \texttt{)} & \texttt{@ } \texttt{negctrl(}n_2\texttt{) } \texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
-        & \ \texttt{ctrl(}n_1 \texttt{) } &\texttt{@ } \texttt{negctrl(}n_2+1\texttt{) } \texttt{@ }& id \  qArg_1, \dots, qArg_{n_1}, qArg, \dots, qArg_{n'}\texttt{;}
+        & \ \texttt{ctrl(}n_1 \texttt{) } &\llap{$\texttt{@ } \texttt{negctrl(}n_2+1\texttt{) }$} \texttt{@ }& id \  qArg_1, \dots, qArg_{n_1}, qArg, \dots, qArg_{n'}\texttt{;}
     \end{align*}
 }%
 
