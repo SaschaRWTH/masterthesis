@@ -70,7 +70,7 @@ In the case of the qubit and register declaration, the update function is more c
 
 The arithmetic translation $at$ is used to evaluate expressions in the source code to constant real values. While a constant value just evaluates to itself and an identifier to its constant value, the operations evaluate to the operation applied to the evaluation of the subexpressions.
 \begin{align*}
-    at : \ & \rlap{$Expression \times SymbolTable \dashrightarrow \mathbb{R}$} &&\\
+    at : \ & \rlap{$Expression \times SymbolTable \dashrightarrow \mathbb{Q}$} &&\\
     at(n, st) = \ & n && \\
     at(id, st) = \ & val \quad \text{if } st[id] = (\texttt{const}, val)&& \\
     at(exp_1 + exp_2, st) = \ & at(exp_1, st) + at(exp_2, st)&& \\
@@ -147,7 +147,7 @@ If a gate application is given, the qubit argument is prepended to the gate argu
 \begin{align*}
     control(qArg, & &&  id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\  
     & \ \texttt{ctrl(1) } &\texttt{@ }& id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
-    control(qArg, & \ \texttt{negctrl(}n\texttt{) } &\texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
+    control(qArg, & & \quad \texttt{negctrl(}n\texttt{) } \texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
     & \ \texttt{ctrl(1) } &\texttt{@ } \texttt{negctrl(}n\texttt{) } \texttt{@ }&id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
     control(qArg, & \ \texttt{ctrl(}n \texttt{) } &\texttt{@ }& id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
     & \ \texttt{ctrl(}n+1 \texttt{) } &\texttt{@ }& id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\

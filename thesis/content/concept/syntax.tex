@@ -41,7 +41,7 @@ The statement rule $stm$ can either be an if-statement, with an optional else-bl
                  & \quad \quad \quad \quad \texttt{skip;}
 \end{align*}
 
-The last grammar rules are the block rule $blk$, which specifies a possibly empty list of translatables; the translatable rule $t$, which can either be a statement or declaration; and the program rule $prg$, which consists of an optional list of gate declarations and a code block.
+The last grammar rules are the block rule $blk$, which specifies a possibly empty list of translatables; the translatable rule $t$, which can either be a statement or declaration; and the program rule $prg_{Luie}$, which consists of an optional list of gate declarations and a code block.
 \begin{align*}
     Block: \ & blk::= t_1 \dots t_n \mid \epsilon\\
     Translatable : \ & t::= stm \mid dcl\\
