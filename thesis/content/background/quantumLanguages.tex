@@ -18,21 +18,26 @@ There are three kinds of jump instructions. The first is a simple jump based on 
 
 \begin{table}[htp]
     \centering
-    \begin{tabular}{llp{.5\textwidth}}
-        \multicolumn{1}{l|}{Operation}                          & \multicolumn{1}{l|}{Syntax}                                      & Semantics\footnote{After all operations, the instruction pointer is increased by the value of the branch control register.}                                                              \\ \hline
-        
-        \multicolumn{1}{l|}{No-op}                              & \multicolumn{1}{l|}{\texttt{nop}}               & Only increases instruction pointer by the branch control register.     \\ \hline
-        
-        \multicolumn{1}{l|}{Addition}                           & \multicolumn{1}{l|}{\texttt{add} $ra$ $rb$}     & Adds register $rb$ to $ra$.                                            \\
-        \multicolumn{1}{l|}{Multiplication}                     & \multicolumn{1}{l|}{\texttt{mul} $ra$ $rb$}     & Multiplies register $ra$ by $rb$.                                      \\ \hline
-        
-        \multicolumn{1}{l|}{Jump}                               & \multicolumn{1}{l|}{\texttt{jmp} $p$}           & Increases branch control register by $p$.                              \\
-        \multicolumn{1}{l|}{\multirow{2}{*}{Conditional Jumps}} & \multicolumn{1}{l|}{\texttt{jz} $p$ $ra$}       & Increases branch control register by $p$ if $ra$ is $0$.               \\
-        \multicolumn{1}{l|}{}                                   & \multicolumn{1}{l|}{\texttt{jne} $p$ $ra$ $rb$} & Increases branch control register by $p$ if $ra$ is not equal to $rb$. 
-        % \\ \hline \multicolumn{3}{p{.9\textwidth}}{\small * }                                                                  
-    \end{tabular}
-    \caption{An excerpt of the QCM instruction set with instructions used in later examples.}
-    \label{tab:qcm_instructionset}
+    \begin{threeparttable}[b]
+        \begin{tabular}{llp{.5\textwidth}}
+            \multicolumn{1}{l|}{Operation}                          & \multicolumn{1}{l|}{Syntax}                                      & Semantics\tnote{1}                                                              \\ \hline
+            
+            \multicolumn{1}{l|}{No-op}                              & \multicolumn{1}{l|}{\texttt{nop}}               & Only increases instruction pointer by the branch control register.     \\ \hline
+            
+            \multicolumn{1}{l|}{Addition}                           & \multicolumn{1}{l|}{\texttt{add} $ra$ $rb$}     & Adds register $rb$ to $ra$.                                            \\
+            \multicolumn{1}{l|}{Multiplication}                     & \multicolumn{1}{l|}{\texttt{mul} $ra$ $rb$}     & Multiplies register $ra$ by $rb$.                                      \\ \hline
+            
+            \multicolumn{1}{l|}{Jump}                               & \multicolumn{1}{l|}{\texttt{jmp} $p$}           & Increases branch control register by $p$.                              \\
+            \multicolumn{1}{l|}{\multirow{2}{*}{Conditional Jumps}} & \multicolumn{1}{l|}{\texttt{jz} $p$ $ra$}       & Increases branch control register by $p$ if $ra$ is $0$.               \\
+            \multicolumn{1}{l|}{}                                   & \multicolumn{1}{l|}{\texttt{jne} $p$ $ra$ $rb$} & Increases branch control register by $p$ if $ra$ is not equal to $rb$. 
+            % \\ \hline \multicolumn{3}{p{.9\textwidth}}{\small * }                                                                  
+        \end{tabular}
+        \caption{An excerpt of the QCM instruction set with instructions used in later examples.}
+        \label{tab:qcm_instructionset}
+        \begin{tablenotes}
+            \item [1] After all operations, the instruction pointer is increased by the value of the branch control register.
+        \end{tablenotes}
+    \end{threeparttable}
 \end{table}
 
 When quantum computers are based on unitary gates, all their operations need to be unitary and, therefore, reversible as well. This limits quantum jump instructions and prohibits them from working like their classical equivalent. However, the problem of a reversible architecture and instruction set is not unique to quantum computers but was also taken into consideration for classical architecture to, \eg, increase the energy efficiency of classical computers~\cite{AGY07, TAG12}. 
