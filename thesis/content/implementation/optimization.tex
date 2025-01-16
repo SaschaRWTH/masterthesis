@@ -13,11 +13,9 @@ The circuit graph is constructed from a \texttt{QASMProgram} input. First, all q
 
 When translating the circuit graph back into a programmatic description, often, multiple translations are valid. For example, given a circuit with two qubits $q_0$ and $q_1$, with a Hadamard gate $H$ being applied to both, in the program, it does not matter whether the gate is applied to $q_0$ or $q_1$ first. The only requirement for the order of gate applications is that, if a gate $G_0$ is applied to a qubit before another gate $G_1$ on the same wire, the statement corresponding to $G_0$ must come before the statement of $G_1$ in the resulting program. For our translation, we implement an eager approach where a single wire path is translated as far as possible. If a gate is reached for which other gates need to be translated first, the translation switches to the wire path that needs to be translated first. 
 
-First, a dictionary $curr$, which maps from qubits to nodes, is created where, for each qubit, a current node is initialized to the successor of the input node. Additionally, the first qubit is set as the current qubit $q$. Next, the main algorithm is repeated for as long as a qubit exists where the current node is not the output node. In the main body, the current node $g$ of the current qubit $q$ is selected. If $g$ is an output node, the current qubit is set to a qubit whose current node is not an output node. If qubit $q'$ exists in the arguments to the gate of $g$, where the corresponding current node $g'$ is not equal to $g$, the current qubit is set to $g'$ and the translation continues. If this is not the case, the translation of $g$ is added to the program, and the current nodes of all qubit arguments are set to the corresponding successor nodes. The pseudocode for the algorithm is depicted in Alg.~\ref{alg:circuit_translation}.
-
 % Pseudo code for algorithm
 \SetKwComment{Comment}{\# }{}
-\begin{algorithm}
+\begin{algorithm}[htb]
     \caption{The pseudocode for the algorithm used to translate a circuit graph to a program.}
     \label{alg:circuit_translation}
     \KwData{Circuit Graph $C = (V, E, Q, Q_E, Q_V)$, $V = I \cup O \cup G$}
@@ -42,6 +40,8 @@ First, a dictionary $curr$, which maps from qubits to nodes, is created where, f
         }
     }
 \end{algorithm}
+
+First, a dictionary $curr$, which maps from qubits to nodes, is created where, for each qubit, a current node is initialized to the successor of the input node. Additionally, the first qubit is set as the current qubit $q$. Next, the main algorithm is repeated for as long as a qubit exists where the current node is not the output node. In the main body, the current node $g$ of the current qubit $q$ is selected. If $g$ is an output node, the current qubit is set to a qubit whose current node is not an output node. If qubit $q'$ exists in the arguments to the gate of $g$, where the corresponding current node $g'$ is not equal to $g$, the current qubit is set to $g'$ and the translation continues. If this is not the case, the translation of $g$ is added to the program, and the current nodes of all qubit arguments are set to the corresponding successor nodes. The pseudocode for the algorithm is depicted in Alg.~\ref{alg:circuit_translation}.
 
 \subsection{Optimization Rules}
 When the circuit graph is checked for optimizations, as described in Sec.~\ref{sec:concept_circuitGraph}, a list of rules is given, and, for each subgraph, all rules are checked for applicability. These rules all implement the \texttt{IRule} interface. It describes that each rule contains a maximum rule depth property and a function to check the applicability of the rule for a wire subpath as well as a function to apply the rule. The interface is implemented by an abstract optimization rule class from which all rules inherit and which contains some additional auxiliary functions. In total, the compiler contains four different rule classes, corresponding to the optimizations discussed in Sec.~\ref{sec:concept_optimizationRules}; these are the \emph{control reversal}, \emph{Hadamard reduction}, \emph{null gate}, and \emph{peeping control} rules.
