@@ -12,5 +12,8 @@
 *thesis.lot
 *thesis.loa
 
+*slides.nav
+*slides.snm
+
 # Ignore temporary draw.io files
 .$*.drawio.bkp

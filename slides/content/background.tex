@@ -14,15 +14,68 @@
     \end{align*}
     \begin{itemize}
         \item Later, the concept was formally defined by \cite{YYF12}.
+        % \item Based on Dijkstra's guarded commands, where functions are nondeterministically executed based on Boolean expressions
+        \item Quantum branching allows fot the execution of function based on values in superposition.
+        \item The result is the superposition of the results of individual executions.
     \end{itemize}
 \end{frame}
-\begin{frame}{Limitations}
+\begin{frame}{Limitations --- Reversibity}
     \begin{itemize}
         \item Quantum control flow is mainly limited by two principles: \emph{reversibility} and \emph{synchronization}.
+        \item Any sequence of instructions on gate-based quantum computers, excluding measurements, is required to be reversible by definition, as they are all unitary transformations.
+        \item As a result, control flow, as implemented in classical computers, is not possible.
+        \item For example, any classical jump instruction is inherently irreversible.
+        % \item Two jumps can lead to the same location such that a reversed program cannot know from where the jump came
+        \item Landauer Embedding~\cite{Land61} seems to offer solution.
+        \item The embedding can turn any non-reversible function into a reversible one by not only returning the output but also the input of the function.
+        \item For example, any non-reversible function $f : D \to D'$ can be given as a reversible function $g : D \to D' \times D$ with $g(x) = (f(x), x)$.
+        \item However, because the output is the result together with the program history and the result depends on the history, they become entangled.
+        \item This leads to disruptive entanglement~\cite{YVC24}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Limitations --- Synchronization}
+    \begin{itemize}
+        \item The program counter can become entangled with the data and result in disruptive entanglement leading to an invalid result.
+        \item The principle of synchronization states that control flow must become independent from the data.
+        \item For example, loops cannot depend solely on value in superposition.
+        \item \emph{Tortoise and hare} problem
+        \item Instead, a loop must be bounded by a classical value~\cite{YVC24}. 
     \end{itemize}
 \end{frame}
 
 \subsection{Quantum Control Machine}
 \begin{frame}{Quantum Control Machine}
-    Quantum Control Machine (QCM)~\cite{YVC24}
+    \begin{itemize}
+        \item Quantum Control Machine (QCM), proposed by \cite{YVC24}, is an instruction set architecture, focused on quantum control flow.
+        \item Both its syntax and logic are similar to classical assembly language, utilizing (conditional) jump instructions.
+        \item The architecture employs a branch control register $bcr$ to enable reversible jump instructions.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Intructions}
+    \begin{table}[htp]
+        \centering
+        \begin{threeparttable}[b]
+            \begin{tabular}{llp{.5\textwidth}}
+                \multicolumn{1}{l|}{Operation}                          & \multicolumn{1}{l|}{Syntax}                                      & Semantics\tnote{1}                                                              \\ \hline
+                
+                \multicolumn{1}{l|}{No-op}                              & \multicolumn{1}{l|}{\texttt{nop}}               & Only increases instruction pointer by the $bcr$.     \\ \hline
+                
+                \multicolumn{1}{l|}{Addition}                           & \multicolumn{1}{l|}{\texttt{add} $ra$ $rb$}     & Adds register $rb$ to $ra$.                                            \\
+                \multicolumn{1}{l|}{Multiplication}                     & \multicolumn{1}{l|}{\texttt{mul} $ra$ $rb$}     & Multiplies register $ra$ by $rb$.                                      \\ \hline
+                
+                \multicolumn{1}{l|}{Jump}                               & \multicolumn{1}{l|}{\texttt{jmp} $p$}           & Increases $bcr$ by $p$.                              \\
+                \multicolumn{1}{l|}{\multirow{2}{*}{Conditional Jumps}} & \multicolumn{1}{l|}{\texttt{jz} $p$ $ra$}       & Increases $bcr$ by $p$ if $ra$ is $0$.               \\
+                \multicolumn{1}{l|}{}                                   & \multicolumn{1}{l|}{\texttt{jne} $p$ $ra$ $rb$} & Increases $bcr$ by $p$ if $ra$ is not equal to $rb$. 
+                % \\ \hline \multicolumn{3}{p{.9\textwidth}}{\small * }                                                                  
+            \end{tabular}
+            \begin{tablenotes}
+                \item [1] After all operations, the instruction pointer is increased by the value of the $bcr$.
+            \end{tablenotes}
+        \end{threeparttable}
+        \caption{An excerpt of the QCM instruction set with instructions used in later examples.}
+        \label{tab:qcm_instructionset}
+    \end{table}
 \end{frame}
