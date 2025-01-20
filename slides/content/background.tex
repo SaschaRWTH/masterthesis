@@ -1,4 +1,28 @@
 \section{Background}
-\begin{frame}{Background}
-    test~\cite{Aaby03}
+\subsection{Quantum Control Flow}
+\begin{frame}{Quantum Control Flow}
+    
+    \begin{itemize}
+        \item The idea of Quantum Control Flow was first used by \cite{AlGr05} to define function quantum programming language.
+        \item For example, it was used to define the Hadamard gate as the function $had$:  
+    \end{itemize}
+    \begin{align*}
+        had : Q& \to Q\\
+        had : x \mapsto& \texttt{ if}^\circ x\\
+                       & \texttt{ then } \{false \mid -true\}\\
+                       & \texttt{ else } \{false \mid true\}
+    \end{align*}
+    \begin{itemize}
+        \item Later, the concept was formally defined by \cite{YYF12}.
+    \end{itemize}
+\end{frame}
+\begin{frame}{Limitations}
+    \begin{itemize}
+        \item Quantum control flow is mainly limited by two principles: \emph{reversibility} and \emph{synchronization}.
+    \end{itemize}
+\end{frame}
+
+\subsection{Quantum Control Machine}
+\begin{frame}{Quantum Control Machine}
+    Quantum Control Machine (QCM)~\cite{YVC24}
 \end{frame}
