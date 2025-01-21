@@ -1,16 +1,119 @@
 \section{Language}
 \subsection{Overview}
 \begin{frame}{Language Overview}
-    \dots
+    \begin{itemize}
+        \item The idea for our language is to provide a high-level language with the capabilities of the QCM. 
+        \item We want to remove low-level concepts and add high-level ones.
+        \item Additionally, since jump instructions in superposition are removed, we need to add other control flow statements so that the
+        language is as expressive as the QCM.
+        \item For this, we introduce multiple high-level concepts and two basic control flow statements:
+        \begin{itemize}
+            \item Blocks and scopes
+            \item Different data types
+            \item Composite gates
+            \item Loop statements, unrolled at compile time
+            \item Quantum if- and else-statements
+        \end{itemize}
+    \end{itemize}
 \end{frame}
 
 \subsection{Syntax}
 \begin{frame}{Syntax}
-    \dots
+    \begin{align*}
+        CFG_{Luie} = \ & (V_{Luie}, \Sigma_{Luie}, R_{Luie}, prg_{Luie} )\\ 
+        V_{Luie} = \ & \{ exp, rExp, gate,  qArg, stm, prg_{Luie}, \dots \}\\ 
+        \Sigma_{Luie} = \ & \{\texttt{..}, \texttt{range}, \texttt{(}, \texttt{)}, \dots \} 
+        \quad \texttt{where } n \in \mathbb{N}_0, id \in Identifier
+    \end{align*}
+    \begin{align*}
+        Program: \ & prg_{Luie} ::= gDcl_1 \dots gDcl_n \ blk \mid blk \\
+        Block: \ & blk::= t_1 \dots t_n \mid \epsilon\\
+        Translatable : \ & t::= stm \mid dcl\\
+    % \end{align*}
+    % \begin{align*}
+        Declaration: \ & dcl ::= \texttt{const } id \texttt{ = } exp \texttt{;} \mid \\
+                     & \quad \quad \quad \texttt{qubit } id \texttt{;}\\
+        GateDeclaration: \ & gDcl::= \texttt{gate } id \texttt{ (}id_1, \dots, id_n\texttt{) do } blk \texttt{ end}
+    \end{align*}
 \end{frame}
+
+\begin{frame}{Syntax}
+    \begin{align*}
+        Statement: \ & stm ::= \texttt{qif } qArg \texttt{ do }  blk \texttt{ end} \mid\\
+                     & \quad \quad \quad \quad \texttt{for } id \texttt{ in } rExp \texttt{ do } blk \texttt{ end} \mid \\
+                     & \quad \quad \quad \quad id \ qArg_1, \dots, qArg_n \texttt{;}\\
+        QubitArgument: \ & qArg ::= id \mid id[exp]\\
+        Expression: \ & exp ::= n \mid id \mid exp_1 \texttt{ + } exp_2 \mid exp_1 \texttt{ - } exp_2 \mid \dots\\
+        RangeExpression: \ & rExp ::= n_1 .. n_2 \mid \texttt{range(} exp \texttt{)} \mid \texttt{range(} exp_1, exp_2 \texttt{)}
+    \end{align*}
+    \begin{equation*}
+        ConstGates = \{\texttt{h}, \texttt{x}, \texttt{y}, \texttt{z}, \texttt{cx}, \texttt{ccx}\}
+    \end{equation*}
+\end{frame}
+
+\begin{frame}{Example Program}
+    \begin{figure}[htp]
+        \centering     
+        \lstinputlisting[style=Luie]{../figures/code/slides/luie_example.luie}
+        \caption{An example Luie program.}
+        \label{fig:qft_example}
+    \end{figure}
+\end{frame}
+
 
 \subsection{Translation}
 \begin{frame}{Translation}
-    \dots
+    \begin{align*}
+        SymbolTable := \ \{st \mid st : Identifier \dashrightarrow & (\{\texttt{const}\} \times \mathbb{Q})\\
+        \cup& (\{\texttt{qubit}\} \times \mathbb{N} \times Identifier)\\
+        \cup& (\{\texttt{arg}\} \times QubitArgument)\\
+        \cup& (\{\texttt{gate}\} \times Block \times Identifier^+)
+        \}
+    \end{align*}
+    \begin{itemize}
+        \item The symbol tables saves the symbol information relevant for the translation.
+        \item It contains four different types of symbols:
+        \begin{enumerate}
+            \item Named constants
+            \item Quantum registers and qubits
+            \item Qubit arguments
+            \item Composite gates 
+        \end{enumerate} 
+    \end{itemize}
+\end{frame}
+\begin{frame}{Translation}
+    \begin{itemize}
+        \item The $trans$ function translate the Luie program to OpenQASM.
+        \item The initial symbol table $st_\epsilon$ contains no mappings.
+        \item Next, the block translation function $bt$ translates all translatables, \ie, statements and declarations.
+    \end{itemize}
+    \begin{align*}
+        trans : \ & Program \dashrightarrow QASMProgam\\
+        trans(gDcl_1 \dots gDcl_n \ blk) = \ & bt(blk, update(update(update(st_\epsilon, gDcl_1), ...), gDcl_n))\\
+        &\\
+        bt : \ & Block \times SymbolTable \dashrightarrow QASM\\
+        bt(t_1 \dots t_n, st_1) = \ &  tr_1 \quad \text{where } (tr_1, st_2) = tt(t_1, st_1)\\
+        & \dots\\
+        & tr_n \quad \text{where } (tr_n, \_) = tt(t_n, st_n)
+    \end{align*}
+\end{frame}
+\begin{frame}{Translation}
+    \begin{itemize}
+        \item The translatable function $tt$ translates each translatable.
+        \item Since declarations update the symbol table, the function returns the updated symbol table.
+        \item The language allows for different variable scopes and, in turn, an identifier can be used multiple times.
+        \item Therefore, a unique identifier $uid$ is generated for the translation of identifiers. 
+    \end{itemize}
+    \begin{align*}
+        tt : \ & Translatable \times SymbolTable \dashrightarrow QASM \times SymbolTable\\
+        tt(t, st) = \ & \begin{cases}
+            dt(t, st)  \quad &\text{if } t \in Declarations\\
+            (ct(t, st), st) &\text{otherwise }
+        \end{cases}\\
+        &\\
+        dt : \ & Declaration \times SymbolTable \dashrightarrow QASM \times SymbolTable\\
+        dt(\underbrace{\texttt{qubit } id \text{;}}_{decl}, st) = \ & (\texttt{qubit } uid\texttt{;}, st')\\
+                                                                    & \text{where } st' = update(decl, st) \text{ and } st'[id] = (\texttt{qubit}, 1, uid)\\
+    \end{align*}
 \end{frame}
 

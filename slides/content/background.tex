@@ -50,6 +50,9 @@
         \item Quantum Control Machine (QCM), proposed by \cite{YVC24}, is an instruction set architecture, focused on quantum control flow.
         \item Both its syntax and logic are similar to classical assembly language, utilizing (conditional) jump instructions.
         \item The architecture employs a branch control register $bcr$ to enable reversible jump instructions.
+        \item Instead of increasing the IP by $1$ after each statement, it is increased by the value in the $bcr$.
+        \item The $bcr$ can then by reversibly modified.
+        \item To jump by $5$, the $bcr$ is increased by $5$ and, at its destination, decreased by $5$ again.  
     \end{itemize}
 \end{frame}
 
@@ -78,4 +81,30 @@
         \caption{An excerpt of the QCM instruction set with instructions used in later examples.}
         \label{tab:qcm_instructionset}
     \end{table}
+\end{frame}
+
+\begin{frame}{(Non-) Reversible Example}
+    \begin{figure}[htp]
+        \centering     
+        \begin{minipage}{.40\textwidth}
+            \lstinputlisting[style=QCM]{../figures/code/background/exp_non_reversible.qcm}
+            \caption{A non-reversible exponentiation algorithm.}
+            \label{fig:qcm_not_reverse}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{.50\textwidth}
+            \lstinputlisting[style=QCM]{../figures/code/background/exp_non_sync.qcm}
+            \caption{A reversible exponentiation algorithm.}    
+            \label{fig:qcm_reverse}
+        \end{minipage}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Reversible Synchronized Example}
+    \begin{figure}[htp]
+        \centering     
+        \lstinputlisting[style=QCM]{../figures/code/background/exp_sync.qcm}
+        \caption{A synchronized, reversible exponentiation algorithm.}
+        \label{fig:qcm_sync}
+    \end{figure}
 \end{frame}

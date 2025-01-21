@@ -1,0 +1,12 @@
+gate c_h_reg(control, reg) do
+    qif control do
+        for i in range(sizeof(reg)) do
+            h reg[i];
+        end
+    end
+end
+
+const regSize : int = 3;
+qubit c;
+qubit[regSize] a;
+c_h_reg c, a;

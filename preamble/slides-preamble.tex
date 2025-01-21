@@ -10,6 +10,7 @@
 \usepackage{mathtools}
 \usepackage{transparent} 
 
+\usepackage{amsmath, amssymb, amsfonts, amstext, xspace}
 \usepackage{xcolor} % color support
 \usepackage{listings}
 
@@ -64,3 +65,155 @@
 \setbeamercolor{title page bar}{fg=white}
 \setbeamertemplate{title page}[rwth][titlesmall]{}
 
+
+
+
+
+
+
+
+
+% Defining colors:
+\definecolor{grey}{rgb}{0.8,0.8,0.8}
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{green}{rgb}{0,1,0}
+\definecolor{yellow}{rgb}{1,1,0}
+\definecolor{lightblue}{rgb}{0,0,0.5}
+\definecolor{lightgray}{rgb}{.95,.95,.95}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\definecolor{ao(english)}{rgb}{0.0, 0.5, 0.0}
+\definecolor{applegreen}{rgb}{0.55, 0.71, 0.0}
+\definecolor{ferngreen}{rgb}{0.31, 0.47, 0.26}
+\definecolor{commentgreen}{rgb}{0.42, 0.7, 0.2}
+% \definecolor{commentgreen}{rgb}{0.42, 0.46, 0.2}
+
+
+\lstloadlanguages{C,C++,csh,Java}
+
+% Define custom lengths for code lstlisting margins
+\newlength{\framexleftmargin}
+\setlength{\framexleftmargin}{17pt}
+
+\newlength{\framexrightmargin}
+\setlength{\framexrightmargin}{17pt}
+
+\newlength{\framexbottommargin}
+\setlength{\framexbottommargin}{4pt}
+
+\newlength{\xleftmargin}
+\setlength{\xleftmargin}{.05\textwidth}
+
+\newlength{\xrightmargin}
+\setlength{\xrightmargin}{.05\textwidth}
+
+
+\lstset{
+    framexleftmargin=\framexleftmargin,                   % Extra margin on the left
+    framexrightmargin=\framexrightmargin,                   % Extra margin on the right
+    framexbottommargin=\framexbottommargin,                  % Extra margin at the bottom
+    xleftmargin=\xleftmargin,               % Left margin
+    xrightmargin=\xrightmargin,              % Right margin
+	  basicstyle=\LARGE\ttfamily,       % Basic font style
+    numbers=left,                            % Line numbers on the left
+    numberstyle=\tiny,                       % Style of line numbers
+    numbersep=5pt,                           % Distance of line numbers from code
+    tabsize=2,                               % Tab size
+    extendedchars=true,                      % Allow extended characters
+    breaklines=true,                         % Break long lines
+    frame=tlrb,                              % Frame around the listing
+    showspaces=false,                        % Do not show spaces
+    showtabs=false,                          % Do not show tabs
+    commentstyle=\color{commentgreen},       % Style for comments
+    keywordstyle=\color{cyan},               % Style for ANTLR keywords
+	stringstyle=\color{blue}\ttfamily,       % Style for strings
+    moredelim=[s][\color{blue}]{"}{"},     % Highlight single-quoted literals (e.g., 'a')
+    moredelim=[s][\color{orange}]{'}{'},     % Highlight single-quoted literals (e.g., 'a')
+}
+
+\lstdefinestyle{ANTLR}{                 
+    morecomment=[l]{//},                     % Line comment style
+    morecomment=[s]{/*}{*/},                 % Multiline comment style
+    showstringspaces=false,                  % Do not mark string spaces
+    morekeywords={
+        grammar, parser, lexer, options, tokens, import, fragment, mode, 
+        returns, throws, locals, catch, finally, rulecatch, super, 
+        exception, context, extends, override, EOF
+    },                                       % ANTLR 4 keywords
+}
+
+
+\lstdefinestyle{QCM}{
+    moredelim=*[s][\color{black}\ttfamily]{options}{\}},%  options in black (until trailing })
+    morecomment=[l]{;},%                                  define // comment
+    emph={%
+		l1, l2, l3, l4, l5, l6, l7, l8, 
+		rl1, rl2, rl3, rl4, rl5, rl6, rl7, rl8%                                         literal strings listed here
+        },emphstyle={\color{blue}\ttfamily},%              and formatted in blue
+    alsoletter={|,;},%
+    morekeywords={add, rjne, jz, jg, mul, jmp, rjmp, nop, rjle, radd}, %define the special characters
+}
+
+\lstdefinestyle{QASM}{                 
+	morecomment=[l]{//},                     % Line comment style
+	morecomment=[s]{/*}{*/},                 % Multiline comment style
+	showstringspaces=false,                  % Do not mark string spaces
+	morekeywords={qreg, creg, gate, measure, reset, barrier,                 % QASM 2.0 keywords
+				if, cx, u3, u2, u1, h, x, y, z, s, sdg, t, tdg, rx, ry, rz, % Quantum gates
+				input, output, bit, bool, const, int, uint, float, angle, duration, 
+				qubit, array, int, stretch, qubit, uint, box, ctrl, negctrl, 
+				return, for, while, end, break, continue, do, def, kernel, 
+				const, stretch, delay, gate, qubit, measure, measure_all},  % OpenQASM 3 new keywords
+}
+
+\lstdefinestyle{Luie}{                 
+	morecomment=[l]{//},                     % Line comment style
+	morecomment=[s]{/*}{*/},                 % Multiline comment style
+	showstringspaces=false,                  % Do not mark string spaces
+	morekeywords= {
+		gate, measure, reset, barrier,                 % QASM 2.0 keywords
+		qif, cx, h, x, y, z, s, t, rx, ry, rz, % Quantum gates
+		const, 
+		sizeof, power, range, in,
+		qubit, register, ctrl, negctrl, 
+		for, while, end, do, def, kernel, 
+		measure, int, double, uint
+	},  % OpenQASM 3 new keywords
+}
+
+\lstdefinestyle{bashstyle}{
+    language=bash,
+    showstringspaces=false,            % Don't show spaces in strings
+    frame=single,                      % Frame around the code
+    framerule=0.5pt,                   % Thickness of frame
+    tabsize=4,                         % Tab size
+    breaklines=false,                   % Line breaking if long
+    % captionpos=b,                      % Caption position at the bottom
+    numbers=left,                      % Line numbers on the left
+    numberstyle=\tiny\color{gray},     % Style of line numbers
+	morekeywords= {
+		input, output, verbose, optimization
+	}
+}
+
+\lstdefinestyle{CSharp}{                 
+    morecomment=[l]{//},                     % Line comment style
+    morecomment=[s]{/*}{*/},                 % Multiline comment style
+    showstringspaces=false,                  % Do not mark string spaces
+    morekeywords={abstract, as, base, bool, break, byte, case, catch, char, 
+                  checked, class, const, continue, decimal, default, delegate, 
+                  do, double, else, enum, event, explicit, extern, false, finally, 
+                  fixed, float, for, foreach, goto, if, implicit, in, int, interface, 
+                  internal, is, lock, long, namespace, new, null, object, operator, 
+                  out, override, params, private, protected, public, readonly, 
+                  ref, return, sbyte, sealed, short, sizeof, stackalloc, static, 
+                  string, struct, switch, this, throw, true, try, typeof, uint, 
+                  ulong, unchecked, unsafe, ushort, using, virtual, void, volatile, 
+                  while, get, set},                     % C# keywords
+    keywordstyle=\color{cyan},               % Style for C# keywords
+}
+
+
+\newcommand*{\eg}{e.g.\@\xspace}
+\newcommand*{\ie}{i.e.\@\xspace}
