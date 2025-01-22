@@ -19,12 +19,18 @@
 
 \subsection{Syntax}
 \begin{frame}{Syntax}
+    \begin{itemize}
+        \item We define a CFG $CFG_{Luie}$ for our language.
+        \item The start symbol is the program, consisting of arbitrarily many gate declarations and a block.
+        \item A block is a list of translatables, either statements of declarations.
+    \end{itemize}
     \begin{align*}
         CFG_{Luie} = \ & (V_{Luie}, \Sigma_{Luie}, R_{Luie}, prg_{Luie} )\\ 
         V_{Luie} = \ & \{ exp, rExp, gate,  qArg, stm, prg_{Luie}, \dots \}\\ 
         \Sigma_{Luie} = \ & \{\texttt{..}, \texttt{range}, \texttt{(}, \texttt{)}, \dots \} 
         \quad \texttt{where } n \in \mathbb{N}_0, id \in Identifier
     \end{align*}
+    \vspace{\alignmargin}
     \begin{align*}
         Program: \ & prg_{Luie} ::= gDcl_1 \dots gDcl_n \ blk \mid blk \\
         Block: \ & blk::= t_1 \dots t_n \mid \epsilon\\
@@ -38,6 +44,12 @@
 \end{frame}
 
 \begin{frame}{Syntax}
+    \begin{itemize}
+        \item There are three different statements: quantum if-statement, loop statement, and application of predefined or composite gate.
+        \item The qubit argument differentiates between qubit or register access.
+        \item For the register access or constant declarations, expressions can be used.
+        \item Additionally, we defined a set of defined gates to differentiate the corresponding translations.
+    \end{itemize}
     \begin{align*}
         Statement: \ & stm ::= \texttt{qif } qArg \texttt{ do }  blk \texttt{ end} \mid\\
                      & \quad \quad \quad \quad \texttt{for } id \texttt{ in } rExp \texttt{ do } blk \texttt{ end} \mid \\
@@ -46,6 +58,7 @@
         Expression: \ & exp ::= n \mid id \mid exp_1 \texttt{ + } exp_2 \mid exp_1 \texttt{ - } exp_2 \mid \dots\\
         RangeExpression: \ & rExp ::= n_1 .. n_2 \mid \texttt{range(} exp \texttt{)} \mid \texttt{range(} exp_1, exp_2 \texttt{)}
     \end{align*}
+    \vspace{\alignmargin}
     \begin{equation*}
         ConstGates = \{\texttt{h}, \texttt{x}, \texttt{y}, \texttt{z}, \texttt{cx}, \texttt{ccx}\}
     \end{equation*}
@@ -62,14 +75,7 @@
 
 
 \subsection{Translation}
-\begin{frame}{Translation}
-    \begin{align*}
-        SymbolTable := \ \{st \mid st : Identifier \dashrightarrow & (\{\texttt{const}\} \times \mathbb{Q})\\
-        \cup& (\{\texttt{qubit}\} \times \mathbb{N} \times Identifier)\\
-        \cup& (\{\texttt{arg}\} \times QubitArgument)\\
-        \cup& (\{\texttt{gate}\} \times Block \times Identifier^+)
-        \}
-    \end{align*}
+\begin{frame}{Symbol Table}
     \begin{itemize}
         \item The symbol tables saves the symbol information relevant for the translation.
         \item It contains four different types of symbols:
@@ -80,8 +86,16 @@
             \item Composite gates 
         \end{enumerate} 
     \end{itemize}
+    \begin{align*}
+        SymbolTable := \ \{st \mid st : Identifier \dashrightarrow & (\{\texttt{const}\} \times \mathbb{Q})\\
+        \cup& (\{\texttt{qubit}\} \times \mathbb{N} \times Identifier)\\
+        \cup& (\{\texttt{arg}\} \times QubitArgument)\\
+        \cup& (\{\texttt{gate}\} \times Block \times Identifier^+)
+        \}
+    \end{align*}
 \end{frame}
-\begin{frame}{Translation}
+
+\begin{frame}{Translation Function and Block Translation}
     \begin{itemize}
         \item The $trans$ function translate the Luie program to OpenQASM.
         \item The initial symbol table $st_\epsilon$ contains no mappings.
@@ -97,7 +111,8 @@
         & tr_n \quad \text{where } (tr_n, \_) = tt(t_n, st_n)
     \end{align*}
 \end{frame}
-\begin{frame}{Translation}
+
+\begin{frame}{Translatable and Declaration Translation}
     \begin{itemize}
         \item The translatable function $tt$ translates each translatable.
         \item Since declarations update the symbol table, the function returns the updated symbol table.
@@ -116,4 +131,52 @@
                                                                     & \text{where } st' = update(decl, st) \text{ and } st'[id] = (\texttt{qubit}, 1, uid)\\
     \end{align*}
 \end{frame}
+
+\begin{frame}{Command Translation}
+    \begin{itemize}
+        \item The commands are translated with the $ct$ function.
+        \item We take a look at an example translation of a quantum if-statement.
+        \item The qubit argument translation $qt$ is used to differentiate between qubits and register accesses and looks up the $uid$.
+        \item The $control$ function adds the translated $qArg$ as a guard to all gate applications in the block translation.  
+    \end{itemize}
+    \begin{align*}
+        ct : \ & Statement \times SymbolTable \dashrightarrow QASM \\        
+        ct(\texttt{qif } qArg \texttt{ do } blk \texttt{ end}, st) = \ &  control(qt(qArg, st), bt(blk, st)) \\
+    \end{align*}
+    \vspace{\alignmargin}
+    \begin{align*}
+        control(qArg, &&&  id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\  
+        & \ \texttt{ctrl(1) @ } && id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}\\
+        %
+        control(qArg, & \ \texttt{ctrl(}n \texttt{) @ } && id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
+        & \ \texttt{ctrl(}n+1 \texttt{) @ } && id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}
+    \end{align*}
+\end{frame}
+
+% \begin{frame}{Command Translation}
+%     \begin{itemize}
+%         \item The commands are translated with the $ct$ function.
+%         \item An example of a composite gate translation is depicted below.
+%         \item The qubit argument translation $qt$ is used to differentiate between qubits and register accesses.
+%         \item From the symbol table, the information about the composite gate is retrieved.
+%     \end{itemize}
+%     \begin{align*}
+%         ct : \ & Statement \times SymbolTable \dashrightarrow QASM\\
+%         ct(id \ qArg_1, \dots, qArg_n\texttt{;}, st) = \ & bt(blk, st_\epsilon[id_1 \mapsto (\texttt{arg}, q_1), \dots, id_n \mapsto (\texttt{arg}, q_n)]) \\
+%             &\text{if } id \not\in ConstGates\\
+%             &\text{where } q_i = qt(qArg_i, st), i \in [1, ...\, n]\\
+%             &\text{and } st[id] = (\texttt{gate}, blk, id_1, \dots, id_n)
+%     \end{align*}
+% \end{frame}
+
+% \begin{frame}{Qubit Argument Translation}
+%     \begin{itemize}
+%         \item ...
+%     \end{itemize}
+%     \begin{align*}
+%         qt :\ & \rlap{$QubitArgument \times SymbolTable \dashrightarrow QubitArgument$} &&\\
+%         qt(id, st) = \ & uid  && \text{if } st[id] = (\texttt{qubit}, 1, uid)\\
+%         qt(id[exp], st) = \ & uid\texttt{[}\underbrace{at(exp, st)}_{n}\texttt{]} && \text{if } st[id] = (\texttt{qubit}, m, uid) \text{ and } m > n\\
+%     \end{align*}
+% \end{frame}
 
