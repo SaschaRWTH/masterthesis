@@ -69,7 +69,6 @@
     \end{itemize}
 \end{frame}
 
-\subsection{Semantic Analysis}
 \begin{frame}{Semantic Analysis}
     \begin{itemize}
         \item The declaration analysis ensure that all identifiers used were previously declared and all identifiers used in declarations are not already declared.
@@ -183,16 +182,16 @@
 \end{frame}
 
 \begin{frame}{Translated Example Program}    
-    \begin{minipage}{.40\textwidth}
+    \begin{minipage}{.45\textwidth}
         \begin{itemize}
-            \item ... 
-            \item ... 
-            \item ... 
-            \item ... 
+            \item In the end, the TCR is converted to the OpenQASM program.
+            \item For this, the version string and include header is appended to the code.
+            \item Additionally, for each quantum register, a classical one is declared and the registers are measured and saved to the corresponding classical registers. 
+            \item These additions are performed right before the result is written to the output and after the optimization.
         \end{itemize}
     \end{minipage}
     \hfill
-    \begin{minipage}{.55\textwidth}
+    \begin{minipage}{.50\textwidth}
         \centering
         \vfill
         \begin{figure}
@@ -207,5 +206,195 @@
 
 \subsection{Optimization}
 \begin{frame}{Optimization}
-    \dots
+    \begin{itemize}
+        \item The compiler can perform optimizations to reduce both the number of gates and qubits.
+        \item The optimizations are performed to the TCR to allow for more optimizations at the cost of performance.
+        \item The compiler performs general peephole optimizations based on rules presented by \cite{GaCh11}.
+        \item They can be divided into four rules:
+        \begin{enumerate}
+            \item \emph{null gate}, 
+            \item \emph{peeping control}, 
+            \item \emph{Hadamard reduction}, and
+            \item \emph{control reversal}. 
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Null Gate and Peeping Control Rules}
+    \begin{itemize}
+        \item Null gates are combinations or gates under specific conditions that are equivalent to the identity gate.
+        \item The simplest null gate version is the twofold application of a self-inverse gate.
+        \item They can be removed entirely from the circuit.
+        \item Our peeping control rules are a special case of null gates.
+        \item In this case, the value of a control is know and the gate can be removed if it is not applied
+        \item Since the implementation of the rules differs greatly from the other null gate rules, its separated as its own rule. 
+    \end{itemize}
+    \vfill
+    \begin{minipage}{.45\textwidth}
+        \begin{figure}[htp!]
+            \centering
+            \[
+                \Qcircuit @C=.5em @R=0em {
+                    & \gate{H} & \gate{H} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{X} & \gate{X} & 
+                    % \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{Y} & \gate{Y} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{Z} & \gate{Z} & 
+                    \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{I} & \qw
+                    }
+            \]
+            \caption{Null gates of self-inverse gates.}
+            % \label{fig:nullgates_selfInverse}
+        \end{figure}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.45\textwidth}
+        \centering
+        \begin{figure}[htp!]
+            \[
+                \Qcircuit @C=1em @R=1em {
+                    \lstick{\ket{0}} & \ctrl{1} & \qw & \raisebox{-2.2em}{=} & & \gate{I} & \qw \\
+                    \lstick{\ket{\psi}} & \gate{U} & \qw &           & & \gate{I} & \qw
+                    }
+            \]
+            \caption{Null gates for gates in specific conditions.}
+            % \label{fig:nullgates_control}
+        \end{figure}
+    \end{minipage}
+\end{frame}
+
+\begin{frame}{Hadamard Reduction and Control Reversal Rules}
+    \begin{itemize}
+        \item The Hadamard reduction can reduce either an $X$ or a $Z$ gate surrounded by $H$ gates to the other without the surrounding gates.
+        \item The rule is also the basis for the control reversal.
+        \item It emerges then the Hadamard reduction is combined with the control reversal of the controlled-$Z$ gate.
+        \item A controlled-not gate surrounded by Hadamard gates is equivalent to the target and control qubits exchanged without Hadamard gates.
+    \end{itemize}
+    \vfill
+    \begin{minipage}{.45\textwidth}
+        \begin{figure}[htp!]
+            \centering
+            \[
+                \Qcircuit @C=.5em @R=0em {
+                    % & \gate{H} & \gate{H} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & 
+                    & \gate{H} & \gate{Z} & \gate{H} & 
+                    % \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{Y} & \gate{Y} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{Z} & \gate{Z} & 
+                    \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{X} & \qw
+                    }
+            \]
+            \caption{A Hadamard reduction rule.}
+            % \label{fig:nullgates_selfInverse}
+        \end{figure}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.45\textwidth}
+        \centering
+        \begin{figure}[htp!]
+            \[
+                \Qcircuit @C=1em @R=1em {
+                   & \gate{H} & \ctrl{1} & \gate{H} & \qw & \raisebox{-2.2em}{=} & & \targ & \qw \\
+                   & \gate{H} & \targ & \gate{H} & \qw &           & & \ctrl{-1} & \qw
+                    }
+            \]
+            \caption{Null gates for gates in specific conditions.}
+            % \label{fig:nullgates_control}
+        \end{figure}
+    \end{minipage}
+\end{frame}
+
+\begin{frame}{Cricuit Graph}
+    \begin{itemize}
+        \item Instead of applying the rules directly to the program, it is translated to a circuit graph.
+        \item Then, the graph is optimized and the result is translated back to a OpenQASM program.
+        \item The circuit graph $C$ is acyclic and directed.
+        \item It consists of a set of nodes $V$ --- split into input, output, and gate nodes --- and edges $E$.
+        \item Additionally, it contains a set of qubits $Q$ and two functions that map nodes $Q_V$ and edges $Q_E$ to qubits.
+    \end{itemize}
+    \vfill
+    \begin{align*}
+        C &= (V, E, Q, Q_E, Q_V)\\
+        V &= \underbrace{I}_{\text{Input Nodes}} \cup \underbrace{O}_{\text{Output Nodes}} \cup \underbrace{G}_{\text{Gate Nodes}}\\
+        E &\subseteq \{ (x, y) \mid x,y \in V \land x \neq y \}\\
+        Q_V &: I \cup O \to Q \\
+        Q_E &: E \to Q
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Example Circuit Graph}
+    \begin{itemize}
+        \item Input and output nodes have only one outgoing or incoming edge, respectively. 
+        \item For each qubit, $C$ contains an input-output node pair.
+        \item Each edge coming into a gate node has a corresponding outgoing one with the same qubit.
+        \item These represent an argument of the gate application.
+        \item The wire for qubit $q$ is represented by the path from the input to the output node where all edges map to $q$.
+    \end{itemize}
+    \vfill
+    \begin{minipage}{.35\textwidth}
+        \begin{figure}
+            \centering
+            \lstinputlisting[style=Luie, basicstyle=\Large\ttfamily]{../figures/code/slides/optimization_example.luie}
+            \caption{A simple, unoptimized program.}
+        \end{figure}
+    \end{minipage}
+    \begin{minipage}{.60\textwidth}
+        \begin{figure}[htp]
+            \centering     
+            \includegraphics[width=.9\textwidth]{../figures/drawio/circuit_graph_unoptimized.pdf}
+            \caption{An example of a simple, unoptimized circuit graph.}
+            % \label{fig:circuit_graph_unoptimized}
+        \end{figure}
+    \end{minipage}
+\end{frame}
+
+\begin{frame}{Example Optimization Process I}
+    \begin{itemize}
+        \item To optimize the graph, each qubit wire is iterated.
+        \item All subpaths up to a maximum length are checked for optimized alternatives.
+        \item In the example, the peeping control rule can be applied to the first $CX$ gate.
+        \item Next, the $HH$ null gate can be removed. 
+    \end{itemize}
+    \vfill
+    \begin{minipage}{.55\textwidth}
+        \begin{figure}[htp]
+            \centering     
+            \includegraphics[width=.9\textwidth]{../figures/drawio/circuit_graph_unoptimized.pdf}
+            \caption{An example of a simple, unoptimized circuit graph.}
+            % \label{fig:circuit_graph_unoptimized}
+        \end{figure}
+    \end{minipage}
+    \begin{minipage}{.40\textwidth}
+        \begin{figure}[htp]
+            \centering     
+            \includegraphics[width=\textwidth]{../figures/drawio/circuit_graph_optimized_firststep.pdf}
+            \caption{The circuit graph after the first optimization step.}
+            % \label{fig:circuit_graph_first_optimized}
+        \end{figure}
+    \end{minipage}
+\end{frame}
+
+\begin{frame}{Example Optimization Process II}
+    \begin{itemize}
+        \item While all qubit wire were iterated, there are still possible optimizations.
+        \item This is because applying optimizations, may enable others.
+        \item Therefore, the optimization is repeated as long as the previous iteration applied optimizations.
+        \item In the next iteration, the $XX$ null gate can be removed.
+        \item Additionally, a peeping control rule can be applied to the remaining $CX$ gate.
+    \end{itemize}
+    \vfill
+    \hfill
+    \begin{minipage}{.40\textwidth}
+        \begin{figure}[htp]
+            \centering     
+            \includegraphics[width=\textwidth]{../figures/drawio/circuit_graph_optimized_firststep.pdf}
+            \caption{The circuit graph after the first optimization step.}
+            % \label{fig:circuit_graph_first_optimized}
+        \end{figure}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.30\textwidth}
+        \begin{figure}[htp]
+            \centering     
+            \includegraphics[width=9em]{../figures/drawio/circuit_graph_optimized_complete.pdf}
+            \caption{The completely optimized graph.}
+            % \label{fig:circuit_graph_optimized_complete}
+        \end{figure}
+    \end{minipage}
+    \hfill
 \end{frame}
