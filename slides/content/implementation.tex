@@ -126,7 +126,7 @@
             \item The gate's body contains only an if-statement, which, in turn, contains a loop statement.
             \item The loop statement consists of a gate application. 
         \end{itemize}   
-        \hfill
+        \vfill
         \begin{figure}
             \centering
             \lstinputlisting[style=Luie, basicstyle=\large\ttfamily]{../figures/code/slides/luie_example_reduced.luie}
@@ -138,16 +138,71 @@
         \begin{figure}[htp]
             \centering
             \includegraphics[]{../figures/drawio/codeGen_sourceCode_example.pdf}
-            \caption{The source code representation of the example program.}
+            \caption{The SCR of the example program.}
             % \label{fig:implementation_uml_errors}
         \end{figure}
     \end{minipage}
 \end{frame}
 
-\begin{frame}{Target Code Representation --- Example}
+\begin{frame}{Target Code Representation}
     \begin{itemize}
-        \item 
+        \item The basis of the TCR is the \texttt{QASMProgram} object.
+        \item It contains a list of \texttt{Code} objects, which are either declarations of gate applications. 
+        \item All SCR objects can be translated to a list of code objects and appended to the program object.
+        \item The translations are as described in translation section.
+        \item For example, a if-statement adds a control qubit to all gate applications in the block translation.
+        \item All code objects implement a \texttt{ToCode} function that returns the textual representation of the statement.
+        \item To translate the program object, the code objects are simply iterated, converted to text, and written to a file. 
     \end{itemize}
+    \vfill
+    \begin{align*}        
+        ct(\texttt{qif } qArg \texttt{ do } blk \texttt{ end}, st) = \ &  control(qt(qArg, st), bt(blk, st)) \\
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Target Code Representation --- Example}    
+    \begin{minipage}{.45\textwidth}
+        \centering
+        \begin{figure}[htp]
+            \centering
+            \includegraphics[]{../figures/drawio/codeGen_sourceCode_example.pdf}
+            \caption{The SCR of the example program.}
+            % \label{fig:implementation_uml_errors}
+        \end{figure}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.45\textwidth}
+        \centering
+        \begin{figure}[htp]
+            \centering
+            \includegraphics[]{../figures/drawio/codeGen_targetCode_example.pdf}
+            \caption{The TCR of the example program.}
+            % \label{fig:implementation_uml_errors}
+        \end{figure}
+    \end{minipage}
+\end{frame}
+
+\begin{frame}{Translated Example Program}    
+    \begin{minipage}{.40\textwidth}
+        \begin{itemize}
+            \item ... 
+            \item ... 
+            \item ... 
+            \item ... 
+        \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.55\textwidth}
+        \centering
+        \vfill
+        \begin{figure}
+            \centering
+            \lstinputlisting[style=QASM,basicstyle=\Large\ttfamily]{../figures/code/implementation/codeGen_example.qasm}
+            \caption{The OpenQASM translation of the example Luie program.}
+            % \label{fig:codeGen_target_example}
+        \end{figure}
+        \vfill
+    \end{minipage}
 \end{frame}
 
 \subsection{Optimization}
