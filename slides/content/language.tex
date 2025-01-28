@@ -8,11 +8,11 @@
         language is as expressive as the QCM.
         \item For this, we introduce multiple high-level concepts and two basic control flow statements:
         \begin{itemize}
-            \item Blocks and scopes
-            \item Different data types
-            \item Composite gates
-            \item Loop statements, unrolled at compile time
-            \item Quantum if- and else-statements
+            \item blocks and scopes,
+            \item different data types,
+            \item composite gates,
+            \item loop statements, unrolled at compile time, and
+            \item quantum if- and else-statements.
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -22,7 +22,7 @@
     \begin{itemize}
         \item We define a CFG $CFG_{Luie}$ for our language.
         \item The start symbol is the program, consisting of arbitrarily many gate declarations and a block.
-        \item A block is a list of translatables, either statements of declarations.
+        \item A block is a list of translatables, either statements or declarations.
     \end{itemize}
     \begin{align*}
         CFG_{Luie} = \ & (V_{Luie}, \Sigma_{Luie}, R_{Luie}, prg_{Luie} )\\ 
@@ -45,7 +45,7 @@
 
 \begin{frame}{Syntax}
     \begin{itemize}
-        \item There are three different statements: quantum if-statement, loop statement, and application of predefined or composite gate.
+        \item There are three different statements: a quantum if-statement, a loop statement, and the application of a predefined or composite gate.
         \item The qubit argument differentiates between qubit or register access.
         \item For the register access or constant declarations, expressions can be used.
         \item Additionally, we defined a set of defined gates to differentiate the corresponding translations.
@@ -65,9 +65,13 @@
 \end{frame}
 
 \begin{frame}{Example Program}
+    \begin{itemize}
+        \item In the example program, a composite gate is defined that applies the $H$ gate to a register with a control qubit.
+        \item This composite gate is then applied to a register.
+    \end{itemize}
     \begin{figure}[htp]
         \centering     
-        \lstinputlisting[style=Luie]{../figures/code/slides/luie_example.luie}
+        \lstinputlisting[style=Luie, basicstyle=\ttfamily\Large]{../figures/code/slides/luie_example.luie}
         \caption{An example Luie program.}
         \label{fig:qft_example}
     \end{figure}
@@ -77,13 +81,13 @@
 \subsection{Translation}
 \begin{frame}{Symbol Table}
     \begin{itemize}
-        \item The symbol tables saves the symbol information relevant for the translation.
+        \item The symbol table saves the symbol information relevant for the translation.
         \item It contains four different types of symbols:
         \begin{enumerate}
-            \item Named constants
-            \item Quantum registers and qubits
-            \item Qubit arguments
-            \item Composite gates 
+            \item named constants,
+            \item quantum registers and qubits,
+            \item qubit arguments, and
+            \item composite gates. 
         \end{enumerate} 
     \end{itemize}
     \begin{align*}
@@ -97,7 +101,7 @@
 
 \begin{frame}{Translation Function and Block Translation}
     \begin{itemize}
-        \item The $trans$ function translate the Luie program to OpenQASM.
+        \item The $trans$ function translates the Luie program to OpenQASM.
         \item The initial symbol table $st_\epsilon$ contains no mappings.
         \item Next, the block translation function $bt$ translates all translatables, \ie, statements and declarations.
     \end{itemize}
