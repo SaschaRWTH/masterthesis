@@ -3,7 +3,7 @@
 \begin{frame}{Quantum Control Flow}
     
     \begin{itemize}
-        \item The idea of Quantum Control Flow was first used by \cite{AlGr05} to define function quantum programming language.
+        \item The idea of quantum control flow was first used by \cite{AlGr05} to define a function quantum programming language.
         \item For example, it was used to define the Hadamard gate as the function $had$:  
     \end{itemize}
     \begin{align*}
@@ -15,7 +15,7 @@
     \begin{itemize}
         \item Later, the concept was formally defined by \cite{YYF12}.
         % \item Based on Dijkstra's guarded commands, where functions are nondeterministically executed based on Boolean expressions
-        \item Quantum branching allows fot the execution of function based on values in superposition.
+        \item Quantum branching allows for the execution of functions based on values in superposition.
         \item The result is the superposition of the results of individual executions.
     \end{itemize}
 \end{frame}
@@ -26,7 +26,7 @@
         \item As a result, control flow, as implemented in classical computers, is not possible.
         \item For example, any classical jump instruction is inherently irreversible.
         % \item Two jumps can lead to the same location such that a reversed program cannot know from where the jump came
-        \item Landauer Embedding~\cite{Land61} seems to offer solution.
+        \item Landauer Embedding~\cite{Land61} seems to offer a solution.
         \item The embedding can turn any non-reversible function into a reversible one by not only returning the output but also the input of the function.
         \item For example, any non-reversible function $f : D \to D'$ can be given as a reversible function $g : D \to D' \times D$ with $g(x) = (f(x), x)$.
         \item However, because the output is the result together with the program history and the result depends on the history, they become entangled.
@@ -38,26 +38,33 @@
     \begin{itemize}
         \item The program counter can become entangled with the data and result in disruptive entanglement leading to an invalid result.
         \item The principle of synchronization states that control flow must become independent from the data.
-        \item For example, loops cannot depend solely on value in superposition.
-        \item \emph{Tortoise and hare} problem
+        \item In turn, loops cannot depend solely on value in superposition.
         \item Instead, a loop must be bounded by a classical value~\cite{YVC24}. 
+        \item An example of this is the \emph{Tortoise and hare} problem.
+        \item When a program is run with a loop based on a superposition of two different values, the loop is executed a different number of times and one will finish first.
+        \item The control flow must become independent of the data, but the program cannot wait.
+        \item To prevent this issue, the program must include padding operations that are executed instead of the main loop.
     \end{itemize}
 \end{frame}
 
 \subsection{Quantum Control Machine}
 \begin{frame}{Quantum Control Machine}
     \begin{itemize}
-        \item Quantum Control Machine (QCM), proposed by \cite{YVC24}, is an instruction set architecture, focused on quantum control flow.
+        \item Quantum Control Machine (QCM), proposed by \cite{YVC24}, is an instruction set architecture focused on quantum control flow.
         \item Both its syntax and logic are similar to classical assembly language, utilizing (conditional) jump instructions.
         \item The architecture employs a branch control register $bcr$ to enable reversible jump instructions.
         \item Instead of increasing the IP by $1$ after each statement, it is increased by the value in the $bcr$.
-        \item The $bcr$ can then by reversibly modified.
-        \item To jump by $5$, the $bcr$ is increased by $5$ and, at its destination, decreased by $5$ again.  
+        \item The $bcr$ can then be reversibly modified.
+        \item To jump by $5$, the $bcr$ is increased by $5$ and, at its destination, decreased by $5$ again.
     \end{itemize}
 \end{frame}
 
 
 \begin{frame}{Instructions}
+    \begin{itemize}
+        \item Here, some instructions of the QCM are listed.
+        \item For every instruction there exists a reversed instruction, \eg, \texttt{radd} is the subtraction operation.
+    \end{itemize}
     \begin{table}[htp]
         \centering
         \begin{threeparttable}[b]
@@ -84,6 +91,11 @@
 \end{frame}
 
 \begin{frame}{(Non-) Reversible Example}
+    \begin{itemize}
+        \item An example of a classical program and the reversible equivalent are depicted below.
+        \item Both programs calculate $x^y$. 
+        \item While the second one is reversible, it is not synchronized and depicts the tortoise and hare problem.
+    \end{itemize}
     \begin{figure}[htp]
         \centering     
         \begin{minipage}{.40\textwidth}
@@ -101,9 +113,13 @@
 \end{frame}
 
 \begin{frame}{Reversible Synchronized Example}
+    \begin{itemize}
+        \item Shown below is a synchronized implementation that calculates $x^{\min{y, max}}$.
+        \item In this case, $max$ is a classical bound.
+    \end{itemize}
     \begin{figure}[htp]
         \centering     
-        \lstinputlisting[style=QCM]{../figures/code/background/exp_sync.qcm}
+        \lstinputlisting[style=QCM, basicstyle=\ttfamily\Large]{../figures/code/background/exp_sync.qcm}
         \caption{A synchronized, reversible exponentiation algorithm.}
         \label{fig:qcm_sync}
     \end{figure}
