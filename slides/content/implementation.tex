@@ -1,7 +1,7 @@
 \section{Implementation}
 \begin{frame}{Overview}
     \begin{itemize}
-        \item The implementation of the compiler is differentiate into four different stages:
+        \item The implementation of the compiler is differentiated into four different stages:
         \begin{enumerate}
             \item the lexical and syntactic analysis,
             \item semantic analysis,
@@ -22,8 +22,8 @@
     \begin{minipage}{.45\textwidth}
         \begin{itemize}
             \item Through out the whole compilation process, the symbol table is used to save and propagate symbol information.
-            \item Additionally, it handles higher level concepts such as variable contexts.
-            \item It contains a dictionary that maps identifier to the symbol objects.
+            \item Additionally, it handles higher-level concepts such as variable contexts.
+            \item It contains a dictionary that maps identifiers to the symbol objects.
             \item All symbol objects are derived from an abstract symbol class.
         \end{itemize}    
     \end{minipage}
@@ -71,12 +71,12 @@
 
 \begin{frame}{Semantic Analysis}
     \begin{itemize}
-        \item The declaration analysis ensure that all identifiers used were previously declared and all identifiers used in declarations are not already declared.
+        \item The declaration analysis ensures that all identifiers used were previously declared and all identifiers used in declarations are not already declared.
         \item This includes throwing warnings for declared but unused identifiers.
         \item Additionally, it prevents the use of a qubit in a code block that is guarded by the same qubit because this would lead to irreversible gates.
         \item The type checking ensures that symbols are used in the correct context.
         \item For example, while a qubit symbol can be used as the argument for a gate application, it does not represent a classical numerical value and, therefore, cannot be used in the context of a factor.
-        \item Since we do not give the type of composite gate argument, its body cannot be type checked and any invalid types are thrown at generation time. 
+        \item Since we do not give the type of composite gate argument, its body cannot be type checked, and any invalid types are thrown at generation time. 
     \end{itemize}
 \end{frame}
 
@@ -121,7 +121,7 @@
         \begin{itemize}
             \item Any translation always consists of the main block.
             \item It contains three translatables.
-            \item The first two are the declarations and the last is the composite gate statement.
+            \item The first two are the declarations, and the last is the composite gate statement.
             \item The gate's body contains only an if-statement, which, in turn, contains a loop statement.
             \item The loop statement consists of a gate application. 
         \end{itemize}   
@@ -148,8 +148,8 @@
         \item The basis of the TCR is the \texttt{QASMProgram} object.
         \item It contains a list of \texttt{Code} objects, which are either declarations of gate applications. 
         \item All SCR objects can be translated to a list of code objects and appended to the program object.
-        \item The translations are as described in translation section.
-        \item For example, a if-statement adds a control qubit to all gate applications in the block translation.
+        \item The translations are as described in the translation section.
+        \item For example, an if-statement adds a control qubit to all gate applications in the block translation.
         \item All code objects implement a \texttt{ToCode} function that returns the textual representation of the statement.
         \item To translate the program object, the code objects are simply iterated, converted to text, and written to a file. 
     \end{itemize}
@@ -185,8 +185,8 @@
     \begin{minipage}{.45\textwidth}
         \begin{itemize}
             \item In the end, the TCR is converted to the OpenQASM program.
-            \item For this, the version string and include header is appended to the code.
-            \item Additionally, for each quantum register, a classical one is declared and the registers are measured and saved to the corresponding classical registers. 
+            \item For this, the version string and include header are prepended to the code.
+            \item Additionally, for each quantum register, a classical one is declared, and the registers are measured and saved to the corresponding classical registers. 
             \item These additions are performed right before the result is written to the output and after the optimization.
         \end{itemize}
     \end{minipage}
@@ -222,12 +222,12 @@
 
 \begin{frame}{Null Gate and Peeping Control Rules}
     \begin{itemize}
-        \item Null gates are combinations or gates under specific conditions that are equivalent to the identity gate.
+        \item Null gates are combinations of gates under specific conditions that are equivalent to the identity gate.
         \item The simplest null gate version is the twofold application of a self-inverse gate.
         \item They can be removed entirely from the circuit.
         \item Our peeping control rules are a special case of null gates.
-        \item In this case, the value of a control is know and the gate can be removed if it is not applied
-        \item Since the implementation of the rules differs greatly from the other null gate rules, its separated as its own rule. 
+        \item In this case, the value of a control is known and the gate can be removed if it is not applied.
+        \item Since the implementation of the rules differs greatly from the other null gate rules, it is separated as its own rule. 
     \end{itemize}
     \vfill
     \begin{minipage}{.45\textwidth}
@@ -264,7 +264,7 @@
     \begin{itemize}
         \item The Hadamard reduction can reduce either an $X$ or a $Z$ gate surrounded by $H$ gates to the other without the surrounding gates.
         \item The rule is also the basis for the control reversal.
-        \item It emerges then the Hadamard reduction is combined with the control reversal of the controlled-$Z$ gate.
+        \item It emerges when the Hadamard reduction is combined with the control reversal of the controlled-$Z$ gate.
         \item A controlled-not gate surrounded by Hadamard gates is equivalent to the target and control qubits exchanged without Hadamard gates.
     \end{itemize}
     \vfill
@@ -302,7 +302,7 @@
 \begin{frame}{Cricuit Graph}
     \begin{itemize}
         \item Instead of applying the rules directly to the program, it is translated to a circuit graph.
-        \item Then, the graph is optimized and the result is translated back to a OpenQASM program.
+        \item Then, the graph is optimized and the result is translated back to an OpenQASM program.
         \item The circuit graph $C$ is acyclic and directed.
         \item It consists of a set of nodes $V$ --- split into input, output, and gate nodes --- and edges $E$.
         \item Additionally, it contains a set of qubits $Q$ and two functions that map nodes $Q_V$ and edges $Q_E$ to qubits.
@@ -371,8 +371,8 @@
 
 \begin{frame}{Example Optimization Process II}
     \begin{itemize}
-        \item While all qubit wire were iterated, there are still possible optimizations.
-        \item This is because applying optimizations, may enable others.
+        \item While all qubit wires were iterated, there are still possible optimizations.
+        \item This is because applying optimizations may enable others.
         \item Therefore, the optimization is repeated as long as the previous iteration applied optimizations.
         \item In the next iteration, the $XX$ null gate can be removed.
         \item Additionally, a peeping control rule can be applied to the remaining $CX$ gate.
