@@ -170,9 +170,10 @@ c_h_reg c, a;  // Gate Application
     \Large
     \begin{align*}
         st_1 = up(st_\epsilon, \texttt{gate c\_h\_reg} \dots) =& \ 
-        [ \texttt{c\_h\_reg} \mapsto (\texttt{gate}, \texttt{qif control do} \dots, \texttt{control}, \texttt{reg})  ]\\
+        [ \texttt{c\_h\_reg} \mapsto (\texttt{gate}, \texttt{qif control do ... end}, \\
+        & \quad\quad\quad\quad\quad\quad\quad \texttt{control}, \texttt{reg})  ]\\
         &\\
-        bt(\texttt{const regSize} \dots, st_1) =& \ tr_1 \quad \quad \text{ where } (tr_1, st_2) = tt(\texttt{const regSize : int = 3;}, st_1)\\ 
+        bt(\texttt{const regSize = 3;} \dots, st_1) =& \ tr_1 \quad \quad \text{ where } (tr_1, st_2) = tt(\texttt{const regSize = 3;}, st_1)\\ 
                                                 & \ tr_2 \quad \quad \text{ where } (tr_2, st_3) = tt(\texttt{qubit c;}, st_2)\\ 
                                                 & \ tr_3 \quad \quad \text{ where } (tr_3, st_4) = tt(\texttt{qubit[regSize] a;}, st_3)\\ 
                                                 & \ tr_4 \quad \quad \text{ where } (tr_4, \_) = tt(\texttt{c\_h\_reg c, a;}, st_4)
