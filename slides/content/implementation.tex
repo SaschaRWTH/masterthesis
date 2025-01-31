@@ -1,15 +1,20 @@
 \section{Implementation}
 \begin{frame}{Overview}
     \begin{itemize}
-        \item The implementation of the compiler is differentiated into four different stages:
+        \item Four compilation stages:
         \begin{enumerate}
             \item the lexical and syntactic analysis,
             \item semantic analysis,
             \item code generation, and % at generation time
             \item optimizations
         \end{enumerate}
-        \item The process is managed by a static compiler class.
-        \item It parses the command line parameters, handles the input and output of files, and calls the different stages.
+        \item Process managed by a static compiler class.
+        \begin{itemize}
+            \item Parses command line parameters.
+            \item Handles input and output of files.
+            \item Calls the different stages.
+            \item Handles logging and error messages.
+        \end{itemize}
     \end{itemize}    
     \begin{figure}[htp]
         \centering     
@@ -21,10 +26,10 @@
 \begin{frame}{Symbols and Symbol Table}
     \begin{minipage}{.45\textwidth}
         \begin{itemize}
-            \item Through out the whole compilation process, the symbol table is used to save and propagate symbol information.
-            \item Additionally, it handles higher-level concepts such as variable contexts.
-            \item It contains a dictionary that maps identifiers to the symbol objects.
-            \item All symbol objects are derived from an abstract symbol class.
+            \item Symbol table used to save and propagate symbol information.
+            \item Handles higher-level concepts such as variable contexts. %! Not inherent since not functional impl.
+            \item Contains dictionary that maps identifiers to symbol objects.
+            \item All symbol objects derived from abstract symbol class.
         \end{itemize}    
     \end{minipage}
     \begin{minipage}{.50\textwidth}
@@ -41,10 +46,10 @@
 \subsection{Lexical and Syntactic Analysis}
 \begin{frame}{Lexical and Syntactic Analysis}
     \begin{itemize}
-        \item The first compilation stage is the lexical and syntactic analysis.
-        \item Both the lexer and parser are created with the ANTLR4 tool.
-        \item It generates the source code based on a given grammar. 
-        \item The implementation of the grammar is a more elaborate version of the syntax given previously.
+        \item First compilation stage is lexical and syntactic analysis.
+        \item Both lexer and parser created with the ANTLR4 tool.
+        \item Generates the source code based on a given grammar. 
+        \item Implementation of the grammar is more elaborate version of previously disused one.
     \end{itemize}
     \begin{figure}[h]
         \centering
@@ -54,40 +59,49 @@
 \end{frame}
 
 \subsection{Semantic Analysis}
-\begin{frame}{Semantic Analysis}
+\begin{frame}[fragile]{Semantic Analysis}
     \begin{itemize}
-        \item The next step is the semantic analysis.
-        \item An analysis without any context is not sufficient for non-syntactic constraints of the program.
-        \item For example, the syntactic analysis may ensure gate declarations are always at the beginning of a program, but it cannot ensure that all identifiers in a gate application were previously defined.
-        \item Our semantic analysis is divided into two parts:
+        \item Analyses non-syntactic constraints of program, mainly:
         \begin{enumerate}
-            \item the declaration analysis and
-            \item the type checking.
+            \item declaration analysis and
+            \item type checking.
         \end{enumerate}
-        \item Both parts are implemented as ANTLR listener classes. 
-        \item These traverse the parse tree and call both an enter and exit function for each grammar rule, \eg, \texttt{EnterBlock} and \texttt{ExitBlock}.
+        \item Declaration analysis ensures all identifiers used were previously declared and all identifiers used in declarations are not already declared.
+        \item Type checking ensures that symbols are used in the correct context.
     \end{itemize}
+    \vfill
+    \begin{figure}[htp]
+        \centering     
+        \begin{lstlisting}[style=Luie, mathescape=true,basicstyle=\ttfamily\large, literate={↑}{$\aup{}$}{1}, escapechar=\%] 
+qubit c;               /* $\adown$ Type error (cannot use qubits in arith. expression) */       
+const regSize : int = c + %\uwave{2}%; 
+            /* $\adown$ Already declared */      
+qubit[regSize] %\uwave{c}%;
+              /* $\adown$ Type error (expects a register or qubit) */                      
+c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
+        /* ↑ Undeclared identifier */                 
+        \end{lstlisting}
+        \caption{Luie program with semantic errors highlighted.}
+        % \label{fig:qft_example}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{Semantic Analysis}
-    \begin{itemize}
-        \item The declaration analysis ensures that all identifiers used were previously declared and all identifiers used in declarations are not already declared.
-        \item This includes throwing warnings for declared but unused identifiers.
-        \item Additionally, it prevents the use of a qubit in a code block that is guarded by the same qubit because this would lead to irreversible gates.
-        \item The type checking ensures that symbols are used in the correct context.
-        \item For example, while a qubit symbol can be used as the argument for a gate application, it does not represent a classical numerical value and, therefore, cannot be used in the context of a factor.
-        \item Since we do not give the type of composite gate argument, its body cannot be type checked, and any invalid types are thrown at generation time. 
-    \end{itemize}
-\end{frame}
+% \begin{frame}{Semantic Analysis}
+%     \begin{itemize}
+%         \item This includes throwing warnings for declared but unused identifiers.
+%         \item Additionally, it prevents the use of a qubit in a code block that is guarded by the same qubit because this would lead to irreversible gates.
+%         \item For example, while a qubit symbol can be used as the argument for a gate application, it does not represent a classical numerical value and, therefore, cannot be used in the context of a factor.
+%         \item Since we do not give the type of composite gate argument, its body cannot be type checked, and any invalid types are thrown at generation time. 
+%     \end{itemize}
+% \end{frame}
 
 \subsection{Code Generation}
 \begin{frame}{Code Generation}
     \begin{itemize}
-        \item First, the parse tree is traversed and the source code is translated to an in-memory representation.
-        \item Next, this source code representation (SCR) is translated to the target code representation (TCR).
-        \item Then, the TCR can be translated directly to the textual OpenQASM code.
-        \item We want to go through the process with the example program from before.
-        \item For simplicity, the named constant was replaced with a constant value.
+        \item Parse tree is traversed and source code is translated to in-memory representation.
+        \item Source code representation (SCR) is translated to target code representation (TCR).
+        \item TCR can be translated directly to the textual OpenQASM code.
+        \item Example code generation with program:
     \end{itemize}
     \begin{figure}
         \centering
@@ -96,34 +110,41 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}{Source Code Representation}
-    \begin{minipage}{.45\textwidth}
-        \begin{itemize}
-            \item All SCR objects implement the translatable interface, which requires a translation function.
-            \item The are three main translatables: the code block, statement, and declaration classes.
-            \item The block contains a list of translatables and is used for both the main block and the body of some statements.
-            \item The declaration consists only of register declarations; the compile-time-only declarations are only saved in the symbol table. 
-        \end{itemize}    
-    \end{minipage}
-    \begin{minipage}{.50\textwidth}
-        \centering
-        \begin{figure}[htp]
-            \centering
-            \includegraphics[]{../figures/drawio/slides/uml_translateables.pdf}
-            \caption{A diagram showing the hierarchy of translatable classes.}
-            % \label{fig:implementation_uml_errors}
-        \end{figure}
-    \end{minipage}
-\end{frame}
+% \begin{frame}{Source Code Representation}
+%     \begin{minipage}{.45\textwidth}
+%         \begin{itemize}
+%             \item All SCR objects implement the translatable interface, which requires a translation function.
+%             \item The are three main translatables: the code block, statement, and declaration classes.
+%             \item The block contains a list of translatables and is used for both the main block and the body of some statements.
+%             \item The declaration consists only of register declarations; the compile-time-only declarations are only saved in the symbol table. 
+%         \end{itemize}    
+%     \end{minipage}
+%     \begin{minipage}{.50\textwidth}
+%         \centering
+%         \begin{figure}[htp]
+%             \centering
+%             \includegraphics[]{../figures/drawio/slides/uml_translateables.pdf}
+%             \caption{A diagram showing the hierarchy of translatable classes.}
+%             % \label{fig:implementation_uml_errors}
+%         \end{figure}
+%     \end{minipage}
+% \end{frame}
 
-\begin{frame}{Source Code Representation --- Example}
+\begin{frame}{Source Code Representation}
     \begin{minipage}{.60\textwidth}
         \begin{itemize}
-            \item Any translation always consists of the main block.
-            \item It contains three translatables.
-            \item The first two are the declarations, and the last is the composite gate statement.
-            \item The gate's body contains only an if-statement, which, in turn, contains a loop statement.
-            \item The loop statement consists of a gate application. 
+            % \item All SCR objects implement the translatable interface, which requires a translation function.
+            \item Three main classes:
+            \begin{enumerate}
+                \item Code block: contains list of translatables.
+                \item Declaration: only register declaration, constants compile-time only.
+                \item Statements: variety of different classes.
+            \end{enumerate}
+            \item Example contains three translatables.
+            \begin{itemize}
+                \item First two declarations, last is gate statement.
+                \item Gate's body $\supset$ if-statement $\supset$ loop statement $\supset$ gate application.
+            \end{itemize}
         \end{itemize}   
         \vfill
         \begin{figure}
@@ -143,38 +164,49 @@
     \end{minipage}
 \end{frame}
 
-\begin{frame}{Target Code Representation}
-    \begin{itemize}
-        \item The basis of the TCR is the \texttt{QASMProgram} object.
-        \item It contains a list of \texttt{Code} objects, which are either declarations of gate applications. 
-        \item All SCR objects can be translated to a list of code objects and appended to the program object.
-        \item The translations are as described in the translation section.
-        \item For example, an if-statement adds a control qubit to all gate applications in the block translation.
-        \item All code objects implement a \texttt{ToCode} function that returns the textual representation of the statement.
-        \item To translate the program object, the code objects are simply iterated, converted to text, and written to a file. 
-    \end{itemize}
-    \vfill
-    \begin{align*}        
-        ct(\texttt{qif } qArg \texttt{ do } blk \texttt{ end}, st) = \ &  control(qt(qArg, st), bt(blk, st)) \\
-    \end{align*}
-\end{frame}
+% \begin{frame}{Target Code Representation}
+%     \begin{itemize}
+%         \item The basis of the TCR is the \texttt{QASMProgram} object.
+%         \item It contains a list of \texttt{Code} objects, which are either declarations of gate applications. 
+%         \item All SCR objects can be translated to a list of code objects and appended to the program object.
+%         \item The translations are as described in the translation section.
+%         \item For example, an if-statement adds a control qubit to all gate applications in the block translation.
+%         \item All code objects implement a \texttt{ToCode} function that returns the textual representation of the statement.
+%         \item To translate the program object, the code objects are simply iterated, converted to text, and written to a file. 
+%     \end{itemize}
+%     \vfill
+%     \begin{align*}        
+%         ct(\texttt{qif } qArg \texttt{ do } blk \texttt{ end}, st) = \ &  control(qt(qArg, st), bt(blk, st)) \\
+%     \end{align*}
+% \end{frame}
 
-\begin{frame}{Target Code Representation --- Example}    
-    \begin{minipage}{.45\textwidth}
+\begin{frame}{Target Code Representation}    
+    \begin{minipage}{.38\textwidth}
+        \begin{itemize}
+            \item TCR based on \texttt{QASMProgram} object.
+            \item Contains list of \texttt{Code} objects, either gate or declaration. 
+            \item All SCR objects translated to list of code objects and appended to program object.
+            % \item The translations are as described in the translation section.
+            % \item For example, an if-statement adds a control qubit to all gate applications in the block translation.
+            % \item All code objects implement a \texttt{ToCode} function that returns the textual representation of the statement.
+            \item Translate program object: code iterated, converted to text, written file. 
+        \end{itemize}
+    \end{minipage}    
+    \begin{minipage}{.32\textwidth}
         \centering
         \begin{figure}[htp]
             \centering
-            \includegraphics[]{../figures/drawio/codeGen_sourceCode_example.pdf}
+            \includegraphics[width=\textwidth]{../figures/drawio/codeGen_sourceCode_example.pdf}
             \caption{The SCR of the example program.}
             % \label{fig:implementation_uml_errors}
         \end{figure}
     \end{minipage}
     \hfill
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.28\textwidth}
         \centering
         \begin{figure}[htp]
             \centering
-            \includegraphics[]{../figures/drawio/codeGen_targetCode_example.pdf}
+            \includegraphics[width=\textwidth]{../figures/drawio/slides/codeGen_targetCode_example.pdf}
             \caption{The TCR of the example program.}
             % \label{fig:implementation_uml_errors}
         \end{figure}
@@ -184,10 +216,10 @@
 \begin{frame}{Translated Example Program}    
     \begin{minipage}{.45\textwidth}
         \begin{itemize}
-            \item In the end, the TCR is converted to the OpenQASM program.
-            \item For this, the version string and include header are prepended to the code.
-            \item Additionally, for each quantum register, a classical one is declared, and the registers are measured and saved to the corresponding classical registers. 
-            \item These additions are performed right before the result is written to the output and after the optimization.
+            \item TCR converted to OpenQASM program.
+            \item Version string and include header prepended to the code.
+            \item For each quantum register, classical one is declared, the registers are measured and saved to registers. 
+            \item Additions are performed right before result is written to output and after optimization.
         \end{itemize}
     \end{minipage}
     \hfill
@@ -212,10 +244,10 @@
         \item The compiler performs general peephole optimizations based on rules presented by \cite{GaCh11}.
         \item They can be divided into four rules:
         \begin{enumerate}
-            \item \emph{null gate}, 
-            \item \emph{peeping control}, 
-            \item \emph{Hadamard reduction}, and
-            \item \emph{control reversal}. 
+            \item null gate, 
+            \item peeping control, 
+            \item Hadamard reduction, and
+            \item control reversal. 
         \end{enumerate}
     \end{itemize}
 \end{frame}
