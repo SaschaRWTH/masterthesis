@@ -14,6 +14,7 @@
 
 *slides.nav
 *slides.snm
+*slides.vrb
 
 # Ignore temporary draw.io files
 .$*.drawio.bkp
