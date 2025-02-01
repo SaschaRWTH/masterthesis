@@ -239,8 +239,8 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
 \subsection{Optimization}
 \begin{frame}{Optimization}
     \begin{itemize}
-        \item Compiler can perform optimizations to reduce number of gates and qubits.
-        \item Optimizations are performed to TCR $\to$ allow for more optimizations at cost of performance.
+        % \item Compiler can perform optimizations to reduce number of gates and qubits.
+        % \item Optimizations are performed to TCR $\to$ allow for more optimizations at cost of performance.
         \item Compiler performs general peephole optimizations based on rules presented by \cite{GaCh11}.
         \item Can be divided into four rules:
         \begin{enumerate}
@@ -249,25 +249,21 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
             \item Hadamard reduction rule (omitted).
             \item Control reversal (omitted).
         \end{enumerate}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Null Gate and Peeping Control Rules}
-    \begin{itemize}
+    % \end{itemize}
+    % \begin{itemize}
         \item Null gates are combinations of gates under specific conditions equivalent to $I$.
         \begin{itemize}
             \item Simplest null gate version is twofold application of self-inverse gate.
-            \item Can be removed entirely from circuit.
+            % \item Can be removed entirely from circuit.
         \end{itemize}
         \item Our peeping control rules are special case of null gates.
         \begin{itemize}
-            \item Control is $\ket{1}$ $\to$ remove control.
-            \item Control is $\ket{0}$ $\to$ remove gate.
+            \item Control is $\ket{1}$ $\to$ remove control, control is $\ket{0}$ $\to$ remove gate.
         \end{itemize}
     \end{itemize}
     \vfill
     \begin{minipage}{.45\textwidth}
-        \begin{figure}[htp!]
+        \begin{figure}
             \centering
             \[
                 \Qcircuit @C=.5em @R=0em {
@@ -283,7 +279,7 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
     \hfill
     \begin{minipage}{.45\textwidth}
         \centering
-        \begin{figure}[htp!]
+        \begin{figure}
             \[
                 \Qcircuit @C=1em @R=1em {
                     \lstick{\ket{0}} & \ctrl{1} & \qw & \raisebox{-2.2em}{=} & & \gate{I} & \qw \\
@@ -295,6 +291,50 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
         \end{figure}
     \end{minipage}
 \end{frame}
+
+% \begin{frame}{Null Gate and Peeping Control Rules}
+%     \begin{itemize}
+%         \item Null gates are combinations of gates under specific conditions equivalent to $I$.
+%         \begin{itemize}
+%             \item Simplest null gate version is twofold application of self-inverse gate.
+%             \item Can be removed entirely from circuit.
+%         \end{itemize}
+%         \item Our peeping control rules are special case of null gates.
+%         \begin{itemize}
+%             \item Control is $\ket{1}$ $\to$ remove control.
+%             \item Control is $\ket{0}$ $\to$ remove gate.
+%         \end{itemize}
+%     \end{itemize}
+%     \vfill
+%     \begin{minipage}{.45\textwidth}
+%         \begin{figure}[htp!]
+%             \centering
+%             \[
+%                 \Qcircuit @C=.5em @R=0em {
+%                     & \gate{H} & \gate{H} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{X} & \gate{X} & 
+%                     % \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{Y} & \gate{Y} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{Z} & \gate{Z} & 
+%                     \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{I} & \qw
+%                     }
+%             \]
+%             \caption{Null gates of self-inverse gates.}
+%             % \label{fig:nullgates_selfInverse}
+%         \end{figure}
+%     \end{minipage}
+%     \hfill
+%     \begin{minipage}{.45\textwidth}
+%         \centering
+%         \begin{figure}[htp!]
+%             \[
+%                 \Qcircuit @C=1em @R=1em {
+%                     \lstick{\ket{0}} & \ctrl{1} & \qw & \raisebox{-2.2em}{=} & & \gate{I} & \qw \\
+%                     \lstick{\ket{\psi}} & \gate{U} & \qw &           & & \gate{I} & \qw
+%                     }
+%             \]
+%             \caption{Null gates for gates in specific conditions.}
+%             % \label{fig:nullgates_control}
+%         \end{figure}
+%     \end{minipage}
+% \end{frame}
 
 % \begin{frame}{Hadamard Reduction and Control Reversal Rules}
 %     \begin{itemize}
