@@ -239,10 +239,10 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
 \subsection{Optimization}
 \begin{frame}{Optimization}
     \begin{itemize}
-        \item The compiler can perform optimizations to reduce both the number of gates and qubits.
-        \item The optimizations are performed to the TCR to allow for more optimizations at the cost of performance.
-        \item The compiler performs general peephole optimizations based on rules presented by \cite{GaCh11}.
-        \item They can be divided into four rules:
+        \item Compiler can perform optimizations to reduce number of gates and qubits.
+        \item Optimizations are performed to TCR $\to$ allow for more optimizations at cost of performance.
+        \item Compiler performs general peephole optimizations based on rules presented by \cite{GaCh11}.
+        \item Can be divided into four rules:
         \begin{enumerate}
             \item null gate, 
             \item peeping control, 
@@ -254,12 +254,16 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
 
 \begin{frame}{Null Gate and Peeping Control Rules}
     \begin{itemize}
-        \item Null gates are combinations of gates under specific conditions that are equivalent to the identity gate.
-        \item The simplest null gate version is the twofold application of a self-inverse gate.
-        \item They can be removed entirely from the circuit.
-        \item Our peeping control rules are a special case of null gates.
-        \item In this case, the value of a control is known and the gate can be removed if it is not applied.
-        \item Since the implementation of the rules differs greatly from the other null gate rules, it is separated as its own rule. 
+        \item Null gates are combinations of gates under specific conditions equivalent to $I$.
+        \begin{itemize}
+            \item Simplest null gate version is twofold application of self-inverse gate.
+            \item Can be removed entirely from circuit.
+        \end{itemize}
+        \item Our peeping control rules are special case of null gates.
+        \begin{itemize}
+            \item Control is $\ket{1}$ $\to$ remove control.
+            \item Control is $\ket{0}$ $\to$ remove gate.
+        \end{itemize}
     \end{itemize}
     \vfill
     \begin{minipage}{.45\textwidth}
@@ -294,10 +298,10 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
 
 \begin{frame}{Hadamard Reduction and Control Reversal Rules}
     \begin{itemize}
-        \item The Hadamard reduction can reduce either an $X$ or a $Z$ gate surrounded by $H$ gates to the other without the surrounding gates.
-        \item The rule is also the basis for the control reversal.
-        \item It emerges when the Hadamard reduction is combined with the control reversal of the controlled-$Z$ gate.
-        \item A controlled-not gate surrounded by Hadamard gates is equivalent to the target and control qubits exchanged without Hadamard gates.
+        \item Hadamard reduction can reduce either $X$ or $Z$ surrounded by $H$ to the other without surrounding $H$.
+        \item Rule is basis for control reversal.
+        \item Emerges when Hadamard reduction is combined with control reversal of $CZ$.
+        \item A $CX$ surrounded by $H$ is equivalent to target and control qubits exchanged without $H$.
     \end{itemize}
     \vfill
     \begin{minipage}{.45\textwidth}
@@ -333,29 +337,15 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
 
 \begin{frame}{Cricuit Graph}
     \begin{itemize}
-        \item Instead of applying the rules directly to the program, it is translated to a circuit graph.
-        \item Then, the graph is optimized and the result is translated back to an OpenQASM program.
-        \item The circuit graph $C$ is acyclic and directed.
-        \item It consists of a set of nodes $V$ --- split into input, output, and gate nodes --- and edges $E$.
-        \item Additionally, it contains a set of qubits $Q$ and two functions that map nodes $Q_V$ and edges $Q_E$ to qubits.
-    \end{itemize}
-    \vfill
-    \begin{align*}
-        C &= (V, E, Q, Q_E, Q_V)\\
-        V &= \underbrace{I}_{\text{Input Nodes}} \cup \underbrace{O}_{\text{Output Nodes}} \cup \underbrace{G}_{\text{Gate Nodes}}\\
-        E &\subseteq \{ (x, y) \mid x,y \in V \land x \neq y \}\\
-        Q_V &: I \cup O \to Q \\
-        Q_E &: E \to Q
-    \end{align*}
-\end{frame}
-
-\begin{frame}{Example Circuit Graph}
-    \begin{itemize}
-        \item Input and output nodes have only one outgoing or incoming edge, respectively. 
-        \item For each qubit, $C$ contains an input-output node pair.
-        \item Each edge coming into a gate node has a corresponding outgoing one with the same qubit.
-        \item These represent an argument of the gate application.
-        \item The wire for qubit $q$ is represented by the path from the input to the output node where all edges map to $q$.
+        \item Rules not directly applied to program, but to circuit graph.
+        \item Program $\xrightarrow{\text{Translation}}$ Graph $\xrightarrow{\text{Optimization}}$ Graph $\xrightarrow{\text{Translation}}$ Program  
+        \item Circuit graph is acyclic and directed.
+        \begin{itemize}
+            \item Nodes split into input, output, gate nodes.
+            \item Input, output nodes have only one outgoing, incoming edge. 
+            \item Each input, output, edge corresponds belongs to qubit in program.
+            \item Qubit wire represented by path from input to output node over corresponding edges.
+        \end{itemize}
     \end{itemize}
     \vfill
     \begin{minipage}{.35\textwidth}
@@ -373,20 +363,56 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
             % \label{fig:circuit_graph_unoptimized}
         \end{figure}
     \end{minipage}
+    % \begin{align*}
+    %     C &= (V, E, Q, Q_E, Q_V)\\
+    %     V &= \underbrace{I}_{\text{Input Nodes}} \cup \underbrace{O}_{\text{Output Nodes}} \cup \underbrace{G}_{\text{Gate Nodes}}\\
+    %     E &\subseteq \{ (x, y) \mid x,y \in V \land x \neq y \}\\
+    %     Q_V &: I \cup O \to Q \\
+    %     Q_E &: E \to Q
+    % \end{align*}
 \end{frame}
+
+% \begin{frame}{Example Circuit Graph}
+%     \begin{itemize}
+%         \item Input and output nodes have only one outgoing or incoming edge, respectively. 
+%         \item For each qubit, $C$ contains an input-output node pair.
+%         \item Each edge coming into a gate node has a corresponding outgoing one with the same qubit.
+%         \item These represent an argument of the gate application.
+%         \item The wire for qubit $q$ is represented by the path from the input to the output node where all edges map to $q$.
+%     \end{itemize}
+%     \vfill
+%     \begin{minipage}{.35\textwidth}
+%         \begin{figure}
+%             \centering
+%             \lstinputlisting[style=Luie, basicstyle=\Large\ttfamily]{../figures/code/slides/optimization_example.luie}
+%             \caption{A simple, unoptimized program.}
+%         \end{figure}
+%     \end{minipage}
+%     \begin{minipage}{.60\textwidth}
+%         \begin{figure}[htp]
+%             \centering     
+%             \includegraphics[width=.9\textwidth]{../figures/drawio/circuit_graph_unoptimized.pdf}
+%             \caption{An example of a simple, unoptimized circuit graph.}
+%             % \label{fig:circuit_graph_unoptimized}
+%         \end{figure}
+%     \end{minipage}
+% \end{frame}
 
 \begin{frame}{Example Optimization Process I}
     \begin{itemize}
         \item To optimize the graph, each qubit wire is iterated.
-        \item All subpaths up to a maximum length are checked for optimized alternatives.
-        \item In the example, the peeping control rule can be applied to the first $CX$ gate.
-        \item Next, the $HH$ null gate can be removed. 
+        \item All subpaths (up to max. length) checked for alternatives.
+        \item Example:
+        \begin{itemize}
+            \item {\color{commentgreen}First wire}: Peeping control rule can be applied to first $CX$ gate.
+            \item {\color{red}Third wire}: $HH$ null gate can be removed. 
+        \end{itemize}
     \end{itemize}
     \vfill
     \begin{minipage}{.55\textwidth}
         \begin{figure}[htp]
             \centering     
-            \includegraphics[width=.9\textwidth]{../figures/drawio/circuit_graph_unoptimized.pdf}
+            \includegraphics[width=.9\textwidth]{../figures/drawio/slides/circuit_graph_unoptimized_colored.pdf}
             \caption{An example of a simple, unoptimized circuit graph.}
             % \label{fig:circuit_graph_unoptimized}
         \end{figure}
@@ -403,18 +429,21 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
 
 \begin{frame}{Example Optimization Process II}
     \begin{itemize}
-        \item While all qubit wires were iterated, there are still possible optimizations.
-        \item This is because applying optimizations may enable others.
-        \item Therefore, the optimization is repeated as long as the previous iteration applied optimizations.
-        \item In the next iteration, the $XX$ null gate can be removed.
-        \item Additionally, a peeping control rule can be applied to the remaining $CX$ gate.
+        \item While all qubit wires iterated, still possible optimizations.
+        \item Applying optimizations may enable others!
+        \item[$\Rightarrow$] Optimization repeated as long as previous iteration applied optimizations.
+        \item Example:
+        \begin{itemize}
+            \item {\color{commentgreen}First wire}: $XX$ null gate can be removed.
+            \item {\color{red}Second wire}: Peeping control rule can be applied to $CX$ gate.
+        \end{itemize}
     \end{itemize}
     \vfill
     \hfill
     \begin{minipage}{.40\textwidth}
         \begin{figure}[htp]
             \centering     
-            \includegraphics[width=\textwidth]{../figures/drawio/circuit_graph_optimized_firststep.pdf}
+            \includegraphics[width=\textwidth]{../figures/drawio/slides/circuit_graph_optimized_firststep_colored.pdf}
             \caption{The circuit graph after the first optimization step.}
             % \label{fig:circuit_graph_first_optimized}
         \end{figure}
