@@ -23,25 +23,25 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}{Symbols and Symbol Table}
-    \begin{minipage}{.45\textwidth}
-        \begin{itemize}
-            \item Symbol table used to save and propagate symbol information.
-            \item Handles higher-level concepts such as variable contexts. %! Not inherent since not functional impl.
-            \item Contains dictionary that maps identifiers to symbol objects.
-            \item All symbol objects derived from abstract symbol class.
-        \end{itemize}    
-    \end{minipage}
-    \begin{minipage}{.50\textwidth}
-        \centering
-        \begin{figure}[htp]
-            \centering
-            \includegraphics[]{../figures/drawio/slides/uml_symbols.pdf}
-            \caption{A diagram showing the hierarchy of symbol classes.}
-            % \label{fig:implementation_uml_errors}
-        \end{figure}
-    \end{minipage}
-\end{frame}
+% \begin{frame}{Symbols and Symbol Table}
+%     \begin{minipage}{.45\textwidth}
+%         \begin{itemize}
+%             \item Symbol table used to save and propagate symbol information.
+%             \item Handles higher-level concepts such as variable contexts. %! Not inherent since not functional impl.
+%             \item Contains dictionary that maps identifiers to symbol objects.
+%             \item All symbol objects derived from abstract symbol class.
+%         \end{itemize}    
+%     \end{minipage}
+%     \begin{minipage}{.50\textwidth}
+%         \centering
+%         \begin{figure}[htp]
+%             \centering
+%             \includegraphics[]{../figures/drawio/slides/uml_symbols.pdf}
+%             \caption{A diagram showing the hierarchy of symbol classes.}
+%             % \label{fig:implementation_uml_errors}
+%         \end{figure}
+%     \end{minipage}
+% \end{frame}
 
 \subsection{Lexical and Syntactic Analysis}
 \begin{frame}{Lexical and Syntactic Analysis}
@@ -73,8 +73,8 @@
     \begin{figure}[htp]
         \centering     
         \begin{lstlisting}[style=Luie, mathescape=true,basicstyle=\ttfamily\large, literate={↑}{$\aup{}$}{1}, escapechar=\%] 
-qubit c;               /* $\adown$ Type error (cannot use qubits in arith. expression) */       
-const regSize : int = c + %\uwave{2}%; 
+qubit c;           /* $\adown$ Type error (cannot use qubits in arith. expression) */       
+const regSize : int = %\uwave{c}% + 2; 
             /* $\adown$ Already declared */      
 qubit[regSize] %\uwave{c}%;
               /* $\adown$ Type error (expects a register or qubit) */                      
@@ -244,10 +244,10 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
         \item Compiler performs general peephole optimizations based on rules presented by \cite{GaCh11}.
         \item Can be divided into four rules:
         \begin{enumerate}
-            \item null gate, 
-            \item peeping control, 
-            \item Hadamard reduction, and
-            \item control reversal. 
+            \item Null gate rule. 
+            \item Peeping control rule.
+            \item Hadamard reduction rule (omitted).
+            \item Control reversal (omitted).
         \end{enumerate}
     \end{itemize}
 \end{frame}
@@ -296,44 +296,44 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
     \end{minipage}
 \end{frame}
 
-\begin{frame}{Hadamard Reduction and Control Reversal Rules}
-    \begin{itemize}
-        \item Hadamard reduction can reduce either $X$ or $Z$ surrounded by $H$ to the other without surrounding $H$.
-        \item Rule is basis for control reversal.
-        \item Emerges when Hadamard reduction is combined with control reversal of $CZ$.
-        \item A $CX$ surrounded by $H$ is equivalent to target and control qubits exchanged without $H$.
-    \end{itemize}
-    \vfill
-    \begin{minipage}{.45\textwidth}
-        \begin{figure}[htp!]
-            \centering
-            \[
-                \Qcircuit @C=.5em @R=0em {
-                    % & \gate{H} & \gate{H} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & 
-                    & \gate{H} & \gate{Z} & \gate{H} & 
-                    % \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{Y} & \gate{Y} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{Z} & \gate{Z} & 
-                    \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{X} & \qw
-                    }
-            \]
-            \caption{A Hadamard reduction rule.}
-            % \label{fig:nullgates_selfInverse}
-        \end{figure}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{.45\textwidth}
-        \centering
-        \begin{figure}[htp!]
-            \[
-                \Qcircuit @C=1em @R=1em {
-                   & \gate{H} & \ctrl{1} & \gate{H} & \qw & \raisebox{-2.2em}{=} & & \targ & \qw \\
-                   & \gate{H} & \targ & \gate{H} & \qw &           & & \ctrl{-1} & \qw
-                    }
-            \]
-            \caption{Null gates for gates in specific conditions.}
-            % \label{fig:nullgates_control}
-        \end{figure}
-    \end{minipage}
-\end{frame}
+% \begin{frame}{Hadamard Reduction and Control Reversal Rules}
+%     \begin{itemize}
+%         \item Hadamard reduction can reduce either $X$ or $Z$ surrounded by $H$ to the other without surrounding $H$.
+%         \item Rule is basis for control reversal.
+%         \item Emerges when Hadamard reduction is combined with control reversal of $CZ$.
+%         \item A $CX$ surrounded by $H$ is equivalent to target and control qubits exchanged without $H$.
+%     \end{itemize}
+%     \vfill
+%     \begin{minipage}{.45\textwidth}
+%         \begin{figure}[htp!]
+%             \centering
+%             \[
+%                 \Qcircuit @C=.5em @R=0em {
+%                     % & \gate{H} & \gate{H} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & 
+%                     & \gate{H} & \gate{Z} & \gate{H} & 
+%                     % \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{Y} & \gate{Y} & \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{Z} & \gate{Z} & 
+%                     \qw & \push{\rule{.3em}{0em}=\rule{.3em}{0em}} & & \gate{X} & \qw
+%                     }
+%             \]
+%             \caption{A Hadamard reduction rule.}
+%             % \label{fig:nullgates_selfInverse}
+%         \end{figure}
+%     \end{minipage}
+%     \hfill
+%     \begin{minipage}{.45\textwidth}
+%         \centering
+%         \begin{figure}[htp!]
+%             \[
+%                 \Qcircuit @C=1em @R=1em {
+%                    & \gate{H} & \ctrl{1} & \gate{H} & \qw & \raisebox{-2.2em}{=} & & \targ & \qw \\
+%                    & \gate{H} & \targ & \gate{H} & \qw &           & & \ctrl{-1} & \qw
+%                     }
+%             \]
+%             \caption{Null gates for gates in specific conditions.}
+%             % \label{fig:nullgates_control}
+%         \end{figure}
+%     \end{minipage}
+% \end{frame}
 
 \begin{frame}{Cricuit Graph}
     \begin{itemize}

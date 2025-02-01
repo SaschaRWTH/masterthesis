@@ -18,13 +18,13 @@
 
 \subsection{Syntax}
 \begin{frame}[fragile]{Syntax}
-    \begin{itemize}
-        \item Define $CFG_{Luie}$ for our language.
-        \item Start symbol is the program, consisting of gate declarations and a block.
-        \item A block is a list of translatables, either statements or declarations.
-    \end{itemize}
-    \vfill
     \begin{minipage}{.45\textwidth}
+        \begin{itemize}
+            \item Define $CFG_{Luie}$ for our language.
+            \item Start symbol is the program, consisting of gate declarations and a block.
+            \item A block is a list of translatables, either statements or declarations.
+        \end{itemize}
+        \vfill
         \Large
         \begin{align*}
             CFG_{Luie} = \ & (V_{Luie}, \Sigma_{Luie}, R_{Luie}, prg_{Luie} )\\ 
@@ -52,11 +52,15 @@
             \begin{lstlisting}[style=Luie, basicstyle=\ttfamily\large]
 /* Gate Declaration */
 gate c_h_reg(control, reg) do
+   /* Block Start */
+
    qif control do
      for i in range(sizeof(reg)) do
-       h reg[i];
+       h reg[i];  
      end
    end
+
+   /* Block End */
 end
 
 /* Block Start */
@@ -93,10 +97,6 @@ c_h_reg c, a;
             % Expression: \ & exp ::= n \mid id \mid exp_1 \texttt{ + } exp_2 \mid exp_1 \texttt{ - } exp_2 \mid \dots\\
             % RangeExpression: \ & rExp ::= n_1 .. n_2 \mid \texttt{range(} exp \texttt{)} \mid \texttt{range(} exp_1, exp_2 \texttt{)}
     \end{align*}
-    \vspace{\alignmargin}
-    \begin{equation*}
-        ConstGates = \{\texttt{h}, \texttt{x}, \texttt{y}, \texttt{z}, \texttt{cx}, \texttt{ccx}\}
-    \end{equation*}
     \end{minipage}
     \begin{minipage}{.50\textwidth}
         \begin{figure}[htp]
@@ -109,14 +109,16 @@ gate c_h_reg(control, reg) do
       for i in range(sizeof(reg)) do
              /* ↑ Range Exp. */
          h reg[i];
+         /* ↑ Qubit Argument */
       end
    end
 end
 
 const regSize : int = 3; 
 qubit c;
-qubit[regSize] a;        
-c_h_reg c, a;  // Gate Application  
+qubit[regSize] a;
+/* Composite Gate Application */
+c_h_reg c, a;  
       /* ↑  ↑ Qubit Argument */                 
             \end{lstlisting}
             \caption{Luie program with statements and arguments highlighted.}
@@ -169,6 +171,9 @@ c_h_reg c, a;  // Gate Application
     \end{itemize}
     \Large
     \begin{align*}
+        trans(\texttt{gate c\_h\_reg} \dots) =& \ \texttt{OPENQASM 3.0;}\\
+                                              & \ \texttt{include "stdgates.inc";}\\
+                                              & \ bt(\texttt{const regSize = 3;} \dots, up(st_\epsilon, \texttt{gate c\_h\_reg} \dots))\\
         st_1 = up(st_\epsilon, \texttt{gate c\_h\_reg} \dots) =& \ 
         [ \texttt{c\_h\_reg} \mapsto (\texttt{gate}, \texttt{qif control do ... end}, \\
         & \quad\quad\quad\quad\quad\quad\quad \texttt{control}, \texttt{reg})  ]\\
@@ -180,42 +185,42 @@ c_h_reg c, a;  // Gate Application
     \end{align*}
 \end{frame}
 
-\begin{frame}{Translatable and Declaration Translation}
-    \begin{itemize}
-        \item $tt$ translates each translatable, differentiates between declaration and command.
-        \item Declarations translated by $dt$. 
-        \item Update symbol table $\to$ function returns (updated) symbol table.
-        \item Language allows for different variable scopes $\to$ same identifier can be used multiple times.
-        \item[$\Rightarrow$] Unique identifier $uid$ is generated for translation. 
-    \end{itemize}
-    \LARGE
-    \begin{align*}
-        tt(\texttt{c\_h\_reg c, a;}, st) =& \ (ct(\texttt{c\_h\_reg c, a;}, st), st)\\
-        tt(\texttt{qubit c;}, st) =& \ dt(\texttt{qubit c;}, st)\\
-        &\\
-        dt(\texttt{qubit c;}, st) =& \ (\texttt{qubit } uid_c \texttt{;}, up(st, \texttt{qubit c;}))\\
-        &\\
-        up(st, \texttt{qubit c;}) =& \ st[\texttt{c} \mapsto (\texttt{qubit}, 1, uid_c)]
-    \end{align*}
-\end{frame}
+% \begin{frame}{Translatable and Declaration Translation}
+%     \begin{itemize}
+%         \item $tt$ translates each translatable, differentiates between declaration and command.
+%         \item Declarations translated by $dt$. 
+%         \item Update symbol table $\to$ function returns (updated) symbol table.
+%         \item Language allows for different variable scopes $\to$ same identifier can be used multiple times.
+%         \item[$\Rightarrow$] Unique identifier $uid$ is generated for translation. 
+%     \end{itemize}
+%     \LARGE
+%     \begin{align*}
+%         tt(\texttt{c\_h\_reg c, a;}, st) =& \ (ct(\texttt{c\_h\_reg c, a;}, st), st)\\
+%         tt(\texttt{qubit c;}, st) =& \ dt(\texttt{qubit c;}, st)\\
+%         &\\
+%         dt(\texttt{qubit c;}, st) =& \ (\texttt{qubit } uid_c \texttt{;}, up(st, \texttt{qubit c;}))\\
+%         &\\
+%         up(st, \texttt{qubit c;}) =& \ st[\texttt{c} \mapsto (\texttt{qubit}, 1, uid_c)]
+%     \end{align*}
+% \end{frame}
 
-\begin{frame}{Command Translation}
-    \begin{itemize}
-        \item Commands are translated with $ct$.
-        \item Argument translation $qt$ used to differentiate between qubits and register accesses, get $uid$.
-        \item $control$ adds the translated $qArg$ as guard to all gate applications in translation.  
-    \end{itemize}
-    \begin{align*}
-        st =& \ [ \texttt{c} \mapsto (\texttt{qubit}, 1, uid_c),\\
-            & \ \ \ \texttt{a} \mapsto (\texttt{qubit}, 3, uid_a)]\\
-            &\\
-        ct(\texttt{if c do x a[0]; end}, st) =& \ control(qt(c, st), bt(\texttt{x a[0];}, st))\\
-                                             =& \ control(uid_c, \texttt{x } uid_a[0] \texttt{;})\\
-        qt(c, st) =& \ st[c]_3 = uid_c\\
-        bt(\texttt{x a[0];}, st) =& \ \texttt{x } qt(a[0]) \texttt{;} = \texttt{x } uid_a[0] \texttt{;}\\
-            &\\
-        control(uid_c, \texttt{x } uid_a[0] \texttt{;}) =& \ \texttt{ctrl(1) @ x } uid_c, uid_a \texttt{;} 
-    \end{align*}
+% \begin{frame}{Command Translation}
+%     \begin{itemize}
+%         \item Commands are translated with $ct$.
+%         \item Argument translation $qt$ used to differentiate between qubits and register accesses, get $uid$.
+%         \item $control$ adds the translated $qArg$ as guard to all gate applications in translation.  
+%     \end{itemize}
+%     \begin{align*}
+%         st =& \ [ \texttt{c} \mapsto (\texttt{qubit}, 1, uid_c),\\
+%             & \ \ \ \texttt{a} \mapsto (\texttt{qubit}, 3, uid_a)]\\
+%             &\\
+%         ct(\texttt{if c do x a[0]; end}, st) =& \ control(qt(c, st), bt(\texttt{x a[0];}, st))\\
+%                                              =& \ control(uid_c, \texttt{x } uid_a[0] \texttt{;})\\
+%         qt(c, st) =& \ st[c]_3 = uid_c\\
+%         bt(\texttt{x a[0];}, st) =& \ \texttt{x } qt(a[0]) \texttt{;} = \texttt{x } uid_a[0] \texttt{;}\\
+%             &\\
+%         control(uid_c, \texttt{x } uid_a[0] \texttt{;}) =& \ \texttt{ctrl(1) @ x } uid_c, uid_a \texttt{;} 
+%     \end{align*}
     % \begin{align*}
     %     ct : \ & Statement \times SymbolTable \dashrightarrow QASM \\        
     %     ct(\texttt{qif } qArg \texttt{ do } blk \texttt{ end}, st) = \ &  control(qt(qArg, st), bt(blk, st)) \\
@@ -228,7 +233,7 @@ c_h_reg c, a;  // Gate Application
     %     control(qArg, & \ \texttt{ctrl(}n \texttt{) @ } && id \ qArg_1, \dots, qArg_{n'} \texttt{;}) = \\
     %     & \ \texttt{ctrl(}n+1 \texttt{) @ } && id \ qArg, qArg_1, \dots, qArg_{n'}\texttt{;}
     % \end{align*}
-\end{frame}
+% \end{frame}
 
 % \begin{frame}{Command Translation}
 %     \begin{itemize}

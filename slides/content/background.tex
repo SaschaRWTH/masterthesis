@@ -18,35 +18,44 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Limitations --- Reversibility}
+\begin{frame}{Limitations}
     \begin{itemize}
         \item Mainly limited by two principles: \emph{reversibility} and \emph{synchronization}.
         \item Instructions required to be reversible, as they are unitary transformations.
-        \item[$\Rightarrow$] Control flow, as implemented in classical computers, not possible.
-        % \item For example, any classical jump instruction is inherently irreversible.
-        % \item Two jumps can lead to the same location such that a reversed program cannot know from where the jump came
-        \item Landauer Embedding~\cite{Land61} seems to offer solution.
-        % \item The embedding can turn any non-reversible function into a reversible one by not only returning the output but also the input of the function.
-        \item Can make non-reversible function $f : D \to D'$ reversible by outputting input value.
-        \item Result is $g : D \to D' \times D$ with $g(x) = (f(x), x)$.
-        \item However, output includes program history and the result depends on the history, they become entangled.
-        \item Leads to disruptive entanglement, invalid results~\cite{YVC24}.
+        \begin{itemize}
+            \item[$\Rightarrow$] Control flow, as implemented in classical computers, not possible.
+            % \item For example, any classical jump instruction is inherently irreversible.
+            % \item Two jumps can lead to the same location such that a reversed program cannot know from where the jump came
+            \item Landauer Embedding~\cite{Land61} seems to offer solution.
+            % \item The embedding can turn any non-reversible function into a reversible one by not only returning the output but also the input of the function.
+            \item Can make non-reversible function reversible by outputting input value.
+            \item However, output includes program history and result depends on the history $\to$ become entangled.
+            \item Leads to disruptive entanglement, invalid results~\cite{YVC24}.
+        \end{itemize}
+        \item Program counter may become entangled with data.
+        \begin{itemize}
+            \item[$\Rightarrow$] Disruptive entanglement.
+            \item The principle of synchronization: \emph{Control flow must become independent from data}.
+            \item Program may include padding operations to ensure synchronization.
+            \item[$\Rightarrow$] Loops cannot depend solely on value in superposition.
+            \item[$\Rightarrow$] Instead, a loop must be bounded by classical value~\cite{YVC24}. 
+        \end{itemize} 
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Limitations --- Synchronization}
-    \begin{itemize}
-        \item Program counter may become entangled with data.
-        \item[$\Rightarrow$] Disruptive entanglement.
-        \item The principle of synchronization: Control flow must become independent from the data.
-        \item Program may include padding operations to ensure synchronization.
-        \item[$\Rightarrow$] Loops cannot depend solely on value in superposition.
-        \item[$\Rightarrow$] Instead, a loop must be bounded by classical value~\cite{YVC24}. 
-        % \item An example of this is the \emph{Tortoise and hare} problem.
-        % \item When a program is run with a loop based on a superposition of two different values, the loop is executed a different number of times and one will finish first.
-        % \item The control flow must become independent of the data, but the program cannot wait.
-    \end{itemize}
-\end{frame}
+% \begin{frame}{Limitations --- Synchronization}
+%     \begin{itemize}
+%         \item Program counter may become entangled with data.
+%         \item[$\Rightarrow$] Disruptive entanglement.
+%         \item The principle of synchronization: Control flow must become independent from the data.
+%         \item Program may include padding operations to ensure synchronization.
+%         \item[$\Rightarrow$] Loops cannot depend solely on value in superposition.
+%         \item[$\Rightarrow$] Instead, a loop must be bounded by classical value~\cite{YVC24}. 
+%         % \item An example of this is the \emph{Tortoise and hare} problem.
+%         % \item When a program is run with a loop based on a superposition of two different values, the loop is executed a different number of times and one will finish first.
+%         % \item The control flow must become independent of the data, but the program cannot wait.
+%     \end{itemize}
+% \end{frame}
 
 \subsection{Quantum Control Machine}
 \begin{frame}{Quantum Control Machine}
