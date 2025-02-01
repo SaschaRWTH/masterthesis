@@ -1,44 +1,49 @@
 \section{Evaluation}
 \begin{frame}{Evaluation}
     \begin{itemize}
-        \item The evaluation consists of two aspects:
+        \item Evaluation consists of two aspects:
         \begin{enumerate}
-            \item the optimizations performed by the compiler and
-            \item the execution time of the compilation stages.
+            \item optimizations performed by compiler and
+            \item execution time of compilation stages.
         \end{enumerate}
-        \item As an example program, we use the quantum ripple-carry adder proposed by \cite{CDKM04}.
-        \item It takes two registers $a$ and $b$ as well as two qubits $cin$ and $cout$.
-        \item The adder adds the $a$ register to the $b$ register.
-        \item The $cin$ and $cout$ qubits are used as input and output carry bits.
-        \item In our implementation, it consists of $CX$ and $CCX$ gates.
+        \item Example program: quantum ripple-carry adder proposed by \cite{CDKM04}.
+        \begin{itemize}
+            \item Takes two registers $a$ and $b$, two qubits $cin$ and $cout$.
+            \item Adder adds $a$ register to $b$ register.
+            \item $cin$ and $cout$ qubits are used as input, output carry bits.
+        \end{itemize}
+        \item Our implementation consists only of $CX$ and $CCX$.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Optimization Evaluation}
     \begin{itemize}
-        \item For the optimization evaluation, we used both inputs with classical values and values in superposition.
-        \item The first inputs were $a = \ket{1}$ and $b = \ket{15}$.
+        \item For optimization evaluation, classical inputs and in superposition.
+        \item First inputs: $a = \ket{1}$ and $b = \ket{15}$.
         \begin{itemize}
-            \item Since the inputs are classical values, peeping control rules and null gate rules can be applied.
-            \item The circuit can be optimized such that the resulting one only contains gates that initialize the result.
-            \item Only two X gates remain. 
-            \item While the first gate flips the first qubit of the a register, initializing it to $\ket{1}$, the second flips the carry output qubit, indicating a result of $\ket{16}$.
+            \item Classical inputs $\to$ peeping control rules, null gate rules can be applied.
+            \item Optimized circuit: only gates that initialize the result.
+            \item Only two $X$ gates remain. 
+            \item First $X$ flips $a[0]$ qubit $\to a = \ket{1}$, second flips $cout$, indicating result of $\ket{16}$.
         \end{itemize}
-        \item The second inputs were $a = \frac{1}{\sqrt{2}} (\ket{0} + \ket{3})$ and $b = \ket{4}$.
+        \item Second inputs: $a = \frac{1}{\sqrt{2}} (\ket{0} + \ket{3})$ and $b = \ket{4}$.
         \begin{itemize}
-            \item Since the inputs are now values in superposition, peeping control rules and null gate rules can only partially be applied.
-            \item In this case, only twelve of 25 gates can be optimized.
-            \item For other inputs in superposition, even fewer gates are optimized.
+            \item Inputs in superposition $\to$ peeping control rules, null gate rules only applied \emph{partially}.
+            \item Only $\frac{12}{25}$ gates can be optimized.
+            \item Other inputs in superposition: even fewer gates optimized.
         \end{itemize}
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Performance Evaluation}
     \begin{itemize}
-        \item To evaluate the performance, we compiled the adder with an input of $a = \frac{1}{\sqrt{2}} (\ket{0} + \ket{3})$ and $b = 15$ for different register sizes $n$.
-        \item Since the program size does not change, the execution times of the semantic analysis remain constant.
-        \item The code generation stage shows a linear increase, as the compiled program increases linearly with the register size.
-        \item The optimization has the worst performance with an approximate quadratic increase.
+        \item Compiled adder with input of $a = \frac{1}{\sqrt{2}} (\ket{0} + \ket{3})$ and $b = 15$ for different register sizes $n$.
+        \item Program size does not change $\to$ execution times of the semantic analysis remain constant.
+        \item Code generation stage: linear increase.
+        \begin{itemize}
+            \item Unrolled loop $\to$ compiled program increases linearly.
+        \end{itemize}
+        \item Optimization worst performance, approximate quadratic increase.
     \end{itemize}
     \begin{table}[htp]
         \centering     
