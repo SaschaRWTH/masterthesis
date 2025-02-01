@@ -62,11 +62,11 @@
     \begin{itemize}
         \item Quantum Control Machine (QCM), proposed by \cite{YVC24}
         \item Focused on quantum control flow.
-        \item Syntax and logic similar to classical assembly language
+        \item Syntax and logic similar to classical assembly language.
         % for example, utilizing (conditional) jump instructions.
         \item Employs a branch control register $bcr$ to enable reversible jumps.
         \item Instead of increasing IP by $1$ after statement, increased by value of $bcr$.
-        \item The $bcr$ can then be reversibly modified.
+        \item $bcr$ can then be reversibly modified.
         \begin{itemize}
             \item To jump by $5$, the $bcr$ increased by $5$
             \item At its destination, decreased by $5$ again.
@@ -78,36 +78,36 @@
 \begin{frame}{Instructions}
     \begin{itemize}
         \item Here, some instructions of the QCM are listed.
-        \item For every instruction there exists a reversed instruction, \eg, \texttt{radd} is the subtraction operation.
+        \item Reversed instruction for every instruction, \eg, \texttt{radd} is the subtraction operation.
     \end{itemize}
     \begin{table}[htp]
         \centering
-        \begin{threeparttable}[b]
-            \begin{tabular}{llp{.5\textwidth}}
-                \multicolumn{1}{l|}{Operation}                          & \multicolumn{1}{l|}{Syntax}                                      & Semantics\tnote{1}                                                              \\ \hline
-                
-                \multicolumn{1}{l|}{No-op}                              & \multicolumn{1}{l|}{\texttt{nop}}               & Only increases instruction pointer by the $bcr$.     \\ \hline
-                
-                \multicolumn{1}{l|}{Addition}                           & \multicolumn{1}{l|}{\texttt{add} $ra$ $rb$}     & Adds register $rb$ to $ra$.                                            \\
-                \multicolumn{1}{l|}{Multiplication}                     & \multicolumn{1}{l|}{\texttt{mul} $ra$ $rb$}     & Multiplies register $ra$ by $rb$.                                      \\ \hline
-                
-                \multicolumn{1}{l|}{Jump}                               & \multicolumn{1}{l|}{\texttt{jmp} $p$}           & Increases $bcr$ by $p$.                              \\ \hline
-                \multicolumn{1}{l|}{\multirow{2}{*}{Conditional Jumps}} & \multicolumn{1}{l|}{\texttt{jz} $p$ $ra$}       & Increases $bcr$ by $p$ if $ra$ is $0$.               \\
-                \multicolumn{1}{l|}{}                                   & \multicolumn{1}{l|}{\texttt{jne} $p$ $ra$ $rb$} & Increases $bcr$ by $p$ if $ra$ is not equal to $rb$. 
-                % \\ \hline \multicolumn{3}{p{.9\textwidth}}{\small * }                                                                  
-            \end{tabular}
-            \begin{tablenotes}
-                \item [1] After all operations, the instruction pointer is increased by the value of the $bcr$.
-            \end{tablenotes}
-        \end{threeparttable}
+        \begin{tabular}{llp{.5\textwidth}}
+            \multicolumn{1}{l|}{Operation}                          & \multicolumn{1}{l|}{Syntax}                                      & Semantics                                                              \\ \hline
+            
+            \multicolumn{1}{l|}{No-op}                              & \multicolumn{1}{l|}{\texttt{nop}}               & Only increases instruction pointer by the $bcr$.     \\ \hline
+            
+            \multicolumn{1}{l|}{Addition}                           & \multicolumn{1}{l|}{\texttt{add} $ra$ $rb$}     & Adds register $rb$ to $ra$.                                            \\
+            \multicolumn{1}{l|}{Multiplication}                     & \multicolumn{1}{l|}{\texttt{mul} $ra$ $rb$}     & Multiplies register $ra$ by $rb$.                                      \\ \hline
+            
+            \multicolumn{1}{l|}{Jump}                               & \multicolumn{1}{l|}{\texttt{jmp} $p$}           & Increases $bcr$ by $p$.                              \\ \hline
+            \multicolumn{1}{l|}{\multirow{2}{*}{Conditional Jumps}} & \multicolumn{1}{l|}{\texttt{jz} $p$ $ra$}       & Increases $bcr$ by $p$ if $ra$ is $0$.               \\
+            \multicolumn{1}{l|}{}                                   & \multicolumn{1}{l|}{\texttt{jne} $p$ $ra$ $rb$} & Increases $bcr$ by $p$ if $ra$ is not equal to $rb$. 
+            % \\ \hline \multicolumn{3}{p{.9\textwidth}}{\small * }                                                                  
+        \end{tabular}
+        % \begin{threeparttable}[b]
+        %     \begin{tablenotes}
+        %         \item [1] After all operations, the instruction pointer is increased by the value of the $bcr$.
+        %     \end{tablenotes}
+        % \end{threeparttable}
         \caption{An excerpt of the QCM instruction set with instructions used in later examples.}
-        \label{tab:qcm_instructionset}
+        % \label{tab:qcm_instructionset}
     \end{table}
 \end{frame}
 
 \begin{frame}{(Non-) Reversible Example}
     \begin{itemize}
-        \item Example of a classical program and the reversible equivalent.
+        \item Example of a classical program and reversible equivalent.
         \item Both programs calculate $x^y$. 
         \item Neither are synchronized because loop is not bound by classical value.
     \end{itemize}
@@ -129,7 +129,7 @@
 
 \begin{frame}{Reversible Synchronized Example}
     \begin{itemize}
-        \item Synchronized implementation, calculating $x^{\min{y, max}}$.
+        \item Synchronized implementation, calculating $x^{\min(y, max)}$.
         \item $max$ is a classical bound for loop.
         \item Line $9$ includes padding instruction.
     \end{itemize}

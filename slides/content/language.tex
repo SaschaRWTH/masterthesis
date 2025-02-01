@@ -13,6 +13,7 @@
             \item loop statements, unrolled at compile time, and
             \item quantum if- and else-statements.
         \end{itemize}
+        \item Implicit measurements
     \end{itemize}
 \end{frame}
 
@@ -141,33 +142,40 @@ c_h_reg c, a;
 % \end{frame}
 
 
-\subsection{Translation}
-\begin{frame}{Symbol Table}
-    \begin{itemize}
-        \item Saves symbol information relevant for translation.
-        \item Contains four types of symbols:
-        \begin{enumerate}
-            \item named constants,
-            \item quantum registers and qubits,
-            \item qubit arguments, and
-            \item composite gates. 
-        \end{enumerate} 
-    \end{itemize}
-    \begin{align*}
-        SymbolTable := \ \{st \mid st : Identifier \dashrightarrow & (\{\texttt{const}\} \times \mathbb{Q})\\
-        \cup& (\{\texttt{qubit}\} \times \mathbb{N} \times Identifier)\\
-        \cup& (\{\texttt{arg}\} \times QubitArgument)\\
-        \cup& (\{\texttt{gate}\} \times Block \times Identifier^+)
-        \}
-    \end{align*}
-\end{frame}
+% \begin{frame}{Symbol Table}
+%     \begin{itemize}
+%         \item Saves symbol information relevant for translation.
+%         \item Contains four types of symbols:
+%         \begin{enumerate}
+%             \item named constants,
+%             \item quantum registers and qubits,
+%             \item qubit arguments, and
+%             \item composite gates. 
+%         \end{enumerate} 
+%     \end{itemize}
+%     \begin{align*}
+%         SymbolTable := \ \{st \mid st : Identifier \dashrightarrow & (\{\texttt{const}\} \times \mathbb{Q})\\
+%         \cup& (\{\texttt{qubit}\} \times \mathbb{N} \times Identifier)\\
+%         \cup& (\{\texttt{arg}\} \times QubitArgument)\\
+%         \cup& (\{\texttt{gate}\} \times Block \times Identifier^+)
+%         \}
+%     \end{align*}
+% \end{frame}
 
+\subsection{Translation}
 \begin{frame}{Translation Functions}
     \begin{itemize}
-        \item $trans$ function translates program.
-        \item Symbol table updated with gate declaration by $up$ function.
-        \item Block translation $bt$ translates all translatables.
-        \item Updates symbol table used in next translation.
+        \item Translation functions:
+        \begin{itemize}
+            \item $trans$: translates program.
+            \item $bt$: translates code blocks.
+            \item $tt$: translates either declaration of statement.
+        \end{itemize}
+        \item Symbol table saves symbol information for translation.
+        \begin{itemize}
+            \item Information updated by $up$ function.
+            \item Initial table $st_\epsilon$ contains no mapping.
+        \end{itemize}
     \end{itemize}
     \Large
     \begin{align*}
