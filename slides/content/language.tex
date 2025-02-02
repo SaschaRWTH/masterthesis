@@ -5,7 +5,7 @@
         \item Idea for language: Provide high-level language with the capabilities of the QCM. 
         \item Want to remove low-level concepts, add high-level ones.
         \item Jump instructions in superposition are removed $\to$ need to add other control flow primitives.
-        \item Introduce multiple high-level concepts and control flow statements:
+        \item Introduced concepts:
         \begin{itemize}
             \item blocks and scopes,
             \item different data types,
@@ -14,6 +14,7 @@
             \item quantum if- and else-statements.
         \end{itemize}
         \item Implicit measurements
+        \item Translated to OpenQASM
     \end{itemize}
 \end{frame}
 
@@ -68,7 +69,7 @@ end
 const regSize : int = 3; // Decl.
 qubit c;                 // Decl.
 qubit[regSize] a;        // Decl.
-c_h_reg c, a;           
+c_h_reg c, a;            // Stm.
 /* Block End */
             \end{lstlisting}
             \caption{Luie program with structure highlighted.}

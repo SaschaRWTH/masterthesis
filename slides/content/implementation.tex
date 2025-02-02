@@ -16,11 +16,11 @@
             \item Handles logging and error messages.
         \end{itemize}
     \end{itemize}    
-    \begin{figure}[htp]
-        \centering     
-        \lstinputlisting[style=bashstyle]{../figures/code/slides/cli_example.bash}
-        \caption{A command line interface example.}
-    \end{figure}
+    % \begin{figure}[htp]
+    %     \centering     
+    %     \lstinputlisting[style=bashstyle]{../figures/code/slides/cli_example.bash}
+    %     \caption{A command line interface example.}
+    % \end{figure}
 \end{frame}
 
 % \begin{frame}{Symbols and Symbol Table}
@@ -61,7 +61,7 @@
 \subsection{Semantic Analysis}
 \begin{frame}[fragile]{Semantic Analysis}
     \begin{itemize}
-        \item Analyses non-syntactic constraints of program, mainly:
+        \item Analyzes non-syntactic constraints of program, mainly:
         \begin{enumerate}
             \item declaration analysis and
             \item type checking.
@@ -136,9 +136,9 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
             % \item All SCR objects implement the translatable interface, which requires a translation function.
             \item Three main classes:
             \begin{enumerate}
-                \item Code block: contains list of translatables.
-                \item Declaration: only register declaration, constants compile-time only.
-                \item Statements: variety of different classes.
+                \item Code block: containing list of translatables.
+                \item Declaration: only register declaration.
+                \item Statements: variety of statements.
             \end{enumerate}
             \item Example contains three translatables.
             \begin{itemize}
@@ -214,26 +214,24 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
 \end{frame}
 
 \begin{frame}{Translated Example Program}    
-    \begin{minipage}{.45\textwidth}
+    % \begin{minipage}{.45\textwidth}
         \begin{itemize}
             \item TCR converted to OpenQASM program.
             \item Version string and include header prepended to the code.
-            \item For each quantum register, classical one is declared, the registers are measured and saved to registers. 
-            \item Additions are performed right before result is written to output and after optimization.
+            \item Add measurements.
+            \item Additions performed after optimization.
         \end{itemize}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{.50\textwidth}
+    % \end{minipage}
+    \vfill
+    % \hfill
+    % \begin{minipage}{.50\textwidth}
+    \begin{figure}
         \centering
-        \vfill
-        \begin{figure}
-            \centering
-            \lstinputlisting[style=QASM,basicstyle=\Large\ttfamily]{../figures/code/implementation/codeGen_example.qasm}
-            \caption{The OpenQASM translation of the example Luie program.}
-            % \label{fig:codeGen_target_example}
-        \end{figure}
-        \vfill
-    \end{minipage}
+        \lstinputlisting[style=QASM,basicstyle=\Large\ttfamily]{../figures/code/implementation/codeGen_example.qasm}
+        \caption{The OpenQASM translation of the example Luie program.}
+        % \label{fig:codeGen_target_example}
+    \end{figure}
+    % \end{minipage}
 \end{frame}
 
 \subsection{Optimization}
@@ -383,7 +381,7 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
         \begin{itemize}
             \item Nodes split into input, output, gate nodes.
             \item Input, output nodes have only one outgoing, incoming edge. 
-            \item Each input, output, edge corresponds belongs to qubit in program.
+            \item Each input, output, edge belongs to qubit in program.
             \item Qubit wire represented by path from input to output node over corresponding edges.
         \end{itemize}
     \end{itemize}
