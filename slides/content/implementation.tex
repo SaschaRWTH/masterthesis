@@ -51,6 +51,7 @@
         \item Generates the source code based on a given grammar. 
         \item Implementation of the grammar is more elaborate version of previously disused one.
     \end{itemize}
+    \vfill
     \begin{figure}[h]
         \centering
         \lstinputlisting[style=ANTLR]{../figures/code/implementation/grammar_structure.g4}
@@ -78,7 +79,7 @@ const regSize : int = %\uwave{c}% + 2;
             /* $\adown$ Already declared */      
 qubit[regSize] %\uwave{c}%;
               /* $\adown$ Type error (expects a register or qubit) */                      
-c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
+ccx c, %\uwave{a}%, %\uwave{regSize}%;
         /* ↑ Undeclared identifier */                 
         \end{lstlisting}
         \caption{Luie program with semantic errors highlighted.}
@@ -103,6 +104,7 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
         \item TCR can be translated directly to the textual OpenQASM code.
         \item Example code generation with program:
     \end{itemize}
+    \vfill
     \begin{figure}
         \centering
         \lstinputlisting[style=Luie, basicstyle=\large\ttfamily]{../figures/code/implementation/codeGen_example.luie}
@@ -189,7 +191,13 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
             % \item The translations are as described in the translation section.
             % \item For example, an if-statement adds a control qubit to all gate applications in the block translation.
             % \item All code objects implement a \texttt{ToCode} function that returns the textual representation of the statement.
-            \item Translate program object: code iterated, converted to text, written file. 
+            \item Example:
+            \begin{itemize}
+                \item Change identifiers to ensure uniqueness.
+                \item Loop is unrolled.
+                \item If-statement adds control to gate applications.
+                \item Composite gate is inlined.
+            \end{itemize} 
         \end{itemize}
     \end{minipage}    
     \begin{minipage}{.32\textwidth}
@@ -376,9 +384,10 @@ c_h_reg c, %\uwave{a}%, %\uwave{regSize}%;
 \begin{frame}{Cricuit Graph}
     \begin{itemize}
         \item Rules not directly applied to program, but to circuit graph.
-        \item Program $\xrightarrow{\text{Translation}}$ Graph $\xrightarrow{\text{Optimization}}$ Graph $\xrightarrow{\text{Translation}}$ Program  
-        \item Circuit graph is acyclic and directed.
+        % \item Program $\xrightarrow{\text{Translation}}$ Graph $\xrightarrow{\text{Optimization}}$ Graph $\xrightarrow{\text{Translation}}$ Program  
+        \item Circuit graph based on graph proposed by \cite{KMO*23}.
         \begin{itemize}
+            \item Acyclic and directed.
             \item Nodes split into input, output, gate nodes.
             \item Input, output nodes have only one outgoing, incoming edge. 
             \item Each input, output, edge belongs to qubit in program.
